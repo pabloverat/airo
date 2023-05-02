@@ -18,8 +18,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 #### Avance 0
     🟢 Tokens
-    🟡 Diagramas de Sintaxis
-    🔴 Gramática
+    🟢 Diagramas de Sintaxis
+    🟡 Gramática
 
 #### Avance 1
     🔴 Análisis de Léxico y Sintaxis
@@ -56,4 +56,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 - 30-Abril
     - 100% Selección de proyecto, creación de repositorio, etc.
-    - 25% Avance 0: Propuesta y consideraciones semánticas.
+    - 25% Avance 0: Propuesta y consideraciones semánticas.  
+
+- 01-Mayo
+    - 75% Avance 0: Diagrama de sintaxis.  
+    - 
