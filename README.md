@@ -19,13 +19,13 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 #### Avance 0
     🟢 Tokens
     🟢 Diagramas de Sintaxis
-    🟡 Gramática
+    🟢 Gramática
 
 #### Avance 1
-    🔴 Análisis de Léxico y Sintaxis
+    🟢 Análisis de Léxico y Sintaxis
 
 #### Avance 2
-    🔴 Semántica Básica de Variables
+    🟡 Semántica Básica de Variables
     🔴 Semántica Básica de Expresiones
 
 #### Avance 3
@@ -60,4 +60,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 - 01-Mayo
     - 75% Avance 0: Diagrama de sintaxis.  
-    - 
+    - 100% Avance 0: Gramatica
+
+- 02-Mayo
+    - 99% Avance 1: Lexer done, parser done  (More testing pending!)
