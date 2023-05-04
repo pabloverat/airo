@@ -76,10 +76,8 @@ def p_decision(p):
     print_control(p, "decision", 12)
 
 def p_func_cont(p):
-    '''func_cont : var_list estat_list RETURN ID dims
-                 | var_list estat_list RETURN ID
-                 | estat_list RETURN ID dims
-                 | estat_list RETURN ID
+    '''func_cont : var_list estat_list RETURN expr
+                 | estat_list RETURN expr
                  | var_list estat_list
                  | estat_list
     '''
@@ -161,6 +159,8 @@ def p_logic(p):
 def p_expr(p):
     '''expr : aritm
             | logic
+            | ID OPPARENTH CLPARENTH
+            | ID OPPARENTH args CLPARENTH
     '''
     print_control(p, "expr\t", 1)
 
@@ -182,16 +182,9 @@ def p_relac(p):
     '''
     print_control(p, "relac\t", 3)
 
-def p_arg(p):
-    '''arg : ID OPPARENTH CLPARENTH
-           | ID OPPARENTH args CLPARENTH
-           | expr
-    '''
-    print_control(p, "arg\t", 4)
-
 def p_args(p):
-    '''args : arg COMMA args
-            | arg
+    '''args : expr COMMA args
+            | expr
     '''
     print_control(p, "args\t", 4)
     
@@ -217,13 +210,9 @@ def p_asign(p):
     '''asign : ID ASGNMNT lectura
              | ID ASGNMNT expr
              | ID ASGNMNT CONST_STRING
-             | ID ASGNMNT ID OPPARENTH CLPARENTH
-             | ID ASGNMNT ID OPPARENTH args CLPARENTH
              | ID dims ASGNMNT lectura
              | ID dims ASGNMNT expr
              | ID dims ASGNMNT CONST_STRING
-             | ID dims ASGNMNT ID OPPARENTH CLPARENTH
-             | ID dims ASGNMNT ID OPPARENTH args CLPARENTH
     '''
     print_control(p, "asign\t", 7)
 

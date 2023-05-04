@@ -1,4 +1,4 @@
-Program myProgCorrect
+Program myProgIncorrect
 
 var x : int
 var y : float
