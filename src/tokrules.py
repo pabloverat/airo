@@ -48,8 +48,8 @@ tokens = [
     'UNEQUAL',
     
     'ID',
-    'CONST_INT',
     'CONST_FLOAT',
+    'CONST_INT',
     'CONST_STRING',
 ] + list(reserved.values())
 
@@ -77,14 +77,14 @@ t_PLUS 		= r'\+'
 t_TIMES 		= r'\*'
 t_UNEQUAL 	= r'!='
 
+def t_CONST_FLOAT(t):
+    r'\d+\.\d+'
+    t.value = float(t.value)
+    return t
+
 def t_CONST_INT(t):
     r'\d+'
     t.value = int(t.value)
-    return t
-
-def t_CONST_FLOAT(t):
-    r'\d+\.?\d+'
-    t.value = float(t.value)
     return t
 
 def t_CONST_STRING(t):

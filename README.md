@@ -64,3 +64,6 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 - 02-Mayo
     - 99% Avance 1: Lexer done, parser done  (More testing pending!)
+
+- 03-Mayo
+    -100% Avance 1: Más pruebas a Análisis sintáctico, bug fixes
