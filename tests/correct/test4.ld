@@ -36,4 +36,5 @@ main()
     {
         myFoo()
     }
+    y = myFoo2(x, myFoo2(x, y))
 }

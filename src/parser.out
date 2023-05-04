@@ -19,8 +19,8 @@ Rule 13    estat_list -> estat estat_list
 Rule 14    estat_list -> estat
 Rule 15    param_list -> param COMMA param_list
 Rule 16    param_list -> param
-Rule 17    dims -> OPBRACKET CONST_INT CLBRACKET
-Rule 18    dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+Rule 17    dims -> OPBRACKET aritm CLBRACKET
+Rule 18    dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 Rule 19    func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
 Rule 20    func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
 Rule 21    ciclo -> WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -81,41 +81,42 @@ Rule 75    relac -> aritm LESS aritm
 Rule 76    relac -> aritm LESSEQ aritm
 Rule 77    relac -> aritm GREATER aritm
 Rule 78    relac -> aritm GREATEREQ aritm
-Rule 79    args -> ID dims COMMA args
-Rule 80    args -> ID COMMA args
-Rule 81    args -> ID dims
-Rule 82    args -> ID
-Rule 83    lectura -> READ OPPARENTH CLPARENTH
-Rule 84    escritura -> WRITE OPPARENTH ID CLPARENTH
-Rule 85    escritura -> WRITE OPPARENTH ID dims CLPARENTH
-Rule 86    escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH
-Rule 87    llam_void -> ID OPPARENTH CLPARENTH
-Rule 88    llam_void -> ID OPPARENTH args CLPARENTH
-Rule 89    asign -> ID ASGNMNT lectura
-Rule 90    asign -> ID ASGNMNT expr
-Rule 91    asign -> ID ASGNMNT CONST_STRING
-Rule 92    asign -> ID ASGNMNT ID OPPARENTH CLPARENTH
-Rule 93    asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH
-Rule 94    asign -> ID dims ASGNMNT lectura
-Rule 95    asign -> ID dims ASGNMNT expr
-Rule 96    asign -> ID dims ASGNMNT CONST_STRING
-Rule 97    asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH
-Rule 98    asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+Rule 79    arg -> ID OPPARENTH CLPARENTH
+Rule 80    arg -> ID OPPARENTH args CLPARENTH
+Rule 81    arg -> expr
+Rule 82    args -> arg COMMA args
+Rule 83    args -> arg
+Rule 84    lectura -> READ OPPARENTH CLPARENTH
+Rule 85    escritura -> WRITE OPPARENTH ID CLPARENTH
+Rule 86    escritura -> WRITE OPPARENTH ID dims CLPARENTH
+Rule 87    escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH
+Rule 88    llam_void -> ID OPPARENTH CLPARENTH
+Rule 89    llam_void -> ID OPPARENTH args CLPARENTH
+Rule 90    asign -> ID ASGNMNT lectura
+Rule 91    asign -> ID ASGNMNT expr
+Rule 92    asign -> ID ASGNMNT CONST_STRING
+Rule 93    asign -> ID ASGNMNT ID OPPARENTH CLPARENTH
+Rule 94    asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH
+Rule 95    asign -> ID dims ASGNMNT lectura
+Rule 96    asign -> ID dims ASGNMNT expr
+Rule 97    asign -> ID dims ASGNMNT CONST_STRING
+Rule 98    asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH
+Rule 99    asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH
 
 Terminals, with rules where they appear
 
 AND                  : 63
-ASGNMNT              : 37 38 89 90 91 92 93 94 95 96 97 98
+ASGNMNT              : 37 38 90 91 92 93 94 95 96 97 98 99
 BOOL                 : 44 49
 CHAR                 : 43 48
 CLBRACE              : 6 19 20 21 22 23 23
 CLBRACKET            : 17 18 18
-CLPARENTH            : 6 19 20 21 22 23 37 38 58 72 83 84 85 86 87 88 92 93 97 98
+CLPARENTH            : 6 19 20 21 22 23 37 38 58 72 79 80 84 85 86 87 88 89 93 94 98 99
 COLON                : 7 8 19 20 39 40
-COMMA                : 15 79 80
+COMMA                : 15 82
 CONST_FLOAT          : 62
-CONST_INT            : 17 18 18 61
-CONST_STRING         : 38 86 91 96
+CONST_INT            : 18 61
+CONST_STRING         : 38 87 92 97
 DIVIDE               : 56
 ELSE                 : 23
 EQUAL                : 73
@@ -125,7 +126,7 @@ FRAME                : 45 50
 FUNC                 : 19 20
 GREATER              : 77
 GREATEREQ            : 78
-ID                   : 5 7 8 19 20 24 25 26 27 37 37 38 39 40 59 60 79 80 81 82 84 85 87 88 89 90 91 92 92 93 93 94 95 96 97 97 98 98
+ID                   : 5 7 8 19 20 24 25 26 27 37 37 38 39 40 59 60 79 80 85 86 88 89 90 91 92 93 93 94 94 95 96 97 98 98 99 99
 INT                  : 41 46
 LESS                 : 75
 LESSEQ               : 76
@@ -135,11 +136,11 @@ MINUS                : 53
 NOT                  : 65
 OPBRACE              : 6 19 20 21 22 23 23
 OPBRACKET            : 17 18 18
-OPPARENTH            : 6 19 20 21 22 23 37 38 58 72 83 84 85 86 87 88 92 93 97 98
+OPPARENTH            : 6 19 20 21 22 23 37 38 58 72 79 80 84 85 86 87 88 89 93 94 98 99
 OR                   : 64
 PLUS                 : 52
 PROGRAM              : 5
-READ                 : 83
+READ                 : 84
 RETURN               : 24 25 26 27
 THEN                 : 21 22 23
 TIMES                : 55
@@ -149,30 +150,31 @@ VAR                  : 7 8
 VOID                 : 51
 WHEN                 : 22 23
 WHILE                : 21
-WRITE                : 84 85 86
+WRITE                : 85 86 87
 error                : 
 
 Nonterminals, with rules where they appear
 
-args                 : 79 80 88 93 98
-aritm                : 52 53 58 67 73 73 74 74 75 75 76 76 77 77 78 78
+arg                  : 82 83
+args                 : 80 82 89 94 99
+aritm                : 17 18 52 53 58 67 73 73 74 74 75 75 76 76 77 77 78 78
 asign                : 30
 carga_dt             : 34
 ciclo                : 36
 cuerpo               : 1 2 3 4
 decision             : 35
-dims                 : 8 24 26 40 60 79 81 85 94 95 96 97 98
+dims                 : 8 24 26 40 60 86 95 96 97 98 99
 encabezamiento       : 1 2 3 4
 escritura            : 33
 estat                : 13 14
 estat_list           : 6 13 21 22 23 23 24 25 26 27 28 29
-expr                 : 90 95
+expr                 : 81 91 96
 factor               : 55 56 57
 func                 : 11 12
 func_cont            : 19 20
 func_list            : 1 3 11
 func_typ             : 19 20
-lectura              : 32 89 94
+lectura              : 32 90 95
 llam_void            : 31
 logic                : 21 22 23 63 64 68 72
 oprnd                : 63 64 65 66
@@ -466,22 +468,22 @@ state 25
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -508,8 +510,8 @@ state 26
 
     (7) variable -> VAR ID COLON var_typ .
     (8) variable -> VAR ID COLON var_typ . dims
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
     VAR             reduce using rule 7 (variable -> VAR ID COLON var_typ .)
     MAIN            reduce using rule 7 (variable -> VAR ID COLON var_typ .)
@@ -659,22 +661,22 @@ state 37
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -792,22 +794,22 @@ state 44
 
 state 45
 
-    (89) asign -> ID . ASGNMNT lectura
-    (90) asign -> ID . ASGNMNT expr
-    (91) asign -> ID . ASGNMNT CONST_STRING
-    (92) asign -> ID . ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> ID . ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> ID . dims ASGNMNT lectura
-    (95) asign -> ID . dims ASGNMNT expr
-    (96) asign -> ID . dims ASGNMNT CONST_STRING
-    (97) asign -> ID . dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> ID . dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> ID . OPPARENTH CLPARENTH
-    (88) llam_void -> ID . OPPARENTH args CLPARENTH
+    (90) asign -> ID . ASGNMNT lectura
+    (91) asign -> ID . ASGNMNT expr
+    (92) asign -> ID . ASGNMNT CONST_STRING
+    (93) asign -> ID . ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> ID . ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> ID . dims ASGNMNT lectura
+    (96) asign -> ID . dims ASGNMNT expr
+    (97) asign -> ID . dims ASGNMNT CONST_STRING
+    (98) asign -> ID . dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> ID . dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> ID . OPPARENTH CLPARENTH
+    (89) llam_void -> ID . OPPARENTH args CLPARENTH
     (37) carga_dt -> ID . ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> ID . ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
     ASGNMNT         shift and go to state 58
     OPPARENTH       shift and go to state 59
@@ -817,16 +819,16 @@ state 45
 
 state 46
 
-    (83) lectura -> READ . OPPARENTH CLPARENTH
+    (84) lectura -> READ . OPPARENTH CLPARENTH
 
     OPPARENTH       shift and go to state 61
 
 
 state 47
 
-    (84) escritura -> WRITE . OPPARENTH ID CLPARENTH
-    (85) escritura -> WRITE . OPPARENTH ID dims CLPARENTH
-    (86) escritura -> WRITE . OPPARENTH CONST_STRING CLPARENTH
+    (85) escritura -> WRITE . OPPARENTH ID CLPARENTH
+    (86) escritura -> WRITE . OPPARENTH ID dims CLPARENTH
+    (87) escritura -> WRITE . OPPARENTH CONST_STRING CLPARENTH
 
     OPPARENTH       shift and go to state 62
 
@@ -862,11 +864,28 @@ state 50
 
 state 51
 
-    (17) dims -> OPBRACKET . CONST_INT CLBRACKET
-    (18) dims -> OPBRACKET . CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> OPBRACKET . aritm CLBRACKET
+    (18) dims -> OPBRACKET . aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
 
-    CONST_INT       shift and go to state 65
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
+    aritm                          shift and go to state 65
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
 state 52
 
@@ -884,7 +903,7 @@ state 52
     BOOL            shift and go to state 30
     FRAME           shift and go to state 31
 
-    var_typ                        shift and go to state 66
+    var_typ                        shift and go to state 72
 
 state 53
 
@@ -896,20 +915,20 @@ state 53
     (50) func_typ -> . FRAME
     (51) func_typ -> . VOID
 
-    INT             shift and go to state 68
-    FLOAT           shift and go to state 69
-    CHAR            shift and go to state 70
-    BOOL            shift and go to state 71
-    FRAME           shift and go to state 72
-    VOID            shift and go to state 73
+    INT             shift and go to state 74
+    FLOAT           shift and go to state 75
+    CHAR            shift and go to state 76
+    BOOL            shift and go to state 77
+    FRAME           shift and go to state 78
+    VOID            shift and go to state 79
 
-    func_typ                       shift and go to state 67
+    func_typ                       shift and go to state 73
 
 state 54
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH . COLON func_typ OPBRACE func_cont CLBRACE
 
-    COLON           shift and go to state 74
+    COLON           shift and go to state 80
 
 
 state 55
@@ -923,7 +942,7 @@ state 55
     ID              shift and go to state 32
 
     param                          shift and go to state 35
-    param_list                     shift and go to state 75
+    param_list                     shift and go to state 81
 
 state 56
 
@@ -942,14 +961,14 @@ state 57
 
 state 58
 
-    (89) asign -> ID ASGNMNT . lectura
-    (90) asign -> ID ASGNMNT . expr
-    (91) asign -> ID ASGNMNT . CONST_STRING
-    (92) asign -> ID ASGNMNT . ID OPPARENTH CLPARENTH
-    (93) asign -> ID ASGNMNT . ID OPPARENTH args CLPARENTH
+    (90) asign -> ID ASGNMNT . lectura
+    (91) asign -> ID ASGNMNT . expr
+    (92) asign -> ID ASGNMNT . CONST_STRING
+    (93) asign -> ID ASGNMNT . ID OPPARENTH CLPARENTH
+    (94) asign -> ID ASGNMNT . ID OPPARENTH args CLPARENTH
     (37) carga_dt -> ID ASGNMNT . LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> ID ASGNMNT . LOAD OPPARENTH CONST_STRING CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
     (67) expr -> . aritm
     (68) expr -> . logic
     (52) aritm -> . term PLUS aritm
@@ -978,66 +997,108 @@ state 58
     (77) relac -> . aritm GREATER aritm
     (78) relac -> . aritm GREATEREQ aritm
 
-    CONST_STRING    shift and go to state 79
-    ID              shift and go to state 76
-    LOAD            shift and go to state 81
+    CONST_STRING    shift and go to state 85
+    ID              shift and go to state 82
+    LOAD            shift and go to state 87
     READ            shift and go to state 46
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    lectura                        shift and go to state 77
-    expr                           shift and go to state 78
-    aritm                          shift and go to state 82
-    logic                          shift and go to state 83
-    term                           shift and go to state 84
-    oprnd                          shift and go to state 85
-    factor                         shift and go to state 87
-    relac                          shift and go to state 90
+    lectura                        shift and go to state 83
+    expr                           shift and go to state 84
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
 state 59
 
-    (87) llam_void -> ID OPPARENTH . CLPARENTH
-    (88) llam_void -> ID OPPARENTH . args CLPARENTH
-    (79) args -> . ID dims COMMA args
-    (80) args -> . ID COMMA args
-    (81) args -> . ID dims
-    (82) args -> . ID
+    (88) llam_void -> ID OPPARENTH . CLPARENTH
+    (89) llam_void -> ID OPPARENTH . args CLPARENTH
+    (82) args -> . arg COMMA args
+    (83) args -> . arg
+    (79) arg -> . ID OPPARENTH CLPARENTH
+    (80) arg -> . ID OPPARENTH args CLPARENTH
+    (81) arg -> . expr
+    (67) expr -> . aritm
+    (68) expr -> . logic
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (63) logic -> . oprnd AND logic
+    (64) logic -> . oprnd OR logic
+    (65) logic -> . NOT oprnd
+    (66) logic -> . oprnd
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (69) oprnd -> . FALSE
+    (70) oprnd -> . TRUE
+    (71) oprnd -> . relac
+    (72) oprnd -> . OPPARENTH logic CLPARENTH
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+    (73) relac -> . aritm EQUAL aritm
+    (74) relac -> . aritm UNEQUAL aritm
+    (75) relac -> . aritm LESS aritm
+    (76) relac -> . aritm LESSEQ aritm
+    (77) relac -> . aritm GREATER aritm
+    (78) relac -> . aritm GREATEREQ aritm
 
-    CLPARENTH       shift and go to state 94
-    ID              shift and go to state 93
+    CLPARENTH       shift and go to state 96
+    ID              shift and go to state 95
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    args                           shift and go to state 95
+    args                           shift and go to state 97
+    arg                            shift and go to state 98
+    expr                           shift and go to state 99
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
 state 60
 
-    (94) asign -> ID dims . ASGNMNT lectura
-    (95) asign -> ID dims . ASGNMNT expr
-    (96) asign -> ID dims . ASGNMNT CONST_STRING
-    (97) asign -> ID dims . ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> ID dims . ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> ID dims . ASGNMNT lectura
+    (96) asign -> ID dims . ASGNMNT expr
+    (97) asign -> ID dims . ASGNMNT CONST_STRING
+    (98) asign -> ID dims . ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> ID dims . ASGNMNT ID OPPARENTH args CLPARENTH
 
-    ASGNMNT         shift and go to state 96
+    ASGNMNT         shift and go to state 100
 
 
 state 61
 
-    (83) lectura -> READ OPPARENTH . CLPARENTH
+    (84) lectura -> READ OPPARENTH . CLPARENTH
 
-    CLPARENTH       shift and go to state 97
+    CLPARENTH       shift and go to state 101
 
 
 state 62
 
-    (84) escritura -> WRITE OPPARENTH . ID CLPARENTH
-    (85) escritura -> WRITE OPPARENTH . ID dims CLPARENTH
-    (86) escritura -> WRITE OPPARENTH . CONST_STRING CLPARENTH
+    (85) escritura -> WRITE OPPARENTH . ID CLPARENTH
+    (86) escritura -> WRITE OPPARENTH . ID dims CLPARENTH
+    (87) escritura -> WRITE OPPARENTH . CONST_STRING CLPARENTH
 
-    ID              shift and go to state 98
-    CONST_STRING    shift and go to state 99
+    ID              shift and go to state 102
+    CONST_STRING    shift and go to state 103
 
 
 state 63
@@ -1070,20 +1131,20 @@ state 63
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    logic                          shift and go to state 100
-    oprnd                          shift and go to state 85
-    relac                          shift and go to state 90
-    aritm                          shift and go to state 101
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    logic                          shift and go to state 104
+    oprnd                          shift and go to state 90
+    relac                          shift and go to state 94
+    aritm                          shift and go to state 105
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
 state 64
 
@@ -1114,92 +1175,263 @@ state 64
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    logic                          shift and go to state 103
-    oprnd                          shift and go to state 85
-    relac                          shift and go to state 90
-    aritm                          shift and go to state 101
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    logic                          shift and go to state 106
+    oprnd                          shift and go to state 90
+    relac                          shift and go to state 94
+    aritm                          shift and go to state 105
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
 state 65
 
-    (17) dims -> OPBRACKET CONST_INT . CLBRACKET
-    (18) dims -> OPBRACKET CONST_INT . CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> OPBRACKET aritm . CLBRACKET
+    (18) dims -> OPBRACKET aritm . CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
-    CLBRACKET       shift and go to state 104
+    CLBRACKET       shift and go to state 107
 
 
 state 66
 
+    (61) factor -> CONST_INT .
+
+    TIMES           reduce using rule 61 (factor -> CONST_INT .)
+    DIVIDE          reduce using rule 61 (factor -> CONST_INT .)
+    PLUS            reduce using rule 61 (factor -> CONST_INT .)
+    MINUS           reduce using rule 61 (factor -> CONST_INT .)
+    CLBRACKET       reduce using rule 61 (factor -> CONST_INT .)
+    EQUAL           reduce using rule 61 (factor -> CONST_INT .)
+    UNEQUAL         reduce using rule 61 (factor -> CONST_INT .)
+    LESS            reduce using rule 61 (factor -> CONST_INT .)
+    LESSEQ          reduce using rule 61 (factor -> CONST_INT .)
+    GREATER         reduce using rule 61 (factor -> CONST_INT .)
+    GREATEREQ       reduce using rule 61 (factor -> CONST_INT .)
+    ID              reduce using rule 61 (factor -> CONST_INT .)
+    READ            reduce using rule 61 (factor -> CONST_INT .)
+    WRITE           reduce using rule 61 (factor -> CONST_INT .)
+    WHEN            reduce using rule 61 (factor -> CONST_INT .)
+    WHILE           reduce using rule 61 (factor -> CONST_INT .)
+    CLBRACE         reduce using rule 61 (factor -> CONST_INT .)
+    RETURN          reduce using rule 61 (factor -> CONST_INT .)
+    COMMA           reduce using rule 61 (factor -> CONST_INT .)
+    CLPARENTH       reduce using rule 61 (factor -> CONST_INT .)
+    AND             reduce using rule 61 (factor -> CONST_INT .)
+    OR              reduce using rule 61 (factor -> CONST_INT .)
+
+
+state 67
+
+    (52) aritm -> term . PLUS aritm
+    (53) aritm -> term . MINUS aritm
+    (54) aritm -> term .
+
+    PLUS            shift and go to state 108
+    MINUS           shift and go to state 109
+    CLBRACKET       reduce using rule 54 (aritm -> term .)
+    EQUAL           reduce using rule 54 (aritm -> term .)
+    UNEQUAL         reduce using rule 54 (aritm -> term .)
+    LESS            reduce using rule 54 (aritm -> term .)
+    LESSEQ          reduce using rule 54 (aritm -> term .)
+    GREATER         reduce using rule 54 (aritm -> term .)
+    GREATEREQ       reduce using rule 54 (aritm -> term .)
+    ID              reduce using rule 54 (aritm -> term .)
+    READ            reduce using rule 54 (aritm -> term .)
+    WRITE           reduce using rule 54 (aritm -> term .)
+    WHEN            reduce using rule 54 (aritm -> term .)
+    WHILE           reduce using rule 54 (aritm -> term .)
+    CLBRACE         reduce using rule 54 (aritm -> term .)
+    RETURN          reduce using rule 54 (aritm -> term .)
+    COMMA           reduce using rule 54 (aritm -> term .)
+    CLPARENTH       reduce using rule 54 (aritm -> term .)
+    AND             reduce using rule 54 (aritm -> term .)
+    OR              reduce using rule 54 (aritm -> term .)
+
+
+state 68
+
+    (55) term -> factor . TIMES term
+    (56) term -> factor . DIVIDE term
+    (57) term -> factor .
+
+    TIMES           shift and go to state 110
+    DIVIDE          shift and go to state 111
+    PLUS            reduce using rule 57 (term -> factor .)
+    MINUS           reduce using rule 57 (term -> factor .)
+    CLBRACKET       reduce using rule 57 (term -> factor .)
+    EQUAL           reduce using rule 57 (term -> factor .)
+    UNEQUAL         reduce using rule 57 (term -> factor .)
+    LESS            reduce using rule 57 (term -> factor .)
+    LESSEQ          reduce using rule 57 (term -> factor .)
+    GREATER         reduce using rule 57 (term -> factor .)
+    GREATEREQ       reduce using rule 57 (term -> factor .)
+    ID              reduce using rule 57 (term -> factor .)
+    READ            reduce using rule 57 (term -> factor .)
+    WRITE           reduce using rule 57 (term -> factor .)
+    WHEN            reduce using rule 57 (term -> factor .)
+    WHILE           reduce using rule 57 (term -> factor .)
+    CLBRACE         reduce using rule 57 (term -> factor .)
+    RETURN          reduce using rule 57 (term -> factor .)
+    COMMA           reduce using rule 57 (term -> factor .)
+    CLPARENTH       reduce using rule 57 (term -> factor .)
+    AND             reduce using rule 57 (term -> factor .)
+    OR              reduce using rule 57 (term -> factor .)
+
+
+state 69
+
+    (58) factor -> OPPARENTH . aritm CLPARENTH
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
+
+    aritm                          shift and go to state 112
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
+
+state 70
+
+    (59) factor -> ID .
+    (60) factor -> ID . dims
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
+
+    TIMES           reduce using rule 59 (factor -> ID .)
+    DIVIDE          reduce using rule 59 (factor -> ID .)
+    PLUS            reduce using rule 59 (factor -> ID .)
+    MINUS           reduce using rule 59 (factor -> ID .)
+    CLBRACKET       reduce using rule 59 (factor -> ID .)
+    EQUAL           reduce using rule 59 (factor -> ID .)
+    UNEQUAL         reduce using rule 59 (factor -> ID .)
+    LESS            reduce using rule 59 (factor -> ID .)
+    LESSEQ          reduce using rule 59 (factor -> ID .)
+    GREATER         reduce using rule 59 (factor -> ID .)
+    GREATEREQ       reduce using rule 59 (factor -> ID .)
+    CLPARENTH       reduce using rule 59 (factor -> ID .)
+    ID              reduce using rule 59 (factor -> ID .)
+    READ            reduce using rule 59 (factor -> ID .)
+    WRITE           reduce using rule 59 (factor -> ID .)
+    WHEN            reduce using rule 59 (factor -> ID .)
+    WHILE           reduce using rule 59 (factor -> ID .)
+    CLBRACE         reduce using rule 59 (factor -> ID .)
+    RETURN          reduce using rule 59 (factor -> ID .)
+    COMMA           reduce using rule 59 (factor -> ID .)
+    AND             reduce using rule 59 (factor -> ID .)
+    OR              reduce using rule 59 (factor -> ID .)
+    OPBRACKET       shift and go to state 51
+
+    dims                           shift and go to state 113
+
+state 71
+
+    (62) factor -> CONST_FLOAT .
+
+    TIMES           reduce using rule 62 (factor -> CONST_FLOAT .)
+    DIVIDE          reduce using rule 62 (factor -> CONST_FLOAT .)
+    PLUS            reduce using rule 62 (factor -> CONST_FLOAT .)
+    MINUS           reduce using rule 62 (factor -> CONST_FLOAT .)
+    CLBRACKET       reduce using rule 62 (factor -> CONST_FLOAT .)
+    EQUAL           reduce using rule 62 (factor -> CONST_FLOAT .)
+    UNEQUAL         reduce using rule 62 (factor -> CONST_FLOAT .)
+    LESS            reduce using rule 62 (factor -> CONST_FLOAT .)
+    LESSEQ          reduce using rule 62 (factor -> CONST_FLOAT .)
+    GREATER         reduce using rule 62 (factor -> CONST_FLOAT .)
+    GREATEREQ       reduce using rule 62 (factor -> CONST_FLOAT .)
+    ID              reduce using rule 62 (factor -> CONST_FLOAT .)
+    READ            reduce using rule 62 (factor -> CONST_FLOAT .)
+    WRITE           reduce using rule 62 (factor -> CONST_FLOAT .)
+    WHEN            reduce using rule 62 (factor -> CONST_FLOAT .)
+    WHILE           reduce using rule 62 (factor -> CONST_FLOAT .)
+    CLBRACE         reduce using rule 62 (factor -> CONST_FLOAT .)
+    RETURN          reduce using rule 62 (factor -> CONST_FLOAT .)
+    COMMA           reduce using rule 62 (factor -> CONST_FLOAT .)
+    CLPARENTH       reduce using rule 62 (factor -> CONST_FLOAT .)
+    AND             reduce using rule 62 (factor -> CONST_FLOAT .)
+    OR              reduce using rule 62 (factor -> CONST_FLOAT .)
+
+
+state 72
+
     (39) param -> ID COLON var_typ .
     (40) param -> ID COLON var_typ . dims
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
     COMMA           reduce using rule 39 (param -> ID COLON var_typ .)
     CLPARENTH       reduce using rule 39 (param -> ID COLON var_typ .)
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 105
+    dims                           shift and go to state 114
 
-state 67
+state 73
 
     (19) func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ . OPBRACE func_cont CLBRACE
 
-    OPBRACE         shift and go to state 106
+    OPBRACE         shift and go to state 115
 
 
-state 68
+state 74
 
     (46) func_typ -> INT .
 
     OPBRACE         reduce using rule 46 (func_typ -> INT .)
 
 
-state 69
+state 75
 
     (47) func_typ -> FLOAT .
 
     OPBRACE         reduce using rule 47 (func_typ -> FLOAT .)
 
 
-state 70
+state 76
 
     (48) func_typ -> CHAR .
 
     OPBRACE         reduce using rule 48 (func_typ -> CHAR .)
 
 
-state 71
+state 77
 
     (49) func_typ -> BOOL .
 
     OPBRACE         reduce using rule 49 (func_typ -> BOOL .)
 
 
-state 72
+state 78
 
     (50) func_typ -> FRAME .
 
     OPBRACE         reduce using rule 50 (func_typ -> FRAME .)
 
 
-state 73
+state 79
 
     (51) func_typ -> VOID .
 
     OPBRACE         reduce using rule 51 (func_typ -> VOID .)
 
 
-state 74
+state 80
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH COLON . func_typ OPBRACE func_cont CLBRACE
     (46) func_typ -> . INT
@@ -1209,32 +1441,32 @@ state 74
     (50) func_typ -> . FRAME
     (51) func_typ -> . VOID
 
-    INT             shift and go to state 68
-    FLOAT           shift and go to state 69
-    CHAR            shift and go to state 70
-    BOOL            shift and go to state 71
-    FRAME           shift and go to state 72
-    VOID            shift and go to state 73
+    INT             shift and go to state 74
+    FLOAT           shift and go to state 75
+    CHAR            shift and go to state 76
+    BOOL            shift and go to state 77
+    FRAME           shift and go to state 78
+    VOID            shift and go to state 79
 
-    func_typ                       shift and go to state 107
+    func_typ                       shift and go to state 116
 
-state 75
+state 81
 
     (15) param_list -> param COMMA param_list .
 
     CLPARENTH       reduce using rule 15 (param_list -> param COMMA param_list .)
 
 
-state 76
+state 82
 
-    (92) asign -> ID ASGNMNT ID . OPPARENTH CLPARENTH
-    (93) asign -> ID ASGNMNT ID . OPPARENTH args CLPARENTH
+    (93) asign -> ID ASGNMNT ID . OPPARENTH CLPARENTH
+    (94) asign -> ID ASGNMNT ID . OPPARENTH args CLPARENTH
     (59) factor -> ID .
     (60) factor -> ID . dims
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
-    OPPARENTH       shift and go to state 108
+    OPPARENTH       shift and go to state 117
     TIMES           reduce using rule 59 (factor -> ID .)
     DIVIDE          reduce using rule 59 (factor -> ID .)
     PLUS            reduce using rule 59 (factor -> ID .)
@@ -1254,48 +1486,48 @@ state 76
     RETURN          reduce using rule 59 (factor -> ID .)
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 109
+    dims                           shift and go to state 113
 
-state 77
+state 83
 
-    (89) asign -> ID ASGNMNT lectura .
+    (90) asign -> ID ASGNMNT lectura .
 
-    ID              reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    READ            reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    WRITE           reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    WHEN            reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    WHILE           reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    CLBRACE         reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-    RETURN          reduce using rule 89 (asign -> ID ASGNMNT lectura .)
-
-
-state 78
-
-    (90) asign -> ID ASGNMNT expr .
-
-    ID              reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    READ            reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    WRITE           reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    WHEN            reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    WHILE           reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    CLBRACE         reduce using rule 90 (asign -> ID ASGNMNT expr .)
-    RETURN          reduce using rule 90 (asign -> ID ASGNMNT expr .)
+    ID              reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    READ            reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    WRITE           reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    WHEN            reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    WHILE           reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    CLBRACE         reduce using rule 90 (asign -> ID ASGNMNT lectura .)
+    RETURN          reduce using rule 90 (asign -> ID ASGNMNT lectura .)
 
 
-state 79
+state 84
 
-    (91) asign -> ID ASGNMNT CONST_STRING .
+    (91) asign -> ID ASGNMNT expr .
 
-    ID              reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    READ            reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    WRITE           reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    WHEN            reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    WHILE           reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    CLBRACE         reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
-    RETURN          reduce using rule 91 (asign -> ID ASGNMNT CONST_STRING .)
+    ID              reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    READ            reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    WRITE           reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    WHEN            reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    WHILE           reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    CLBRACE         reduce using rule 91 (asign -> ID ASGNMNT expr .)
+    RETURN          reduce using rule 91 (asign -> ID ASGNMNT expr .)
 
 
-state 80
+state 85
+
+    (92) asign -> ID ASGNMNT CONST_STRING .
+
+    ID              reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    READ            reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    WRITE           reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    WHEN            reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    WHILE           reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    CLBRACE         reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+    RETURN          reduce using rule 92 (asign -> ID ASGNMNT CONST_STRING .)
+
+
+state 86
 
     (72) oprnd -> OPPARENTH . logic CLPARENTH
     (58) factor -> OPPARENTH . aritm CLPARENTH
@@ -1325,30 +1557,30 @@ state 80
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    logic                          shift and go to state 110
-    aritm                          shift and go to state 111
-    oprnd                          shift and go to state 85
-    term                           shift and go to state 84
-    relac                          shift and go to state 90
-    factor                         shift and go to state 87
+    logic                          shift and go to state 118
+    aritm                          shift and go to state 119
+    oprnd                          shift and go to state 90
+    term                           shift and go to state 67
+    relac                          shift and go to state 94
+    factor                         shift and go to state 68
 
-state 81
+state 87
 
     (37) carga_dt -> ID ASGNMNT LOAD . OPPARENTH ID CLPARENTH
     (38) carga_dt -> ID ASGNMNT LOAD . OPPARENTH CONST_STRING CLPARENTH
 
-    OPPARENTH       shift and go to state 112
+    OPPARENTH       shift and go to state 120
 
 
-state 82
+state 88
 
     (67) expr -> aritm .
     (73) relac -> aritm . EQUAL aritm
@@ -1365,15 +1597,17 @@ state 82
     WHILE           reduce using rule 67 (expr -> aritm .)
     CLBRACE         reduce using rule 67 (expr -> aritm .)
     RETURN          reduce using rule 67 (expr -> aritm .)
-    EQUAL           shift and go to state 113
-    UNEQUAL         shift and go to state 114
-    LESS            shift and go to state 115
-    LESSEQ          shift and go to state 116
-    GREATER         shift and go to state 117
-    GREATEREQ       shift and go to state 118
+    COMMA           reduce using rule 67 (expr -> aritm .)
+    CLPARENTH       reduce using rule 67 (expr -> aritm .)
+    EQUAL           shift and go to state 121
+    UNEQUAL         shift and go to state 122
+    LESS            shift and go to state 123
+    LESSEQ          shift and go to state 124
+    GREATER         shift and go to state 125
+    GREATEREQ       shift and go to state 126
 
 
-state 83
+state 89
 
     (68) expr -> logic .
 
@@ -1384,42 +1618,18 @@ state 83
     WHILE           reduce using rule 68 (expr -> logic .)
     CLBRACE         reduce using rule 68 (expr -> logic .)
     RETURN          reduce using rule 68 (expr -> logic .)
+    COMMA           reduce using rule 68 (expr -> logic .)
+    CLPARENTH       reduce using rule 68 (expr -> logic .)
 
 
-state 84
-
-    (52) aritm -> term . PLUS aritm
-    (53) aritm -> term . MINUS aritm
-    (54) aritm -> term .
-
-    PLUS            shift and go to state 119
-    MINUS           shift and go to state 120
-    EQUAL           reduce using rule 54 (aritm -> term .)
-    UNEQUAL         reduce using rule 54 (aritm -> term .)
-    LESS            reduce using rule 54 (aritm -> term .)
-    LESSEQ          reduce using rule 54 (aritm -> term .)
-    GREATER         reduce using rule 54 (aritm -> term .)
-    GREATEREQ       reduce using rule 54 (aritm -> term .)
-    ID              reduce using rule 54 (aritm -> term .)
-    READ            reduce using rule 54 (aritm -> term .)
-    WRITE           reduce using rule 54 (aritm -> term .)
-    WHEN            reduce using rule 54 (aritm -> term .)
-    WHILE           reduce using rule 54 (aritm -> term .)
-    CLBRACE         reduce using rule 54 (aritm -> term .)
-    RETURN          reduce using rule 54 (aritm -> term .)
-    CLPARENTH       reduce using rule 54 (aritm -> term .)
-    AND             reduce using rule 54 (aritm -> term .)
-    OR              reduce using rule 54 (aritm -> term .)
-
-
-state 85
+state 90
 
     (63) logic -> oprnd . AND logic
     (64) logic -> oprnd . OR logic
     (66) logic -> oprnd .
 
-    AND             shift and go to state 121
-    OR              shift and go to state 122
+    AND             shift and go to state 127
+    OR              shift and go to state 128
     ID              reduce using rule 66 (logic -> oprnd .)
     READ            reduce using rule 66 (logic -> oprnd .)
     WRITE           reduce using rule 66 (logic -> oprnd .)
@@ -1427,10 +1637,11 @@ state 85
     WHILE           reduce using rule 66 (logic -> oprnd .)
     CLBRACE         reduce using rule 66 (logic -> oprnd .)
     RETURN          reduce using rule 66 (logic -> oprnd .)
+    COMMA           reduce using rule 66 (logic -> oprnd .)
     CLPARENTH       reduce using rule 66 (logic -> oprnd .)
 
 
-state 86
+state 91
 
     (65) logic -> NOT . oprnd
     (69) oprnd -> . FALSE
@@ -1455,48 +1666,20 @@ state 86
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    oprnd                          shift and go to state 123
-    relac                          shift and go to state 90
-    aritm                          shift and go to state 101
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    oprnd                          shift and go to state 129
+    relac                          shift and go to state 94
+    aritm                          shift and go to state 105
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 87
-
-    (55) term -> factor . TIMES term
-    (56) term -> factor . DIVIDE term
-    (57) term -> factor .
-
-    TIMES           shift and go to state 124
-    DIVIDE          shift and go to state 125
-    PLUS            reduce using rule 57 (term -> factor .)
-    MINUS           reduce using rule 57 (term -> factor .)
-    EQUAL           reduce using rule 57 (term -> factor .)
-    UNEQUAL         reduce using rule 57 (term -> factor .)
-    LESS            reduce using rule 57 (term -> factor .)
-    LESSEQ          reduce using rule 57 (term -> factor .)
-    GREATER         reduce using rule 57 (term -> factor .)
-    GREATEREQ       reduce using rule 57 (term -> factor .)
-    ID              reduce using rule 57 (term -> factor .)
-    READ            reduce using rule 57 (term -> factor .)
-    WRITE           reduce using rule 57 (term -> factor .)
-    WHEN            reduce using rule 57 (term -> factor .)
-    WHILE           reduce using rule 57 (term -> factor .)
-    CLBRACE         reduce using rule 57 (term -> factor .)
-    RETURN          reduce using rule 57 (term -> factor .)
-    CLPARENTH       reduce using rule 57 (term -> factor .)
-    AND             reduce using rule 57 (term -> factor .)
-    OR              reduce using rule 57 (term -> factor .)
-
-
-state 88
+state 92
 
     (69) oprnd -> FALSE .
 
@@ -1509,10 +1692,11 @@ state 88
     WHILE           reduce using rule 69 (oprnd -> FALSE .)
     CLBRACE         reduce using rule 69 (oprnd -> FALSE .)
     RETURN          reduce using rule 69 (oprnd -> FALSE .)
+    COMMA           reduce using rule 69 (oprnd -> FALSE .)
     CLPARENTH       reduce using rule 69 (oprnd -> FALSE .)
 
 
-state 89
+state 93
 
     (70) oprnd -> TRUE .
 
@@ -1525,10 +1709,11 @@ state 89
     WHILE           reduce using rule 70 (oprnd -> TRUE .)
     CLBRACE         reduce using rule 70 (oprnd -> TRUE .)
     RETURN          reduce using rule 70 (oprnd -> TRUE .)
+    COMMA           reduce using rule 70 (oprnd -> TRUE .)
     CLPARENTH       reduce using rule 70 (oprnd -> TRUE .)
 
 
-state 90
+state 94
 
     (71) oprnd -> relac .
 
@@ -1541,104 +1726,81 @@ state 90
     WHILE           reduce using rule 71 (oprnd -> relac .)
     CLBRACE         reduce using rule 71 (oprnd -> relac .)
     RETURN          reduce using rule 71 (oprnd -> relac .)
+    COMMA           reduce using rule 71 (oprnd -> relac .)
     CLPARENTH       reduce using rule 71 (oprnd -> relac .)
-
-
-state 91
-
-    (61) factor -> CONST_INT .
-
-    TIMES           reduce using rule 61 (factor -> CONST_INT .)
-    DIVIDE          reduce using rule 61 (factor -> CONST_INT .)
-    PLUS            reduce using rule 61 (factor -> CONST_INT .)
-    MINUS           reduce using rule 61 (factor -> CONST_INT .)
-    EQUAL           reduce using rule 61 (factor -> CONST_INT .)
-    UNEQUAL         reduce using rule 61 (factor -> CONST_INT .)
-    LESS            reduce using rule 61 (factor -> CONST_INT .)
-    LESSEQ          reduce using rule 61 (factor -> CONST_INT .)
-    GREATER         reduce using rule 61 (factor -> CONST_INT .)
-    GREATEREQ       reduce using rule 61 (factor -> CONST_INT .)
-    ID              reduce using rule 61 (factor -> CONST_INT .)
-    READ            reduce using rule 61 (factor -> CONST_INT .)
-    WRITE           reduce using rule 61 (factor -> CONST_INT .)
-    WHEN            reduce using rule 61 (factor -> CONST_INT .)
-    WHILE           reduce using rule 61 (factor -> CONST_INT .)
-    CLBRACE         reduce using rule 61 (factor -> CONST_INT .)
-    RETURN          reduce using rule 61 (factor -> CONST_INT .)
-    CLPARENTH       reduce using rule 61 (factor -> CONST_INT .)
-    AND             reduce using rule 61 (factor -> CONST_INT .)
-    OR              reduce using rule 61 (factor -> CONST_INT .)
-
-
-state 92
-
-    (62) factor -> CONST_FLOAT .
-
-    TIMES           reduce using rule 62 (factor -> CONST_FLOAT .)
-    DIVIDE          reduce using rule 62 (factor -> CONST_FLOAT .)
-    PLUS            reduce using rule 62 (factor -> CONST_FLOAT .)
-    MINUS           reduce using rule 62 (factor -> CONST_FLOAT .)
-    EQUAL           reduce using rule 62 (factor -> CONST_FLOAT .)
-    UNEQUAL         reduce using rule 62 (factor -> CONST_FLOAT .)
-    LESS            reduce using rule 62 (factor -> CONST_FLOAT .)
-    LESSEQ          reduce using rule 62 (factor -> CONST_FLOAT .)
-    GREATER         reduce using rule 62 (factor -> CONST_FLOAT .)
-    GREATEREQ       reduce using rule 62 (factor -> CONST_FLOAT .)
-    ID              reduce using rule 62 (factor -> CONST_FLOAT .)
-    READ            reduce using rule 62 (factor -> CONST_FLOAT .)
-    WRITE           reduce using rule 62 (factor -> CONST_FLOAT .)
-    WHEN            reduce using rule 62 (factor -> CONST_FLOAT .)
-    WHILE           reduce using rule 62 (factor -> CONST_FLOAT .)
-    CLBRACE         reduce using rule 62 (factor -> CONST_FLOAT .)
-    RETURN          reduce using rule 62 (factor -> CONST_FLOAT .)
-    CLPARENTH       reduce using rule 62 (factor -> CONST_FLOAT .)
-    AND             reduce using rule 62 (factor -> CONST_FLOAT .)
-    OR              reduce using rule 62 (factor -> CONST_FLOAT .)
-
-
-state 93
-
-    (79) args -> ID . dims COMMA args
-    (80) args -> ID . COMMA args
-    (81) args -> ID . dims
-    (82) args -> ID .
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
-
-    COMMA           shift and go to state 127
-    CLPARENTH       reduce using rule 82 (args -> ID .)
-    OPBRACKET       shift and go to state 51
-
-    dims                           shift and go to state 126
-
-state 94
-
-    (87) llam_void -> ID OPPARENTH CLPARENTH .
-
-    ID              reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    READ            reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    WRITE           reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    WHEN            reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    WHILE           reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    CLBRACE         reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
-    RETURN          reduce using rule 87 (llam_void -> ID OPPARENTH CLPARENTH .)
 
 
 state 95
 
-    (88) llam_void -> ID OPPARENTH args . CLPARENTH
+    (79) arg -> ID . OPPARENTH CLPARENTH
+    (80) arg -> ID . OPPARENTH args CLPARENTH
+    (59) factor -> ID .
+    (60) factor -> ID . dims
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
-    CLPARENTH       shift and go to state 128
+    OPPARENTH       shift and go to state 130
+    TIMES           reduce using rule 59 (factor -> ID .)
+    DIVIDE          reduce using rule 59 (factor -> ID .)
+    PLUS            reduce using rule 59 (factor -> ID .)
+    MINUS           reduce using rule 59 (factor -> ID .)
+    EQUAL           reduce using rule 59 (factor -> ID .)
+    UNEQUAL         reduce using rule 59 (factor -> ID .)
+    LESS            reduce using rule 59 (factor -> ID .)
+    LESSEQ          reduce using rule 59 (factor -> ID .)
+    GREATER         reduce using rule 59 (factor -> ID .)
+    GREATEREQ       reduce using rule 59 (factor -> ID .)
+    COMMA           reduce using rule 59 (factor -> ID .)
+    CLPARENTH       reduce using rule 59 (factor -> ID .)
+    OPBRACKET       shift and go to state 51
 
+    dims                           shift and go to state 113
 
 state 96
 
-    (94) asign -> ID dims ASGNMNT . lectura
-    (95) asign -> ID dims ASGNMNT . expr
-    (96) asign -> ID dims ASGNMNT . CONST_STRING
-    (97) asign -> ID dims ASGNMNT . ID OPPARENTH CLPARENTH
-    (98) asign -> ID dims ASGNMNT . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
+    (88) llam_void -> ID OPPARENTH CLPARENTH .
+
+    ID              reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    READ            reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    WRITE           reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    WHEN            reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    WHILE           reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    CLBRACE         reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+    RETURN          reduce using rule 88 (llam_void -> ID OPPARENTH CLPARENTH .)
+
+
+state 97
+
+    (89) llam_void -> ID OPPARENTH args . CLPARENTH
+
+    CLPARENTH       shift and go to state 131
+
+
+state 98
+
+    (82) args -> arg . COMMA args
+    (83) args -> arg .
+
+    COMMA           shift and go to state 132
+    CLPARENTH       reduce using rule 83 (args -> arg .)
+
+
+state 99
+
+    (81) arg -> expr .
+
+    COMMA           reduce using rule 81 (arg -> expr .)
+    CLPARENTH       reduce using rule 81 (arg -> expr .)
+
+
+state 100
+
+    (95) asign -> ID dims ASGNMNT . lectura
+    (96) asign -> ID dims ASGNMNT . expr
+    (97) asign -> ID dims ASGNMNT . CONST_STRING
+    (98) asign -> ID dims ASGNMNT . ID OPPARENTH CLPARENTH
+    (99) asign -> ID dims ASGNMNT . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
     (67) expr -> . aritm
     (68) expr -> . logic
     (52) aritm -> . term PLUS aritm
@@ -1667,66 +1829,66 @@ state 96
     (77) relac -> . aritm GREATER aritm
     (78) relac -> . aritm GREATEREQ aritm
 
-    CONST_STRING    shift and go to state 132
-    ID              shift and go to state 129
+    CONST_STRING    shift and go to state 136
+    ID              shift and go to state 133
     READ            shift and go to state 46
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    lectura                        shift and go to state 130
-    expr                           shift and go to state 131
-    aritm                          shift and go to state 82
-    logic                          shift and go to state 83
-    term                           shift and go to state 84
-    oprnd                          shift and go to state 85
-    factor                         shift and go to state 87
-    relac                          shift and go to state 90
+    lectura                        shift and go to state 134
+    expr                           shift and go to state 135
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
-state 97
+state 101
 
-    (83) lectura -> READ OPPARENTH CLPARENTH .
+    (84) lectura -> READ OPPARENTH CLPARENTH .
 
-    ID              reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    READ            reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    WRITE           reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    WHEN            reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    WHILE           reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    CLBRACE         reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
-    RETURN          reduce using rule 83 (lectura -> READ OPPARENTH CLPARENTH .)
+    ID              reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    READ            reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    WRITE           reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    WHEN            reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    WHILE           reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    CLBRACE         reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
+    RETURN          reduce using rule 84 (lectura -> READ OPPARENTH CLPARENTH .)
 
 
-state 98
+state 102
 
-    (84) escritura -> WRITE OPPARENTH ID . CLPARENTH
-    (85) escritura -> WRITE OPPARENTH ID . dims CLPARENTH
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (85) escritura -> WRITE OPPARENTH ID . CLPARENTH
+    (86) escritura -> WRITE OPPARENTH ID . dims CLPARENTH
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
-    CLPARENTH       shift and go to state 133
+    CLPARENTH       shift and go to state 137
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 134
+    dims                           shift and go to state 138
 
-state 99
+state 103
 
-    (86) escritura -> WRITE OPPARENTH CONST_STRING . CLPARENTH
+    (87) escritura -> WRITE OPPARENTH CONST_STRING . CLPARENTH
 
-    CLPARENTH       shift and go to state 135
+    CLPARENTH       shift and go to state 139
 
 
-state 100
+state 104
 
     (22) decision -> WHEN OPPARENTH logic . CLPARENTH THEN OPBRACE estat_list CLBRACE
     (23) decision -> WHEN OPPARENTH logic . CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
 
-    CLPARENTH       shift and go to state 136
+    CLPARENTH       shift and go to state 140
 
 
-state 101
+state 105
 
     (73) relac -> aritm . EQUAL aritm
     (74) relac -> aritm . UNEQUAL aritm
@@ -1735,86 +1897,179 @@ state 101
     (77) relac -> aritm . GREATER aritm
     (78) relac -> aritm . GREATEREQ aritm
 
-    EQUAL           shift and go to state 113
-    UNEQUAL         shift and go to state 114
-    LESS            shift and go to state 115
-    LESSEQ          shift and go to state 116
-    GREATER         shift and go to state 117
-    GREATEREQ       shift and go to state 118
+    EQUAL           shift and go to state 121
+    UNEQUAL         shift and go to state 122
+    LESS            shift and go to state 123
+    LESSEQ          shift and go to state 124
+    GREATER         shift and go to state 125
+    GREATEREQ       shift and go to state 126
 
 
-state 102
-
-    (59) factor -> ID .
-    (60) factor -> ID . dims
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
-
-    TIMES           reduce using rule 59 (factor -> ID .)
-    DIVIDE          reduce using rule 59 (factor -> ID .)
-    PLUS            reduce using rule 59 (factor -> ID .)
-    MINUS           reduce using rule 59 (factor -> ID .)
-    EQUAL           reduce using rule 59 (factor -> ID .)
-    UNEQUAL         reduce using rule 59 (factor -> ID .)
-    LESS            reduce using rule 59 (factor -> ID .)
-    LESSEQ          reduce using rule 59 (factor -> ID .)
-    GREATER         reduce using rule 59 (factor -> ID .)
-    GREATEREQ       reduce using rule 59 (factor -> ID .)
-    CLPARENTH       reduce using rule 59 (factor -> ID .)
-    AND             reduce using rule 59 (factor -> ID .)
-    OR              reduce using rule 59 (factor -> ID .)
-    ID              reduce using rule 59 (factor -> ID .)
-    READ            reduce using rule 59 (factor -> ID .)
-    WRITE           reduce using rule 59 (factor -> ID .)
-    WHEN            reduce using rule 59 (factor -> ID .)
-    WHILE           reduce using rule 59 (factor -> ID .)
-    CLBRACE         reduce using rule 59 (factor -> ID .)
-    RETURN          reduce using rule 59 (factor -> ID .)
-    OPBRACKET       shift and go to state 51
-
-    dims                           shift and go to state 109
-
-state 103
+state 106
 
     (21) ciclo -> WHILE OPPARENTH logic . CLPARENTH THEN OPBRACE estat_list CLBRACE
 
-    CLPARENTH       shift and go to state 137
+    CLPARENTH       shift and go to state 141
 
 
-state 104
+state 107
 
-    (17) dims -> OPBRACKET CONST_INT CLBRACKET .
-    (18) dims -> OPBRACKET CONST_INT CLBRACKET . OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> OPBRACKET aritm CLBRACKET .
+    (18) dims -> OPBRACKET aritm CLBRACKET . OPBRACKET CONST_INT CLBRACKET
 
-    VAR             reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    MAIN            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    FUNC            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    ID              reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    READ            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    WRITE           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    WHEN            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    WHILE           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    ASGNMNT         reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    COMMA           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    CLPARENTH       reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    TIMES           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    DIVIDE          reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    PLUS            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    MINUS           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    EQUAL           reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    UNEQUAL         reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    LESS            reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    LESSEQ          reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    GREATER         reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    GREATEREQ       reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    CLBRACE         reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    RETURN          reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    AND             reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    OR              reduce using rule 17 (dims -> OPBRACKET CONST_INT CLBRACKET .)
-    OPBRACKET       shift and go to state 138
+    VAR             reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    MAIN            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    FUNC            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    ID              reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    READ            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    WRITE           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    WHEN            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    WHILE           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    ASGNMNT         reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    TIMES           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    DIVIDE          reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    PLUS            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    MINUS           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    CLBRACKET       reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    EQUAL           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    UNEQUAL         reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    LESS            reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    LESSEQ          reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    GREATER         reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    GREATEREQ       reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    CLPARENTH       reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    CLBRACE         reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    RETURN          reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    COMMA           reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    AND             reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    OR              reduce using rule 17 (dims -> OPBRACKET aritm CLBRACKET .)
+    OPBRACKET       shift and go to state 142
 
 
-state 105
+state 108
+
+    (52) aritm -> term PLUS . aritm
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
+
+    term                           shift and go to state 67
+    aritm                          shift and go to state 143
+    factor                         shift and go to state 68
+
+state 109
+
+    (53) aritm -> term MINUS . aritm
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
+
+    term                           shift and go to state 67
+    aritm                          shift and go to state 144
+    factor                         shift and go to state 68
+
+state 110
+
+    (55) term -> factor TIMES . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
+
+    factor                         shift and go to state 68
+    term                           shift and go to state 145
+
+state 111
+
+    (56) term -> factor DIVIDE . term
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
+
+    factor                         shift and go to state 68
+    term                           shift and go to state 146
+
+state 112
+
+    (58) factor -> OPPARENTH aritm . CLPARENTH
+
+    CLPARENTH       shift and go to state 147
+
+
+state 113
+
+    (60) factor -> ID dims .
+
+    TIMES           reduce using rule 60 (factor -> ID dims .)
+    DIVIDE          reduce using rule 60 (factor -> ID dims .)
+    PLUS            reduce using rule 60 (factor -> ID dims .)
+    MINUS           reduce using rule 60 (factor -> ID dims .)
+    CLBRACKET       reduce using rule 60 (factor -> ID dims .)
+    EQUAL           reduce using rule 60 (factor -> ID dims .)
+    UNEQUAL         reduce using rule 60 (factor -> ID dims .)
+    LESS            reduce using rule 60 (factor -> ID dims .)
+    LESSEQ          reduce using rule 60 (factor -> ID dims .)
+    GREATER         reduce using rule 60 (factor -> ID dims .)
+    GREATEREQ       reduce using rule 60 (factor -> ID dims .)
+    ID              reduce using rule 60 (factor -> ID dims .)
+    READ            reduce using rule 60 (factor -> ID dims .)
+    WRITE           reduce using rule 60 (factor -> ID dims .)
+    WHEN            reduce using rule 60 (factor -> ID dims .)
+    WHILE           reduce using rule 60 (factor -> ID dims .)
+    CLBRACE         reduce using rule 60 (factor -> ID dims .)
+    RETURN          reduce using rule 60 (factor -> ID dims .)
+    COMMA           reduce using rule 60 (factor -> ID dims .)
+    CLPARENTH       reduce using rule 60 (factor -> ID dims .)
+    AND             reduce using rule 60 (factor -> ID dims .)
+    OR              reduce using rule 60 (factor -> ID dims .)
+
+
+state 114
 
     (40) param -> ID COLON var_typ dims .
 
@@ -1822,7 +2077,7 @@ state 105
     CLPARENTH       reduce using rule 40 (param -> ID COLON var_typ dims .)
 
 
-state 106
+state 115
 
     (19) func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE . func_cont CLBRACE
     (24) func_cont -> . var_list estat_list RETURN ID dims
@@ -1844,22 +2099,22 @@ state 106
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -1873,9 +2128,9 @@ state 106
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    func_cont                      shift and go to state 139
-    var_list                       shift and go to state 140
-    estat_list                     shift and go to state 141
+    func_cont                      shift and go to state 148
+    var_list                       shift and go to state 149
+    estat_list                     shift and go to state 150
     variable                       shift and go to state 7
     estat                          shift and go to state 37
     asign                          shift and go to state 38
@@ -1886,61 +2141,77 @@ state 106
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 107
+state 116
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ . OPBRACE func_cont CLBRACE
 
-    OPBRACE         shift and go to state 142
+    OPBRACE         shift and go to state 151
 
 
-state 108
+state 117
 
-    (92) asign -> ID ASGNMNT ID OPPARENTH . CLPARENTH
-    (93) asign -> ID ASGNMNT ID OPPARENTH . args CLPARENTH
-    (79) args -> . ID dims COMMA args
-    (80) args -> . ID COMMA args
-    (81) args -> . ID dims
-    (82) args -> . ID
+    (93) asign -> ID ASGNMNT ID OPPARENTH . CLPARENTH
+    (94) asign -> ID ASGNMNT ID OPPARENTH . args CLPARENTH
+    (82) args -> . arg COMMA args
+    (83) args -> . arg
+    (79) arg -> . ID OPPARENTH CLPARENTH
+    (80) arg -> . ID OPPARENTH args CLPARENTH
+    (81) arg -> . expr
+    (67) expr -> . aritm
+    (68) expr -> . logic
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (63) logic -> . oprnd AND logic
+    (64) logic -> . oprnd OR logic
+    (65) logic -> . NOT oprnd
+    (66) logic -> . oprnd
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (69) oprnd -> . FALSE
+    (70) oprnd -> . TRUE
+    (71) oprnd -> . relac
+    (72) oprnd -> . OPPARENTH logic CLPARENTH
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+    (73) relac -> . aritm EQUAL aritm
+    (74) relac -> . aritm UNEQUAL aritm
+    (75) relac -> . aritm LESS aritm
+    (76) relac -> . aritm LESSEQ aritm
+    (77) relac -> . aritm GREATER aritm
+    (78) relac -> . aritm GREATEREQ aritm
 
-    CLPARENTH       shift and go to state 143
-    ID              shift and go to state 93
+    CLPARENTH       shift and go to state 152
+    ID              shift and go to state 95
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    args                           shift and go to state 144
+    args                           shift and go to state 153
+    arg                            shift and go to state 98
+    expr                           shift and go to state 99
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
-state 109
-
-    (60) factor -> ID dims .
-
-    TIMES           reduce using rule 60 (factor -> ID dims .)
-    DIVIDE          reduce using rule 60 (factor -> ID dims .)
-    PLUS            reduce using rule 60 (factor -> ID dims .)
-    MINUS           reduce using rule 60 (factor -> ID dims .)
-    EQUAL           reduce using rule 60 (factor -> ID dims .)
-    UNEQUAL         reduce using rule 60 (factor -> ID dims .)
-    LESS            reduce using rule 60 (factor -> ID dims .)
-    LESSEQ          reduce using rule 60 (factor -> ID dims .)
-    GREATER         reduce using rule 60 (factor -> ID dims .)
-    GREATEREQ       reduce using rule 60 (factor -> ID dims .)
-    ID              reduce using rule 60 (factor -> ID dims .)
-    READ            reduce using rule 60 (factor -> ID dims .)
-    WRITE           reduce using rule 60 (factor -> ID dims .)
-    WHEN            reduce using rule 60 (factor -> ID dims .)
-    WHILE           reduce using rule 60 (factor -> ID dims .)
-    CLBRACE         reduce using rule 60 (factor -> ID dims .)
-    RETURN          reduce using rule 60 (factor -> ID dims .)
-    CLPARENTH       reduce using rule 60 (factor -> ID dims .)
-    AND             reduce using rule 60 (factor -> ID dims .)
-    OR              reduce using rule 60 (factor -> ID dims .)
-
-
-state 110
+state 118
 
     (72) oprnd -> OPPARENTH logic . CLPARENTH
 
-    CLPARENTH       shift and go to state 145
+    CLPARENTH       shift and go to state 154
 
 
-state 111
+state 119
 
     (58) factor -> OPPARENTH aritm . CLPARENTH
     (73) relac -> aritm . EQUAL aritm
@@ -1950,25 +2221,25 @@ state 111
     (77) relac -> aritm . GREATER aritm
     (78) relac -> aritm . GREATEREQ aritm
 
-    CLPARENTH       shift and go to state 146
-    EQUAL           shift and go to state 113
-    UNEQUAL         shift and go to state 114
-    LESS            shift and go to state 115
-    LESSEQ          shift and go to state 116
-    GREATER         shift and go to state 117
-    GREATEREQ       shift and go to state 118
+    CLPARENTH       shift and go to state 147
+    EQUAL           shift and go to state 121
+    UNEQUAL         shift and go to state 122
+    LESS            shift and go to state 123
+    LESSEQ          shift and go to state 124
+    GREATER         shift and go to state 125
+    GREATEREQ       shift and go to state 126
 
 
-state 112
+state 120
 
     (37) carga_dt -> ID ASGNMNT LOAD OPPARENTH . ID CLPARENTH
     (38) carga_dt -> ID ASGNMNT LOAD OPPARENTH . CONST_STRING CLPARENTH
 
-    ID              shift and go to state 147
-    CONST_STRING    shift and go to state 148
+    ID              shift and go to state 155
+    CONST_STRING    shift and go to state 156
 
 
-state 113
+state 121
 
     (73) relac -> aritm EQUAL . aritm
     (52) aritm -> . term PLUS aritm
@@ -1983,16 +2254,16 @@ state 113
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 149
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 157
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 114
+state 122
 
     (74) relac -> aritm UNEQUAL . aritm
     (52) aritm -> . term PLUS aritm
@@ -2007,16 +2278,16 @@ state 114
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 151
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 158
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 115
+state 123
 
     (75) relac -> aritm LESS . aritm
     (52) aritm -> . term PLUS aritm
@@ -2031,16 +2302,16 @@ state 115
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 152
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 159
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 116
+state 124
 
     (76) relac -> aritm LESSEQ . aritm
     (52) aritm -> . term PLUS aritm
@@ -2055,16 +2326,16 @@ state 116
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 153
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 160
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 117
+state 125
 
     (77) relac -> aritm GREATER . aritm
     (52) aritm -> . term PLUS aritm
@@ -2079,16 +2350,16 @@ state 117
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 154
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 161
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 118
+state 126
 
     (78) relac -> aritm GREATEREQ . aritm
     (52) aritm -> . term PLUS aritm
@@ -2103,64 +2374,16 @@ state 118
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    OPPARENTH       shift and go to state 69
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    aritm                          shift and go to state 155
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    aritm                          shift and go to state 162
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 119
-
-    (52) aritm -> term PLUS . aritm
-    (52) aritm -> . term PLUS aritm
-    (53) aritm -> . term MINUS aritm
-    (54) aritm -> . term
-    (55) term -> . factor TIMES term
-    (56) term -> . factor DIVIDE term
-    (57) term -> . factor
-    (58) factor -> . OPPARENTH aritm CLPARENTH
-    (59) factor -> . ID
-    (60) factor -> . ID dims
-    (61) factor -> . CONST_INT
-    (62) factor -> . CONST_FLOAT
-
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
-
-    term                           shift and go to state 84
-    aritm                          shift and go to state 156
-    factor                         shift and go to state 87
-
-state 120
-
-    (53) aritm -> term MINUS . aritm
-    (52) aritm -> . term PLUS aritm
-    (53) aritm -> . term MINUS aritm
-    (54) aritm -> . term
-    (55) term -> . factor TIMES term
-    (56) term -> . factor DIVIDE term
-    (57) term -> . factor
-    (58) factor -> . OPPARENTH aritm CLPARENTH
-    (59) factor -> . ID
-    (60) factor -> . ID dims
-    (61) factor -> . CONST_INT
-    (62) factor -> . CONST_FLOAT
-
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
-
-    term                           shift and go to state 84
-    aritm                          shift and go to state 157
-    factor                         shift and go to state 87
-
-state 121
+state 127
 
     (63) logic -> oprnd AND . logic
     (63) logic -> . oprnd AND logic
@@ -2189,22 +2412,22 @@ state 121
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    oprnd                          shift and go to state 85
-    logic                          shift and go to state 158
-    relac                          shift and go to state 90
-    aritm                          shift and go to state 101
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    oprnd                          shift and go to state 90
+    logic                          shift and go to state 163
+    relac                          shift and go to state 94
+    aritm                          shift and go to state 105
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 122
+state 128
 
     (64) logic -> oprnd OR . logic
     (63) logic -> . oprnd AND logic
@@ -2233,22 +2456,22 @@ state 122
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
 
-    NOT             shift and go to state 86
-    FALSE           shift and go to state 88
-    TRUE            shift and go to state 89
-    OPPARENTH       shift and go to state 80
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    ID              shift and go to state 70
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    oprnd                          shift and go to state 85
-    logic                          shift and go to state 159
-    relac                          shift and go to state 90
-    aritm                          shift and go to state 101
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
+    oprnd                          shift and go to state 90
+    logic                          shift and go to state 164
+    relac                          shift and go to state 94
+    aritm                          shift and go to state 105
+    term                           shift and go to state 67
+    factor                         shift and go to state 68
 
-state 123
+state 129
 
     (65) logic -> NOT oprnd .
 
@@ -2259,93 +2482,143 @@ state 123
     WHILE           reduce using rule 65 (logic -> NOT oprnd .)
     CLBRACE         reduce using rule 65 (logic -> NOT oprnd .)
     RETURN          reduce using rule 65 (logic -> NOT oprnd .)
+    COMMA           reduce using rule 65 (logic -> NOT oprnd .)
     CLPARENTH       reduce using rule 65 (logic -> NOT oprnd .)
 
 
-state 124
+state 130
 
-    (55) term -> factor TIMES . term
+    (79) arg -> ID OPPARENTH . CLPARENTH
+    (80) arg -> ID OPPARENTH . args CLPARENTH
+    (82) args -> . arg COMMA args
+    (83) args -> . arg
+    (79) arg -> . ID OPPARENTH CLPARENTH
+    (80) arg -> . ID OPPARENTH args CLPARENTH
+    (81) arg -> . expr
+    (67) expr -> . aritm
+    (68) expr -> . logic
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (63) logic -> . oprnd AND logic
+    (64) logic -> . oprnd OR logic
+    (65) logic -> . NOT oprnd
+    (66) logic -> . oprnd
     (55) term -> . factor TIMES term
     (56) term -> . factor DIVIDE term
     (57) term -> . factor
+    (69) oprnd -> . FALSE
+    (70) oprnd -> . TRUE
+    (71) oprnd -> . relac
+    (72) oprnd -> . OPPARENTH logic CLPARENTH
     (58) factor -> . OPPARENTH aritm CLPARENTH
     (59) factor -> . ID
     (60) factor -> . ID dims
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
+    (73) relac -> . aritm EQUAL aritm
+    (74) relac -> . aritm UNEQUAL aritm
+    (75) relac -> . aritm LESS aritm
+    (76) relac -> . aritm LESSEQ aritm
+    (77) relac -> . aritm GREATER aritm
+    (78) relac -> . aritm GREATEREQ aritm
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    CLPARENTH       shift and go to state 165
+    ID              shift and go to state 95
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    factor                         shift and go to state 87
-    term                           shift and go to state 160
+    args                           shift and go to state 166
+    arg                            shift and go to state 98
+    expr                           shift and go to state 99
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
-state 125
+state 131
 
-    (56) term -> factor DIVIDE . term
+    (89) llam_void -> ID OPPARENTH args CLPARENTH .
+
+    ID              reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    READ            reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    WRITE           reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    WHEN            reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    WHILE           reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    CLBRACE         reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+    RETURN          reduce using rule 89 (llam_void -> ID OPPARENTH args CLPARENTH .)
+
+
+state 132
+
+    (82) args -> arg COMMA . args
+    (82) args -> . arg COMMA args
+    (83) args -> . arg
+    (79) arg -> . ID OPPARENTH CLPARENTH
+    (80) arg -> . ID OPPARENTH args CLPARENTH
+    (81) arg -> . expr
+    (67) expr -> . aritm
+    (68) expr -> . logic
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (63) logic -> . oprnd AND logic
+    (64) logic -> . oprnd OR logic
+    (65) logic -> . NOT oprnd
+    (66) logic -> . oprnd
     (55) term -> . factor TIMES term
     (56) term -> . factor DIVIDE term
     (57) term -> . factor
+    (69) oprnd -> . FALSE
+    (70) oprnd -> . TRUE
+    (71) oprnd -> . relac
+    (72) oprnd -> . OPPARENTH logic CLPARENTH
     (58) factor -> . OPPARENTH aritm CLPARENTH
     (59) factor -> . ID
     (60) factor -> . ID dims
     (61) factor -> . CONST_INT
     (62) factor -> . CONST_FLOAT
+    (73) relac -> . aritm EQUAL aritm
+    (74) relac -> . aritm UNEQUAL aritm
+    (75) relac -> . aritm LESS aritm
+    (76) relac -> . aritm LESSEQ aritm
+    (77) relac -> . aritm GREATER aritm
+    (78) relac -> . aritm GREATEREQ aritm
 
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
+    ID              shift and go to state 95
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
-    factor                         shift and go to state 87
-    term                           shift and go to state 161
+    arg                            shift and go to state 98
+    args                           shift and go to state 167
+    expr                           shift and go to state 99
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
-state 126
+state 133
 
-    (79) args -> ID dims . COMMA args
-    (81) args -> ID dims .
-
-    COMMA           shift and go to state 162
-    CLPARENTH       reduce using rule 81 (args -> ID dims .)
-
-
-state 127
-
-    (80) args -> ID COMMA . args
-    (79) args -> . ID dims COMMA args
-    (80) args -> . ID COMMA args
-    (81) args -> . ID dims
-    (82) args -> . ID
-
-    ID              shift and go to state 93
-
-    args                           shift and go to state 163
-
-state 128
-
-    (88) llam_void -> ID OPPARENTH args CLPARENTH .
-
-    ID              reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    READ            reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    WRITE           reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    WHEN            reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    WHILE           reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    CLBRACE         reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-    RETURN          reduce using rule 88 (llam_void -> ID OPPARENTH args CLPARENTH .)
-
-
-state 129
-
-    (97) asign -> ID dims ASGNMNT ID . OPPARENTH CLPARENTH
-    (98) asign -> ID dims ASGNMNT ID . OPPARENTH args CLPARENTH
+    (98) asign -> ID dims ASGNMNT ID . OPPARENTH CLPARENTH
+    (99) asign -> ID dims ASGNMNT ID . OPPARENTH args CLPARENTH
     (59) factor -> ID .
     (60) factor -> ID . dims
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
-    OPPARENTH       shift and go to state 164
+    OPPARENTH       shift and go to state 168
     TIMES           reduce using rule 59 (factor -> ID .)
     DIVIDE          reduce using rule 59 (factor -> ID .)
     PLUS            reduce using rule 59 (factor -> ID .)
@@ -2365,110 +2638,238 @@ state 129
     RETURN          reduce using rule 59 (factor -> ID .)
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 109
-
-state 130
-
-    (94) asign -> ID dims ASGNMNT lectura .
-
-    ID              reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    READ            reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    WRITE           reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    WHEN            reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    WHILE           reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    CLBRACE         reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-    RETURN          reduce using rule 94 (asign -> ID dims ASGNMNT lectura .)
-
-
-state 131
-
-    (95) asign -> ID dims ASGNMNT expr .
-
-    ID              reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    READ            reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    WRITE           reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    WHEN            reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    WHILE           reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    CLBRACE         reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-    RETURN          reduce using rule 95 (asign -> ID dims ASGNMNT expr .)
-
-
-state 132
-
-    (96) asign -> ID dims ASGNMNT CONST_STRING .
-
-    ID              reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    READ            reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    WRITE           reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    WHEN            reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    WHILE           reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    CLBRACE         reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-    RETURN          reduce using rule 96 (asign -> ID dims ASGNMNT CONST_STRING .)
-
-
-state 133
-
-    (84) escritura -> WRITE OPPARENTH ID CLPARENTH .
-
-    ID              reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    READ            reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    WRITE           reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    WHEN            reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    WHILE           reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    CLBRACE         reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-    RETURN          reduce using rule 84 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
-
+    dims                           shift and go to state 113
 
 state 134
 
-    (85) escritura -> WRITE OPPARENTH ID dims . CLPARENTH
+    (95) asign -> ID dims ASGNMNT lectura .
 
-    CLPARENTH       shift and go to state 165
+    ID              reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    READ            reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    WRITE           reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    WHEN            reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    WHILE           reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    CLBRACE         reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
+    RETURN          reduce using rule 95 (asign -> ID dims ASGNMNT lectura .)
 
 
 state 135
 
-    (86) escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .
+    (96) asign -> ID dims ASGNMNT expr .
 
-    ID              reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    READ            reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    WRITE           reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    WHEN            reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    WHILE           reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    CLBRACE         reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
-    RETURN          reduce using rule 86 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    ID              reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    READ            reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    WRITE           reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    WHEN            reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    WHILE           reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    CLBRACE         reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
+    RETURN          reduce using rule 96 (asign -> ID dims ASGNMNT expr .)
 
 
 state 136
 
-    (22) decision -> WHEN OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE
-    (23) decision -> WHEN OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+    (97) asign -> ID dims ASGNMNT CONST_STRING .
 
-    THEN            shift and go to state 166
+    ID              reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    READ            reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    WRITE           reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    WHEN            reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    WHILE           reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    CLBRACE         reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
+    RETURN          reduce using rule 97 (asign -> ID dims ASGNMNT CONST_STRING .)
 
 
 state 137
 
-    (21) ciclo -> WHILE OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE
+    (85) escritura -> WRITE OPPARENTH ID CLPARENTH .
 
-    THEN            shift and go to state 167
+    ID              reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    READ            reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    WRITE           reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    WHEN            reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    WHILE           reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    CLBRACE         reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
+    RETURN          reduce using rule 85 (escritura -> WRITE OPPARENTH ID CLPARENTH .)
 
 
 state 138
 
-    (18) dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET . CONST_INT CLBRACKET
+    (86) escritura -> WRITE OPPARENTH ID dims . CLPARENTH
 
-    CONST_INT       shift and go to state 168
+    CLPARENTH       shift and go to state 169
 
 
 state 139
 
-    (19) func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont . CLBRACE
+    (87) escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .
 
-    CLBRACE         shift and go to state 169
+    ID              reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    READ            reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    WRITE           reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    WHEN            reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    WHILE           reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    CLBRACE         reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
+    RETURN          reduce using rule 87 (escritura -> WRITE OPPARENTH CONST_STRING CLPARENTH .)
 
 
 state 140
+
+    (22) decision -> WHEN OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE
+    (23) decision -> WHEN OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+
+    THEN            shift and go to state 170
+
+
+state 141
+
+    (21) ciclo -> WHILE OPPARENTH logic CLPARENTH . THEN OPBRACE estat_list CLBRACE
+
+    THEN            shift and go to state 171
+
+
+state 142
+
+    (18) dims -> OPBRACKET aritm CLBRACKET OPBRACKET . CONST_INT CLBRACKET
+
+    CONST_INT       shift and go to state 172
+
+
+state 143
+
+    (52) aritm -> term PLUS aritm .
+
+    CLBRACKET       reduce using rule 52 (aritm -> term PLUS aritm .)
+    EQUAL           reduce using rule 52 (aritm -> term PLUS aritm .)
+    UNEQUAL         reduce using rule 52 (aritm -> term PLUS aritm .)
+    LESS            reduce using rule 52 (aritm -> term PLUS aritm .)
+    LESSEQ          reduce using rule 52 (aritm -> term PLUS aritm .)
+    GREATER         reduce using rule 52 (aritm -> term PLUS aritm .)
+    GREATEREQ       reduce using rule 52 (aritm -> term PLUS aritm .)
+    ID              reduce using rule 52 (aritm -> term PLUS aritm .)
+    READ            reduce using rule 52 (aritm -> term PLUS aritm .)
+    WRITE           reduce using rule 52 (aritm -> term PLUS aritm .)
+    WHEN            reduce using rule 52 (aritm -> term PLUS aritm .)
+    WHILE           reduce using rule 52 (aritm -> term PLUS aritm .)
+    CLBRACE         reduce using rule 52 (aritm -> term PLUS aritm .)
+    RETURN          reduce using rule 52 (aritm -> term PLUS aritm .)
+    COMMA           reduce using rule 52 (aritm -> term PLUS aritm .)
+    CLPARENTH       reduce using rule 52 (aritm -> term PLUS aritm .)
+    AND             reduce using rule 52 (aritm -> term PLUS aritm .)
+    OR              reduce using rule 52 (aritm -> term PLUS aritm .)
+
+
+state 144
+
+    (53) aritm -> term MINUS aritm .
+
+    CLBRACKET       reduce using rule 53 (aritm -> term MINUS aritm .)
+    EQUAL           reduce using rule 53 (aritm -> term MINUS aritm .)
+    UNEQUAL         reduce using rule 53 (aritm -> term MINUS aritm .)
+    LESS            reduce using rule 53 (aritm -> term MINUS aritm .)
+    LESSEQ          reduce using rule 53 (aritm -> term MINUS aritm .)
+    GREATER         reduce using rule 53 (aritm -> term MINUS aritm .)
+    GREATEREQ       reduce using rule 53 (aritm -> term MINUS aritm .)
+    ID              reduce using rule 53 (aritm -> term MINUS aritm .)
+    READ            reduce using rule 53 (aritm -> term MINUS aritm .)
+    WRITE           reduce using rule 53 (aritm -> term MINUS aritm .)
+    WHEN            reduce using rule 53 (aritm -> term MINUS aritm .)
+    WHILE           reduce using rule 53 (aritm -> term MINUS aritm .)
+    CLBRACE         reduce using rule 53 (aritm -> term MINUS aritm .)
+    RETURN          reduce using rule 53 (aritm -> term MINUS aritm .)
+    COMMA           reduce using rule 53 (aritm -> term MINUS aritm .)
+    CLPARENTH       reduce using rule 53 (aritm -> term MINUS aritm .)
+    AND             reduce using rule 53 (aritm -> term MINUS aritm .)
+    OR              reduce using rule 53 (aritm -> term MINUS aritm .)
+
+
+state 145
+
+    (55) term -> factor TIMES term .
+
+    PLUS            reduce using rule 55 (term -> factor TIMES term .)
+    MINUS           reduce using rule 55 (term -> factor TIMES term .)
+    CLBRACKET       reduce using rule 55 (term -> factor TIMES term .)
+    EQUAL           reduce using rule 55 (term -> factor TIMES term .)
+    UNEQUAL         reduce using rule 55 (term -> factor TIMES term .)
+    LESS            reduce using rule 55 (term -> factor TIMES term .)
+    LESSEQ          reduce using rule 55 (term -> factor TIMES term .)
+    GREATER         reduce using rule 55 (term -> factor TIMES term .)
+    GREATEREQ       reduce using rule 55 (term -> factor TIMES term .)
+    ID              reduce using rule 55 (term -> factor TIMES term .)
+    READ            reduce using rule 55 (term -> factor TIMES term .)
+    WRITE           reduce using rule 55 (term -> factor TIMES term .)
+    WHEN            reduce using rule 55 (term -> factor TIMES term .)
+    WHILE           reduce using rule 55 (term -> factor TIMES term .)
+    CLBRACE         reduce using rule 55 (term -> factor TIMES term .)
+    RETURN          reduce using rule 55 (term -> factor TIMES term .)
+    COMMA           reduce using rule 55 (term -> factor TIMES term .)
+    CLPARENTH       reduce using rule 55 (term -> factor TIMES term .)
+    AND             reduce using rule 55 (term -> factor TIMES term .)
+    OR              reduce using rule 55 (term -> factor TIMES term .)
+
+
+state 146
+
+    (56) term -> factor DIVIDE term .
+
+    PLUS            reduce using rule 56 (term -> factor DIVIDE term .)
+    MINUS           reduce using rule 56 (term -> factor DIVIDE term .)
+    CLBRACKET       reduce using rule 56 (term -> factor DIVIDE term .)
+    EQUAL           reduce using rule 56 (term -> factor DIVIDE term .)
+    UNEQUAL         reduce using rule 56 (term -> factor DIVIDE term .)
+    LESS            reduce using rule 56 (term -> factor DIVIDE term .)
+    LESSEQ          reduce using rule 56 (term -> factor DIVIDE term .)
+    GREATER         reduce using rule 56 (term -> factor DIVIDE term .)
+    GREATEREQ       reduce using rule 56 (term -> factor DIVIDE term .)
+    ID              reduce using rule 56 (term -> factor DIVIDE term .)
+    READ            reduce using rule 56 (term -> factor DIVIDE term .)
+    WRITE           reduce using rule 56 (term -> factor DIVIDE term .)
+    WHEN            reduce using rule 56 (term -> factor DIVIDE term .)
+    WHILE           reduce using rule 56 (term -> factor DIVIDE term .)
+    CLBRACE         reduce using rule 56 (term -> factor DIVIDE term .)
+    RETURN          reduce using rule 56 (term -> factor DIVIDE term .)
+    COMMA           reduce using rule 56 (term -> factor DIVIDE term .)
+    CLPARENTH       reduce using rule 56 (term -> factor DIVIDE term .)
+    AND             reduce using rule 56 (term -> factor DIVIDE term .)
+    OR              reduce using rule 56 (term -> factor DIVIDE term .)
+
+
+state 147
+
+    (58) factor -> OPPARENTH aritm CLPARENTH .
+
+    TIMES           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    DIVIDE          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    PLUS            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    MINUS           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    CLBRACKET       reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    EQUAL           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    UNEQUAL         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    LESS            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    LESSEQ          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    GREATER         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    GREATEREQ       reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    ID              reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    READ            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    WRITE           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    WHEN            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    WHILE           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    CLBRACE         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    RETURN          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    COMMA           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    CLPARENTH       reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    AND             reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+    OR              reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
+
+
+state 148
+
+    (19) func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont . CLBRACE
+
+    CLBRACE         shift and go to state 173
+
+
+state 149
 
     (24) func_cont -> var_list . estat_list RETURN ID dims
     (25) func_cont -> var_list . estat_list RETURN ID
@@ -2482,22 +2883,22 @@ state 140
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -2510,7 +2911,7 @@ state 140
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    estat_list                     shift and go to state 170
+    estat_list                     shift and go to state 174
     estat                          shift and go to state 37
     asign                          shift and go to state 38
     llam_void                      shift and go to state 39
@@ -2520,17 +2921,17 @@ state 140
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 141
+state 150
 
     (26) func_cont -> estat_list . RETURN ID dims
     (27) func_cont -> estat_list . RETURN ID
     (29) func_cont -> estat_list .
 
-    RETURN          shift and go to state 171
+    RETURN          shift and go to state 175
     CLBRACE         reduce using rule 29 (func_cont -> estat_list .)
 
 
-state 142
+state 151
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE . func_cont CLBRACE
     (24) func_cont -> . var_list estat_list RETURN ID dims
@@ -2552,22 +2953,22 @@ state 142
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -2581,9 +2982,9 @@ state 142
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    func_cont                      shift and go to state 172
-    var_list                       shift and go to state 140
-    estat_list                     shift and go to state 141
+    func_cont                      shift and go to state 176
+    var_list                       shift and go to state 149
+    estat_list                     shift and go to state 150
     variable                       shift and go to state 7
     estat                          shift and go to state 37
     asign                          shift and go to state 38
@@ -2594,27 +2995,27 @@ state 142
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 143
+state 152
 
-    (92) asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .
+    (93) asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .
 
-    ID              reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    READ            reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    WRITE           reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    WHEN            reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    WHILE           reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    CLBRACE         reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-    RETURN          reduce using rule 92 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
-
-
-state 144
-
-    (93) asign -> ID ASGNMNT ID OPPARENTH args . CLPARENTH
-
-    CLPARENTH       shift and go to state 173
+    ID              reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    READ            reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    WRITE           reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    WHEN            reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    WHILE           reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    CLBRACE         reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
+    RETURN          reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH CLPARENTH .)
 
 
-state 145
+state 153
+
+    (94) asign -> ID ASGNMNT ID OPPARENTH args . CLPARENTH
+
+    CLPARENTH       shift and go to state 177
+
+
+state 154
 
     (72) oprnd -> OPPARENTH logic CLPARENTH .
 
@@ -2627,50 +3028,25 @@ state 145
     WHILE           reduce using rule 72 (oprnd -> OPPARENTH logic CLPARENTH .)
     CLBRACE         reduce using rule 72 (oprnd -> OPPARENTH logic CLPARENTH .)
     RETURN          reduce using rule 72 (oprnd -> OPPARENTH logic CLPARENTH .)
+    COMMA           reduce using rule 72 (oprnd -> OPPARENTH logic CLPARENTH .)
     CLPARENTH       reduce using rule 72 (oprnd -> OPPARENTH logic CLPARENTH .)
 
 
-state 146
-
-    (58) factor -> OPPARENTH aritm CLPARENTH .
-
-    TIMES           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    DIVIDE          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    PLUS            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    MINUS           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    EQUAL           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    UNEQUAL         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    LESS            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    LESSEQ          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    GREATER         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    GREATEREQ       reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    ID              reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    READ            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    WRITE           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    WHEN            reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    WHILE           reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    CLBRACE         reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    RETURN          reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    CLPARENTH       reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    AND             reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-    OR              reduce using rule 58 (factor -> OPPARENTH aritm CLPARENTH .)
-
-
-state 147
+state 155
 
     (37) carga_dt -> ID ASGNMNT LOAD OPPARENTH ID . CLPARENTH
 
-    CLPARENTH       shift and go to state 174
+    CLPARENTH       shift and go to state 178
 
 
-state 148
+state 156
 
     (38) carga_dt -> ID ASGNMNT LOAD OPPARENTH CONST_STRING . CLPARENTH
 
-    CLPARENTH       shift and go to state 175
+    CLPARENTH       shift and go to state 179
 
 
-state 149
+state 157
 
     (73) relac -> aritm EQUAL aritm .
 
@@ -2683,34 +3059,11 @@ state 149
     WHILE           reduce using rule 73 (relac -> aritm EQUAL aritm .)
     CLBRACE         reduce using rule 73 (relac -> aritm EQUAL aritm .)
     RETURN          reduce using rule 73 (relac -> aritm EQUAL aritm .)
+    COMMA           reduce using rule 73 (relac -> aritm EQUAL aritm .)
     CLPARENTH       reduce using rule 73 (relac -> aritm EQUAL aritm .)
 
 
-state 150
-
-    (58) factor -> OPPARENTH . aritm CLPARENTH
-    (52) aritm -> . term PLUS aritm
-    (53) aritm -> . term MINUS aritm
-    (54) aritm -> . term
-    (55) term -> . factor TIMES term
-    (56) term -> . factor DIVIDE term
-    (57) term -> . factor
-    (58) factor -> . OPPARENTH aritm CLPARENTH
-    (59) factor -> . ID
-    (60) factor -> . ID dims
-    (61) factor -> . CONST_INT
-    (62) factor -> . CONST_FLOAT
-
-    OPPARENTH       shift and go to state 150
-    ID              shift and go to state 102
-    CONST_INT       shift and go to state 91
-    CONST_FLOAT     shift and go to state 92
-
-    aritm                          shift and go to state 176
-    term                           shift and go to state 84
-    factor                         shift and go to state 87
-
-state 151
+state 158
 
     (74) relac -> aritm UNEQUAL aritm .
 
@@ -2723,10 +3076,11 @@ state 151
     WHILE           reduce using rule 74 (relac -> aritm UNEQUAL aritm .)
     CLBRACE         reduce using rule 74 (relac -> aritm UNEQUAL aritm .)
     RETURN          reduce using rule 74 (relac -> aritm UNEQUAL aritm .)
+    COMMA           reduce using rule 74 (relac -> aritm UNEQUAL aritm .)
     CLPARENTH       reduce using rule 74 (relac -> aritm UNEQUAL aritm .)
 
 
-state 152
+state 159
 
     (75) relac -> aritm LESS aritm .
 
@@ -2739,10 +3093,11 @@ state 152
     WHILE           reduce using rule 75 (relac -> aritm LESS aritm .)
     CLBRACE         reduce using rule 75 (relac -> aritm LESS aritm .)
     RETURN          reduce using rule 75 (relac -> aritm LESS aritm .)
+    COMMA           reduce using rule 75 (relac -> aritm LESS aritm .)
     CLPARENTH       reduce using rule 75 (relac -> aritm LESS aritm .)
 
 
-state 153
+state 160
 
     (76) relac -> aritm LESSEQ aritm .
 
@@ -2755,10 +3110,11 @@ state 153
     WHILE           reduce using rule 76 (relac -> aritm LESSEQ aritm .)
     CLBRACE         reduce using rule 76 (relac -> aritm LESSEQ aritm .)
     RETURN          reduce using rule 76 (relac -> aritm LESSEQ aritm .)
+    COMMA           reduce using rule 76 (relac -> aritm LESSEQ aritm .)
     CLPARENTH       reduce using rule 76 (relac -> aritm LESSEQ aritm .)
 
 
-state 154
+state 161
 
     (77) relac -> aritm GREATER aritm .
 
@@ -2771,10 +3127,11 @@ state 154
     WHILE           reduce using rule 77 (relac -> aritm GREATER aritm .)
     CLBRACE         reduce using rule 77 (relac -> aritm GREATER aritm .)
     RETURN          reduce using rule 77 (relac -> aritm GREATER aritm .)
+    COMMA           reduce using rule 77 (relac -> aritm GREATER aritm .)
     CLPARENTH       reduce using rule 77 (relac -> aritm GREATER aritm .)
 
 
-state 155
+state 162
 
     (78) relac -> aritm GREATEREQ aritm .
 
@@ -2787,54 +3144,11 @@ state 155
     WHILE           reduce using rule 78 (relac -> aritm GREATEREQ aritm .)
     CLBRACE         reduce using rule 78 (relac -> aritm GREATEREQ aritm .)
     RETURN          reduce using rule 78 (relac -> aritm GREATEREQ aritm .)
+    COMMA           reduce using rule 78 (relac -> aritm GREATEREQ aritm .)
     CLPARENTH       reduce using rule 78 (relac -> aritm GREATEREQ aritm .)
 
 
-state 156
-
-    (52) aritm -> term PLUS aritm .
-
-    EQUAL           reduce using rule 52 (aritm -> term PLUS aritm .)
-    UNEQUAL         reduce using rule 52 (aritm -> term PLUS aritm .)
-    LESS            reduce using rule 52 (aritm -> term PLUS aritm .)
-    LESSEQ          reduce using rule 52 (aritm -> term PLUS aritm .)
-    GREATER         reduce using rule 52 (aritm -> term PLUS aritm .)
-    GREATEREQ       reduce using rule 52 (aritm -> term PLUS aritm .)
-    ID              reduce using rule 52 (aritm -> term PLUS aritm .)
-    READ            reduce using rule 52 (aritm -> term PLUS aritm .)
-    WRITE           reduce using rule 52 (aritm -> term PLUS aritm .)
-    WHEN            reduce using rule 52 (aritm -> term PLUS aritm .)
-    WHILE           reduce using rule 52 (aritm -> term PLUS aritm .)
-    CLBRACE         reduce using rule 52 (aritm -> term PLUS aritm .)
-    RETURN          reduce using rule 52 (aritm -> term PLUS aritm .)
-    CLPARENTH       reduce using rule 52 (aritm -> term PLUS aritm .)
-    AND             reduce using rule 52 (aritm -> term PLUS aritm .)
-    OR              reduce using rule 52 (aritm -> term PLUS aritm .)
-
-
-state 157
-
-    (53) aritm -> term MINUS aritm .
-
-    EQUAL           reduce using rule 53 (aritm -> term MINUS aritm .)
-    UNEQUAL         reduce using rule 53 (aritm -> term MINUS aritm .)
-    LESS            reduce using rule 53 (aritm -> term MINUS aritm .)
-    LESSEQ          reduce using rule 53 (aritm -> term MINUS aritm .)
-    GREATER         reduce using rule 53 (aritm -> term MINUS aritm .)
-    GREATEREQ       reduce using rule 53 (aritm -> term MINUS aritm .)
-    ID              reduce using rule 53 (aritm -> term MINUS aritm .)
-    READ            reduce using rule 53 (aritm -> term MINUS aritm .)
-    WRITE           reduce using rule 53 (aritm -> term MINUS aritm .)
-    WHEN            reduce using rule 53 (aritm -> term MINUS aritm .)
-    WHILE           reduce using rule 53 (aritm -> term MINUS aritm .)
-    CLBRACE         reduce using rule 53 (aritm -> term MINUS aritm .)
-    RETURN          reduce using rule 53 (aritm -> term MINUS aritm .)
-    CLPARENTH       reduce using rule 53 (aritm -> term MINUS aritm .)
-    AND             reduce using rule 53 (aritm -> term MINUS aritm .)
-    OR              reduce using rule 53 (aritm -> term MINUS aritm .)
-
-
-state 158
+state 163
 
     (63) logic -> oprnd AND logic .
 
@@ -2845,10 +3159,11 @@ state 158
     WHILE           reduce using rule 63 (logic -> oprnd AND logic .)
     CLBRACE         reduce using rule 63 (logic -> oprnd AND logic .)
     RETURN          reduce using rule 63 (logic -> oprnd AND logic .)
+    COMMA           reduce using rule 63 (logic -> oprnd AND logic .)
     CLPARENTH       reduce using rule 63 (logic -> oprnd AND logic .)
 
 
-state 159
+state 164
 
     (64) logic -> oprnd OR logic .
 
@@ -2859,126 +3174,124 @@ state 159
     WHILE           reduce using rule 64 (logic -> oprnd OR logic .)
     CLBRACE         reduce using rule 64 (logic -> oprnd OR logic .)
     RETURN          reduce using rule 64 (logic -> oprnd OR logic .)
+    COMMA           reduce using rule 64 (logic -> oprnd OR logic .)
     CLPARENTH       reduce using rule 64 (logic -> oprnd OR logic .)
 
 
-state 160
-
-    (55) term -> factor TIMES term .
-
-    PLUS            reduce using rule 55 (term -> factor TIMES term .)
-    MINUS           reduce using rule 55 (term -> factor TIMES term .)
-    EQUAL           reduce using rule 55 (term -> factor TIMES term .)
-    UNEQUAL         reduce using rule 55 (term -> factor TIMES term .)
-    LESS            reduce using rule 55 (term -> factor TIMES term .)
-    LESSEQ          reduce using rule 55 (term -> factor TIMES term .)
-    GREATER         reduce using rule 55 (term -> factor TIMES term .)
-    GREATEREQ       reduce using rule 55 (term -> factor TIMES term .)
-    ID              reduce using rule 55 (term -> factor TIMES term .)
-    READ            reduce using rule 55 (term -> factor TIMES term .)
-    WRITE           reduce using rule 55 (term -> factor TIMES term .)
-    WHEN            reduce using rule 55 (term -> factor TIMES term .)
-    WHILE           reduce using rule 55 (term -> factor TIMES term .)
-    CLBRACE         reduce using rule 55 (term -> factor TIMES term .)
-    RETURN          reduce using rule 55 (term -> factor TIMES term .)
-    CLPARENTH       reduce using rule 55 (term -> factor TIMES term .)
-    AND             reduce using rule 55 (term -> factor TIMES term .)
-    OR              reduce using rule 55 (term -> factor TIMES term .)
-
-
-state 161
-
-    (56) term -> factor DIVIDE term .
-
-    PLUS            reduce using rule 56 (term -> factor DIVIDE term .)
-    MINUS           reduce using rule 56 (term -> factor DIVIDE term .)
-    EQUAL           reduce using rule 56 (term -> factor DIVIDE term .)
-    UNEQUAL         reduce using rule 56 (term -> factor DIVIDE term .)
-    LESS            reduce using rule 56 (term -> factor DIVIDE term .)
-    LESSEQ          reduce using rule 56 (term -> factor DIVIDE term .)
-    GREATER         reduce using rule 56 (term -> factor DIVIDE term .)
-    GREATEREQ       reduce using rule 56 (term -> factor DIVIDE term .)
-    ID              reduce using rule 56 (term -> factor DIVIDE term .)
-    READ            reduce using rule 56 (term -> factor DIVIDE term .)
-    WRITE           reduce using rule 56 (term -> factor DIVIDE term .)
-    WHEN            reduce using rule 56 (term -> factor DIVIDE term .)
-    WHILE           reduce using rule 56 (term -> factor DIVIDE term .)
-    CLBRACE         reduce using rule 56 (term -> factor DIVIDE term .)
-    RETURN          reduce using rule 56 (term -> factor DIVIDE term .)
-    CLPARENTH       reduce using rule 56 (term -> factor DIVIDE term .)
-    AND             reduce using rule 56 (term -> factor DIVIDE term .)
-    OR              reduce using rule 56 (term -> factor DIVIDE term .)
-
-
-state 162
-
-    (79) args -> ID dims COMMA . args
-    (79) args -> . ID dims COMMA args
-    (80) args -> . ID COMMA args
-    (81) args -> . ID dims
-    (82) args -> . ID
-
-    ID              shift and go to state 93
-
-    args                           shift and go to state 177
-
-state 163
-
-    (80) args -> ID COMMA args .
-
-    CLPARENTH       reduce using rule 80 (args -> ID COMMA args .)
-
-
-state 164
-
-    (97) asign -> ID dims ASGNMNT ID OPPARENTH . CLPARENTH
-    (98) asign -> ID dims ASGNMNT ID OPPARENTH . args CLPARENTH
-    (79) args -> . ID dims COMMA args
-    (80) args -> . ID COMMA args
-    (81) args -> . ID dims
-    (82) args -> . ID
-
-    CLPARENTH       shift and go to state 178
-    ID              shift and go to state 93
-
-    args                           shift and go to state 179
-
 state 165
 
-    (85) escritura -> WRITE OPPARENTH ID dims CLPARENTH .
+    (79) arg -> ID OPPARENTH CLPARENTH .
 
-    ID              reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    READ            reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    WRITE           reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    WHEN            reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    WHILE           reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    CLBRACE         reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
-    RETURN          reduce using rule 85 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    COMMA           reduce using rule 79 (arg -> ID OPPARENTH CLPARENTH .)
+    CLPARENTH       reduce using rule 79 (arg -> ID OPPARENTH CLPARENTH .)
 
 
 state 166
 
-    (22) decision -> WHEN OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE
-    (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+    (80) arg -> ID OPPARENTH args . CLPARENTH
 
-    OPBRACE         shift and go to state 180
+    CLPARENTH       shift and go to state 180
 
 
 state 167
 
-    (21) ciclo -> WHILE OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE
+    (82) args -> arg COMMA args .
 
-    OPBRACE         shift and go to state 181
+    CLPARENTH       reduce using rule 82 (args -> arg COMMA args .)
 
 
 state 168
 
-    (18) dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT . CLBRACKET
+    (98) asign -> ID dims ASGNMNT ID OPPARENTH . CLPARENTH
+    (99) asign -> ID dims ASGNMNT ID OPPARENTH . args CLPARENTH
+    (82) args -> . arg COMMA args
+    (83) args -> . arg
+    (79) arg -> . ID OPPARENTH CLPARENTH
+    (80) arg -> . ID OPPARENTH args CLPARENTH
+    (81) arg -> . expr
+    (67) expr -> . aritm
+    (68) expr -> . logic
+    (52) aritm -> . term PLUS aritm
+    (53) aritm -> . term MINUS aritm
+    (54) aritm -> . term
+    (63) logic -> . oprnd AND logic
+    (64) logic -> . oprnd OR logic
+    (65) logic -> . NOT oprnd
+    (66) logic -> . oprnd
+    (55) term -> . factor TIMES term
+    (56) term -> . factor DIVIDE term
+    (57) term -> . factor
+    (69) oprnd -> . FALSE
+    (70) oprnd -> . TRUE
+    (71) oprnd -> . relac
+    (72) oprnd -> . OPPARENTH logic CLPARENTH
+    (58) factor -> . OPPARENTH aritm CLPARENTH
+    (59) factor -> . ID
+    (60) factor -> . ID dims
+    (61) factor -> . CONST_INT
+    (62) factor -> . CONST_FLOAT
+    (73) relac -> . aritm EQUAL aritm
+    (74) relac -> . aritm UNEQUAL aritm
+    (75) relac -> . aritm LESS aritm
+    (76) relac -> . aritm LESSEQ aritm
+    (77) relac -> . aritm GREATER aritm
+    (78) relac -> . aritm GREATEREQ aritm
 
-    CLBRACKET       shift and go to state 182
+    CLPARENTH       shift and go to state 181
+    ID              shift and go to state 95
+    NOT             shift and go to state 91
+    FALSE           shift and go to state 92
+    TRUE            shift and go to state 93
+    OPPARENTH       shift and go to state 86
+    CONST_INT       shift and go to state 66
+    CONST_FLOAT     shift and go to state 71
 
+    args                           shift and go to state 182
+    arg                            shift and go to state 98
+    expr                           shift and go to state 99
+    aritm                          shift and go to state 88
+    logic                          shift and go to state 89
+    term                           shift and go to state 67
+    oprnd                          shift and go to state 90
+    factor                         shift and go to state 68
+    relac                          shift and go to state 94
 
 state 169
+
+    (86) escritura -> WRITE OPPARENTH ID dims CLPARENTH .
+
+    ID              reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    READ            reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    WRITE           reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    WHEN            reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    WHILE           reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    CLBRACE         reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+    RETURN          reduce using rule 86 (escritura -> WRITE OPPARENTH ID dims CLPARENTH .)
+
+
+state 170
+
+    (22) decision -> WHEN OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE
+    (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+
+    OPBRACE         shift and go to state 183
+
+
+state 171
+
+    (21) ciclo -> WHILE OPPARENTH logic CLPARENTH THEN . OPBRACE estat_list CLBRACE
+
+    OPBRACE         shift and go to state 184
+
+
+state 172
+
+    (18) dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT . CLBRACKET
+
+    CLBRACKET       shift and go to state 185
+
+
+state 173
 
     (19) func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE .
 
@@ -2986,45 +3299,45 @@ state 169
     MAIN            reduce using rule 19 (func -> FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE .)
 
 
-state 170
+state 174
 
     (24) func_cont -> var_list estat_list . RETURN ID dims
     (25) func_cont -> var_list estat_list . RETURN ID
     (28) func_cont -> var_list estat_list .
 
-    RETURN          shift and go to state 183
+    RETURN          shift and go to state 186
     CLBRACE         reduce using rule 28 (func_cont -> var_list estat_list .)
 
 
-state 171
+state 175
 
     (26) func_cont -> estat_list RETURN . ID dims
     (27) func_cont -> estat_list RETURN . ID
 
-    ID              shift and go to state 184
+    ID              shift and go to state 187
 
 
-state 172
+state 176
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont . CLBRACE
 
-    CLBRACE         shift and go to state 185
+    CLBRACE         shift and go to state 188
 
 
-state 173
+state 177
 
-    (93) asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .
+    (94) asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .
 
-    ID              reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    READ            reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WRITE           reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WHEN            reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WHILE           reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    CLBRACE         reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
-    RETURN          reduce using rule 93 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    ID              reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    READ            reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WRITE           reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WHEN            reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WHILE           reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    CLBRACE         reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
+    RETURN          reduce using rule 94 (asign -> ID ASGNMNT ID OPPARENTH args CLPARENTH .)
 
 
-state 174
+state 178
 
     (37) carga_dt -> ID ASGNMNT LOAD OPPARENTH ID CLPARENTH .
 
@@ -3037,7 +3350,7 @@ state 174
     RETURN          reduce using rule 37 (carga_dt -> ID ASGNMNT LOAD OPPARENTH ID CLPARENTH .)
 
 
-state 175
+state 179
 
     (38) carga_dt -> ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH .
 
@@ -3050,41 +3363,35 @@ state 175
     RETURN          reduce using rule 38 (carga_dt -> ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH .)
 
 
-state 176
-
-    (58) factor -> OPPARENTH aritm . CLPARENTH
-
-    CLPARENTH       shift and go to state 146
-
-
-state 177
-
-    (79) args -> ID dims COMMA args .
-
-    CLPARENTH       reduce using rule 79 (args -> ID dims COMMA args .)
-
-
-state 178
-
-    (97) asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .
-
-    ID              reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    READ            reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    WRITE           reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    WHEN            reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    WHILE           reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    CLBRACE         reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-    RETURN          reduce using rule 97 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
-
-
-state 179
-
-    (98) asign -> ID dims ASGNMNT ID OPPARENTH args . CLPARENTH
-
-    CLPARENTH       shift and go to state 186
-
-
 state 180
+
+    (80) arg -> ID OPPARENTH args CLPARENTH .
+
+    COMMA           reduce using rule 80 (arg -> ID OPPARENTH args CLPARENTH .)
+    CLPARENTH       reduce using rule 80 (arg -> ID OPPARENTH args CLPARENTH .)
+
+
+state 181
+
+    (98) asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .
+
+    ID              reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    READ            reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    WRITE           reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    WHEN            reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    WHILE           reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    CLBRACE         reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+    RETURN          reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH CLPARENTH .)
+
+
+state 182
+
+    (99) asign -> ID dims ASGNMNT ID OPPARENTH args . CLPARENTH
+
+    CLPARENTH       shift and go to state 189
+
+
+state 183
 
     (22) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE . estat_list CLBRACE
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE . estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
@@ -3097,22 +3404,22 @@ state 180
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -3125,7 +3432,7 @@ state 180
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    estat_list                     shift and go to state 187
+    estat_list                     shift and go to state 190
     estat                          shift and go to state 37
     asign                          shift and go to state 38
     llam_void                      shift and go to state 39
@@ -3135,7 +3442,7 @@ state 180
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 181
+state 184
 
     (21) ciclo -> WHILE OPPARENTH logic CLPARENTH THEN OPBRACE . estat_list CLBRACE
     (13) estat_list -> . estat estat_list
@@ -3147,22 +3454,22 @@ state 181
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -3175,7 +3482,7 @@ state 181
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    estat_list                     shift and go to state 188
+    estat_list                     shift and go to state 191
     estat                          shift and go to state 37
     asign                          shift and go to state 38
     llam_void                      shift and go to state 39
@@ -3185,58 +3492,59 @@ state 181
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 182
+state 185
 
-    (18) dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .
+    (18) dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .
 
-    VAR             reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    MAIN            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    FUNC            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    ID              reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    READ            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    WRITE           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    WHEN            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    WHILE           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    ASGNMNT         reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    COMMA           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    CLPARENTH       reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    TIMES           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    DIVIDE          reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    PLUS            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    MINUS           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    EQUAL           reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    UNEQUAL         reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    LESS            reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    LESSEQ          reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    GREATER         reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    GREATEREQ       reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    CLBRACE         reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    RETURN          reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    AND             reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
-    OR              reduce using rule 18 (dims -> OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    VAR             reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    MAIN            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    FUNC            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    ID              reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    READ            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    WRITE           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    WHEN            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    WHILE           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    ASGNMNT         reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    TIMES           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    DIVIDE          reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    PLUS            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    MINUS           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    CLBRACKET       reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    EQUAL           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    UNEQUAL         reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    LESS            reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    LESSEQ          reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    GREATER         reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    GREATEREQ       reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    CLPARENTH       reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    CLBRACE         reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    RETURN          reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    COMMA           reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    AND             reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
+    OR              reduce using rule 18 (dims -> OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET .)
 
 
-state 183
+state 186
 
     (24) func_cont -> var_list estat_list RETURN . ID dims
     (25) func_cont -> var_list estat_list RETURN . ID
 
-    ID              shift and go to state 189
+    ID              shift and go to state 192
 
 
-state 184
+state 187
 
     (26) func_cont -> estat_list RETURN ID . dims
     (27) func_cont -> estat_list RETURN ID .
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
     CLBRACE         reduce using rule 27 (func_cont -> estat_list RETURN ID .)
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 190
+    dims                           shift and go to state 193
 
-state 185
+state 188
 
     (20) func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE .
 
@@ -3244,54 +3552,54 @@ state 185
     MAIN            reduce using rule 20 (func -> FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE .)
 
 
-state 186
+state 189
 
-    (98) asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .
+    (99) asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .
 
-    ID              reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    READ            reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WRITE           reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WHEN            reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    WHILE           reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    CLBRACE         reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
-    RETURN          reduce using rule 98 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    ID              reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    READ            reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WRITE           reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WHEN            reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    WHILE           reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    CLBRACE         reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
+    RETURN          reduce using rule 99 (asign -> ID dims ASGNMNT ID OPPARENTH args CLPARENTH .)
 
 
-state 187
+state 190
 
     (22) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list . CLBRACE
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list . CLBRACE ELSE OPBRACE estat_list CLBRACE
 
-    CLBRACE         shift and go to state 191
+    CLBRACE         shift and go to state 194
 
 
-state 188
+state 191
 
     (21) ciclo -> WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list . CLBRACE
 
-    CLBRACE         shift and go to state 192
+    CLBRACE         shift and go to state 195
 
 
-state 189
+state 192
 
     (24) func_cont -> var_list estat_list RETURN ID . dims
     (25) func_cont -> var_list estat_list RETURN ID .
-    (17) dims -> . OPBRACKET CONST_INT CLBRACKET
-    (18) dims -> . OPBRACKET CONST_INT CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    (17) dims -> . OPBRACKET aritm CLBRACKET
+    (18) dims -> . OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
 
     CLBRACE         reduce using rule 25 (func_cont -> var_list estat_list RETURN ID .)
     OPBRACKET       shift and go to state 51
 
-    dims                           shift and go to state 193
+    dims                           shift and go to state 196
 
-state 190
+state 193
 
     (26) func_cont -> estat_list RETURN ID dims .
 
     CLBRACE         reduce using rule 26 (func_cont -> estat_list RETURN ID dims .)
 
 
-state 191
+state 194
 
     (22) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE . ELSE OPBRACE estat_list CLBRACE
@@ -3303,10 +3611,10 @@ state 191
     WHILE           reduce using rule 22 (decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .)
     CLBRACE         reduce using rule 22 (decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .)
     RETURN          reduce using rule 22 (decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .)
-    ELSE            shift and go to state 194
+    ELSE            shift and go to state 197
 
 
-state 192
+state 195
 
     (21) ciclo -> WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .
 
@@ -3319,21 +3627,21 @@ state 192
     RETURN          reduce using rule 21 (ciclo -> WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE .)
 
 
-state 193
+state 196
 
     (24) func_cont -> var_list estat_list RETURN ID dims .
 
     CLBRACE         reduce using rule 24 (func_cont -> var_list estat_list RETURN ID dims .)
 
 
-state 194
+state 197
 
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE . OPBRACE estat_list CLBRACE
 
-    OPBRACE         shift and go to state 195
+    OPBRACE         shift and go to state 198
 
 
-state 195
+state 198
 
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE . estat_list CLBRACE
     (13) estat_list -> . estat estat_list
@@ -3345,22 +3653,22 @@ state 195
     (34) estat -> . carga_dt
     (35) estat -> . decision
     (36) estat -> . ciclo
-    (89) asign -> . ID ASGNMNT lectura
-    (90) asign -> . ID ASGNMNT expr
-    (91) asign -> . ID ASGNMNT CONST_STRING
-    (92) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
-    (93) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
-    (94) asign -> . ID dims ASGNMNT lectura
-    (95) asign -> . ID dims ASGNMNT expr
-    (96) asign -> . ID dims ASGNMNT CONST_STRING
-    (97) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
-    (98) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
-    (87) llam_void -> . ID OPPARENTH CLPARENTH
-    (88) llam_void -> . ID OPPARENTH args CLPARENTH
-    (83) lectura -> . READ OPPARENTH CLPARENTH
-    (84) escritura -> . WRITE OPPARENTH ID CLPARENTH
-    (85) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
-    (86) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
+    (90) asign -> . ID ASGNMNT lectura
+    (91) asign -> . ID ASGNMNT expr
+    (92) asign -> . ID ASGNMNT CONST_STRING
+    (93) asign -> . ID ASGNMNT ID OPPARENTH CLPARENTH
+    (94) asign -> . ID ASGNMNT ID OPPARENTH args CLPARENTH
+    (95) asign -> . ID dims ASGNMNT lectura
+    (96) asign -> . ID dims ASGNMNT expr
+    (97) asign -> . ID dims ASGNMNT CONST_STRING
+    (98) asign -> . ID dims ASGNMNT ID OPPARENTH CLPARENTH
+    (99) asign -> . ID dims ASGNMNT ID OPPARENTH args CLPARENTH
+    (88) llam_void -> . ID OPPARENTH CLPARENTH
+    (89) llam_void -> . ID OPPARENTH args CLPARENTH
+    (84) lectura -> . READ OPPARENTH CLPARENTH
+    (85) escritura -> . WRITE OPPARENTH ID CLPARENTH
+    (86) escritura -> . WRITE OPPARENTH ID dims CLPARENTH
+    (87) escritura -> . WRITE OPPARENTH CONST_STRING CLPARENTH
     (37) carga_dt -> . ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
     (38) carga_dt -> . ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH
     (22) decision -> . WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -3373,7 +3681,7 @@ state 195
     WHEN            shift and go to state 48
     WHILE           shift and go to state 49
 
-    estat_list                     shift and go to state 196
+    estat_list                     shift and go to state 199
     estat                          shift and go to state 37
     asign                          shift and go to state 38
     llam_void                      shift and go to state 39
@@ -3383,14 +3691,14 @@ state 195
     decision                       shift and go to state 43
     ciclo                          shift and go to state 44
 
-state 196
+state 199
 
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list . CLBRACE
 
-    CLBRACE         shift and go to state 197
+    CLBRACE         shift and go to state 200
 
 
-state 197
+state 200
 
     (23) decision -> WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE .
 
