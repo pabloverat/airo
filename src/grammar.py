@@ -1,8 +1,9 @@
 # grammar.py
 
-from utils import print_control
+from utils import print_control, encode_var_type, encode_func_type
 
-# funciones de la gramática formal
+
+#--- START : funciones de la gramática formal ---
 
 def p_start(p):
     '''program : encabezamiento var_list func_list cuerpo
@@ -11,14 +12,20 @@ def p_start(p):
                | encabezamiento cuerpo
     '''
     print_control(p, "S\t", 4)
+    p.parser.test = "test"
 
 def p_encabezamiento(p):
-    '''encabezamiento : PROGRAM ID
+    '''encabezamiento : PROGRAM ID context_to_global
     '''
     print_control(p, "encabezamiento", 2)
+    
+def p_context_to_global(p):
+    "context_to_global : "
+    p.parser.context = 0 # 0 for globals, 1 for locals
+    print("Parsed context_to_global\t", p.parser.context)
 
 def p_cuerpo(p):
-    '''cuerpo : MAIN OPPARENTH CLPARENTH OPBRACE estat_list CLBRACE
+    '''cuerpo : MAIN context_to_global OPPARENTH CLPARENTH OPBRACE estat_list CLBRACE
     '''
     print_control(p, "cuerpo\t", 6)
 
@@ -27,6 +34,7 @@ def p_variable(p):
                 | VAR ID COLON var_typ dims
     '''
     print_control(p, "var\t", 5)
+    p.parser.vars_table.add_var(p.parser.context, p[2], p.parser.var_type_read)
 
 def p_var_list(p):
     '''var_list : variable var_list
@@ -59,10 +67,16 @@ def p_dims(p):
     print_control(p, "dims\t", 6)
 
 def p_func(p):
-    '''func : FUNC ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
-            | FUNC ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
+    '''func : FUNC context_to_local ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
+            | FUNC context_to_local ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
     '''
     print_control(p, "func\t", 10)
+
+def p_context_to_local(p):
+    "context_to_local :"
+    #print_control(p, "context_to_local", 0)
+    p.parser.context = 1 # 0 for globals, 1 for locals
+    print("Parsed context_to_local\t", p.parser.context)
 
 def p_ciclo(p):
     '''ciclo : WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
@@ -105,6 +119,7 @@ def p_param(p):
              | ID COLON var_typ dims
     '''
     print_control(p, "param\t", 4)
+    p.parser.vars_table.add_var(p.parser.context, p[1], p.parser.var_type_read)
 
 def p_var_typ(p):
     '''var_typ : INT
@@ -114,6 +129,7 @@ def p_var_typ(p):
                | FRAME
     '''
     print_control(p, "var_typ", 1)
+    p.parser.var_type_read = encode_var_type(p[1])
 
 def p_func_typ(p):
     '''func_typ : INT
@@ -124,6 +140,7 @@ def p_func_typ(p):
                 | VOID
     '''
     print_control(p, "func_typ", 1)
+    p.parser.func_type_read = encode_func_type(p[1])
 
 def p_aritm(p):
     '''aritm : term PLUS aritm
@@ -216,4 +233,4 @@ def p_asign(p):
     '''
     print_control(p, "asign\t", 7)
 
-
+#--- END : funciones de la gramática formal ---

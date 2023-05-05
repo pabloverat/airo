@@ -26,3 +26,24 @@ def print_tokens(myLexer):
 
     print("terminé el scanning")
     print("")
+    
+def encode_var_type(var_type: str) -> int:
+    types = {
+        'bool': 1,
+        'char': 2,
+        'int': 3,
+        'float': 4,
+        'frame': 5
+    }
+    return types[var_type]
+
+def encode_func_type(func_type: str) -> int:
+    types = {
+        'void': 0,
+        'bool': 1,
+        'char': 2,
+        'int': 3,
+        'float': 4,
+        'frame': 5
+    }
+    return types[func_type]

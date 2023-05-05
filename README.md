@@ -66,4 +66,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 99% Avance 1: Lexer done, parser done  (More testing pending!)
 
 - 03-Mayo
-    -100% Avance 1: Más pruebas a Análisis sintáctico, bug fixes
+    - 100% Avance 1: Más pruebas a Análisis sintáctico, bug fixes
+
+- 04-Mayo
+    - 25% Avance 2: primera iteración de tabla de variables, ya las guarda por separado en un dict de globales y otro de locales y les asigna una "dirección virtual" según ciertos rangos definidos en el init

@@ -1,11 +1,13 @@
 # airo.py
 
-import tokrules as tokrules
 import ply.lex as lex
 import ply.yacc as yacc
 
+import tokrules as tokrules
 from tokrules import tokens
 from grammar import *
+
+from tabla_vars import Tabla_Vars
 
 import sys
 from utils import read_file, print_tokens
@@ -42,8 +44,13 @@ def main():
 
     # construyendo parser
     myParser = yacc.yacc()
-    result = myParser.parse(data)
+    myParser.vars_table = Tabla_Vars()
+    _ = myParser.parse(data, lexer=myLexer)
+    print(myParser.test)
     print("terminé el parsing")
+    
+    print("vars table:")
+    myParser.vars_table.print_vars()
     
         
 if __name__ == "__main__":
