@@ -32,8 +32,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🔴 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
 
 #### Avance 4
-    ⚪ Generación de Código de Estatutos Condicionales (Decisiones)
-    ⚪ Generación de Código de Estatutos Condicionales (Ciclos)
+    🔴 Generación de Código de Estatutos Condicionales (Decisiones)
+    🔴 Generación de Código de Estatutos Condicionales (Ciclos)
 
 #### Avance 5
     ⚪ Generación de Código de Funciones
@@ -70,3 +70,9 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 - 04-Mayo
     - 25% Avance 2: primera iteración de tabla de variables, ya las guarda por separado en un dict de globales y otro de locales y les asigna una "dirección virtual" según ciertos rangos definidos en el init
+
+- 09-Mayo
+    - 50% Avance 2:
+    - Refactorización de tabla de variables para que haya un objeto de tabla por función (globales se incluye en directorio de funciones).
+    - Implementación de directorio de funciones: ya guarda tipo de función, lista de recursos con los tipos y lista de params con los tipos
+    - Falta implementar cuádruplos para indicar dirección de inicio de las funciones.

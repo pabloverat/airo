@@ -39,6 +39,7 @@ def encode_var_type(var_type: str) -> int:
 
 def encode_func_type(func_type: str) -> int:
     types = {
+        'programa': -1,
         'void': 0,
         'bool': 1,
         'char': 2,
