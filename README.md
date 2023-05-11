@@ -25,8 +25,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Análisis de Léxico y Sintaxis
 
 #### Avance 2
-    🟡 Semántica Básica de Variables
-    🔴 Semántica Básica de Expresiones
+    🟢 Semántica Básica de Variables
+    🟡 Semántica Básica de Expresiones
 
 #### Avance 3
     🔴 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
@@ -76,3 +76,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - Refactorización de tabla de variables para que haya un objeto de tabla por función (globales se incluye en directorio de funciones).
     - Implementación de directorio de funciones: ya guarda tipo de función, lista de recursos con los tipos y lista de params con los tipos
     - Falta implementar cuádruplos para indicar dirección de inicio de las funciones.
+
+- 10-Mayo
+    - 75% Avance 2:
+    - Definición cubo semántico
+    - Falta implementar validación semántica en cuádruplos
