@@ -26,10 +26,10 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 #### Avance 2
     🟢 Semántica Básica de Variables
-    🟡 Semántica Básica de Expresiones
+    🟢 Semántica Básica de Expresiones
 
 #### Avance 3
-    🔴 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
+    🟡 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
 
 #### Avance 4
     🔴 Generación de Código de Estatutos Condicionales (Decisiones)
@@ -81,3 +81,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 75% Avance 2:
     - Definición cubo semántico
     - Falta implementar validación semántica en cuádruplos
+
+- 11-Mayo
+    - bug fix: antes no se podía hacer operaciones entre llamadas a función y ya se puede, se eliminaron las variables booleanas y las operaciones entre ellas (AND, OR, NOT)
+    - 100% Avance 2: dirFunc, varTable y Cubo Semántico listo

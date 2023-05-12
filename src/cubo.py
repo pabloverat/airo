@@ -18,10 +18,10 @@ class Cubo():
         '*': 12,
         '/': 13,
         
-        # boolean operators
-        'AND': 20,
-        'OR': 21,
-        'NOT': 22,
+        # # boolean operators
+        # 'AND': 20,
+        # 'OR': 21,
+        # 'NOT': 22,
         
         # relational operators
         '==': 30,
@@ -76,20 +76,20 @@ class Cubo():
             }
         },
         
-        # boolean operations
-        20: {
-            1: {
-                1:1 # bool AND bool = bool
-            }
-        },
-        21: {
-            1: {
-                1:1 # bool OR bool = bool
-            }
-        },
-        22: {
-            1: 1 # NOT bool = bool
-        },
+        # # boolean operations
+        # 20: {
+        #     1: {
+        #         1:1 # bool AND bool = bool
+        #     }
+        # },
+        # 21: {
+        #     1: {
+        #         1:1 # bool OR bool = bool
+        #     }
+        # },
+        # 22: {
+        #     1: 1 # NOT bool = bool
+        # },
         
         # relational operators
         30: {

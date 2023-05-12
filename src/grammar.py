@@ -12,7 +12,7 @@ def p_start(p):
                | encabezamiento func_list cuerpo
                | encabezamiento cuerpo
     '''
-    print_control(p, "S\t", 4)
+    print_control(p, "S\t", 5)
     
 
 def p_calcula_globales(p):
@@ -43,7 +43,7 @@ def p_context_to_global(p):
 def p_cuerpo(p):
     '''cuerpo : MAIN context_to_global OPPARENTH CLPARENTH OPBRACE estat_list CLBRACE
     '''
-    print_control(p, "cuerpo\t", 6)
+    print_control(p, "cuerpo\t", 7)
 
 
 def p_variable(p):
@@ -80,7 +80,7 @@ def p_param_list(p):
     '''param_list : param COMMA param_list 
                   | param
     '''
-    print_control(p, "param_list", 2)
+    print_control(p, "param_list", 3)
 
 
 def p_dims(p):
@@ -94,7 +94,7 @@ def p_func(p):
     '''func : FUNC context_to_local ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
             | FUNC context_to_local ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
     '''
-    print_control(p, "func\t", 10)
+    print_control(p, "func\t", 11)
     func_name = p[3]
     p.parser.dir_funcs.funcs[func_name] = p.parser.dir_funcs.funcs["temp"]
     del p.parser.dir_funcs.funcs["temp"]
@@ -114,25 +114,28 @@ def p_context_to_local(p):
 
 
 def p_ciclo(p):
-    '''ciclo : WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
+    # '''ciclo : WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
+    '''ciclo : WHILE OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
     '''
     print_control(p, "ciclo\t", 8)
 
 
 def p_decision(p):
-    '''decision : WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
-               | WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+    # '''decision : WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
+            #    | WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+    '''decision : WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
+               | WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
     '''
     print_control(p, "decision", 12)
 
 
 def p_func_cont(p):
-    '''func_cont : var_list estat_list RETURN expr
-                 | estat_list RETURN expr
+    '''func_cont : var_list estat_list RETURN aritm
+                 | estat_list RETURN aritm
                  | var_list estat_list
                  | estat_list
     '''
-    print_control(p, "func_cont", 5)
+    print_control(p, "func_cont", 4)
 
 
 def p_estat(p):
@@ -210,35 +213,37 @@ def p_factor(p):
               | ID dims
               | CONST_INT
               | CONST_FLOAT
+              | ID OPPARENTH CLPARENTH
+              | ID OPPARENTH args CLPARENTH
     '''
-    print_control(p, "factor\t", 3)
+    print_control(p, "factor\t", 4)
 
 
-def p_logic(p):
-    '''logic : oprnd AND logic
-             | oprnd OR logic
-             | NOT oprnd
-             | oprnd
-    '''
-    print_control(p, "logic\t", 3)
+# def p_logic(p):
+#     '''logic : oprnd AND logic
+#              | oprnd OR logic
+#              | NOT oprnd
+#              | oprnd
+#     '''
+#     print_control(p, "logic\t", 3)
 
 
-def p_expr(p):
-    '''expr : aritm
-            | logic
-            | ID OPPARENTH CLPARENTH
-            | ID OPPARENTH args CLPARENTH
-    '''
-    print_control(p, "expr\t", 1)
+# def p_expr(p):
+#     '''expr : aritm
+#             | logic
+#             | ID OPPARENTH CLPARENTH
+#             | ID OPPARENTH args CLPARENTH
+#     '''
+#     print_control(p, "expr\t", 1)
 
 
-def p_oprnd(p):
-    '''oprnd : FALSE
-             | TRUE
-             | relac
-             | OPPARENTH logic CLPARENTH
-    '''
-    print_control(p, "oprnd\t", 3)
+# def p_oprnd(p):
+#     '''oprnd : FALSE
+#              | TRUE
+#              | relac
+#              | OPPARENTH logic CLPARENTH
+#     '''
+#     print_control(p, "oprnd\t", 3)
 
 
 def p_relac(p):
@@ -251,11 +256,12 @@ def p_relac(p):
     '''
     print_control(p, "relac\t", 3)
 
+
 def p_args(p):
-    '''args : expr COMMA args
-            | expr
+    '''args : aritm COMMA args
+            | aritm
     '''
-    print_control(p, "args\t", 4)
+    print_control(p, "args\t", 3)
 
 
 def p_lectura(p):
@@ -276,17 +282,17 @@ def p_llam_void(p):
     '''llam_void : ID OPPARENTH CLPARENTH
                  | ID OPPARENTH args CLPARENTH
     '''
-    print_control(p, "llam_void", 3)
+    print_control(p, "llam_void", 4)
 
 
 def p_asign(p):
     '''asign : ID ASGNMNT lectura
-             | ID ASGNMNT expr
+             | ID ASGNMNT aritm
              | ID ASGNMNT CONST_STRING
              | ID dims ASGNMNT lectura
-             | ID dims ASGNMNT expr
+             | ID dims ASGNMNT aritm
              | ID dims ASGNMNT CONST_STRING
     '''
-    print_control(p, "asign\t", 7)
+    print_control(p, "asign\t", 4)
 
 #--- END : funciones de la gramática formal ---
