@@ -85,3 +85,6 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 - 11-Mayo
     - bug fix: antes no se podía hacer operaciones entre llamadas a función y ya se puede, se eliminaron las variables booleanas y las operaciones entre ellas (AND, OR, NOT)
     - 100% Avance 2: dirFunc, varTable y Cubo Semántico listo
+
+- 12-Mayo
+    - 20% Avance 3: primera iteración cuádruplos para expresiones, ya se generan operador y operandos falta dónde se van a guardar y temporales 

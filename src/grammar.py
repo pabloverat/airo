@@ -1,7 +1,12 @@
 # grammar.py
 
 from utils import print_control, encode_var_type, encode_func_type
+from dir_funcs import Dir_Funcs
 from tabla_vars import Tabla_Vars
+from cuadruplos import Cuadruplos
+from cubo import CONV, CUBO
+
+
 
 
 #--- START : funciones de la gramática formal ---
@@ -13,6 +18,7 @@ def p_start(p):
                | encabezamiento cuerpo
     '''
     print_control(p, "S\t", 5)
+    # DELETE DIR_FUNC AND GLOBAL VAR_TABLE
     
 
 def p_calcula_globales(p):
@@ -27,9 +33,13 @@ def p_calcula_globales(p):
 def p_encabezamiento(p):
     '''encabezamiento : PROGRAM ID
     '''
+    p.parser.dir_funcs = Dir_Funcs() # create dirFunc
+    p.parser.cuads = Cuadruplos() # create cuadruplos list
+    p.parser.cuads.add_cuadruplo(operation='GOTO')#CONV['GOTO'])
+    
     print_control(p, "encabezamiento", 2)
     p.parser.context = p[2] # name of active func
-    func_type = encode_func_type("programa")
+    func_type = encode_func_type("programa") # type of active func
     globalVars = Tabla_Vars()
     p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=func_type, dir_inicio=1, vars=globalVars)
 
@@ -54,6 +64,7 @@ def p_variable(p):
     current_func = p.parser.context
     current_var_type = p.parser.var_type_read
     p.parser.dir_funcs.funcs[current_func]['vars'].add_var(p[2], current_var_type)
+
 
 def p_var_list(p):
     '''var_list : variable var_list
@@ -96,10 +107,17 @@ def p_func(p):
     '''
     print_control(p, "func\t", 11)
     func_name = p[3]
+    
+    # check if the function's name is already used
+    if func_name in p.parser.dir_funcs.funcs.keys():
+        raise Exception(f"func {func_name} already exists")
+    
+    # agregar nombre y tipo de función a temporal que estaba en dirfunc
     p.parser.dir_funcs.funcs[func_name] = p.parser.dir_funcs.funcs["temp"]
     del p.parser.dir_funcs.funcs["temp"]
     p.parser.dir_funcs.funcs[func_name]['func_type'] = p.parser.func_type_read
     
+    # agregar recursos utilizados por función
     recursos = p.parser.dir_funcs.funcs[func_name]['vars'].calculate_resources()
     p.parser.dir_funcs.funcs[func_name]['recursos'] = recursos
 
@@ -197,6 +215,25 @@ def p_aritm(p):
              | term
     '''
     print_control(p, "aritm\t", 3)
+    # punto neurálgico sumas-restas
+    if p.parser.cuads.pilaOperadores[-1] in ['+', '-']:
+        print(f"haz la {p.parser.cuads.pilaOperadores[-1]}")
+        right_operand = p.parser.cuads.pilaOperandos.pop()
+        left_operand = p.parser.cuads.pilaOperandos.pop()
+        operator = p.parser.cuads.pilaOperadores.pop()
+        p.parser.cuads.add_cuadruplo(operation=operator, leftOp=left_operand, rightOp=right_operand)
+        # result = left_operand + right_operand if operator == "+" else left_operand + right_operand
+        # p.parser.cuads.pilaOperandos.append(result)
+    
+    try:
+        # when reducing factor PLUS term | factor MINUS term
+        operador = p[2]
+        p.parser.cuads.pilaOperadores.append(operador)
+        print("pOperadores: ", p.parser.cuads.pilaOperadores)
+    except:
+        # when reducing only term
+        print("aquí haría algo?")
+        pass
 
 
 def p_term(p):
@@ -205,7 +242,25 @@ def p_term(p):
             | factor
     '''
     print_control(p, "term\t", 3)
-
+    # punto neurálgico mults-divs
+    if p.parser.cuads.pilaOperadores[-1] in ['*', '/']:
+        print(f"haz la {p.parser.cuads.pilaOperadores[-1]}")
+        right_operand = p.parser.cuads.pilaOperandos.pop()
+        left_operand = p.parser.cuads.pilaOperandos.pop()
+        operator = p.parser.cuads.pilaOperadores.pop()
+        p.parser.cuads.add_cuadruplo(operation=operator, leftOp=left_operand, rightOp=right_operand)
+        # result = left_operand * right_operand if operator == "*" else left_operand / right_operand
+        # p.parser.cuads.pilaOperandos.append(result)
+    
+    try:
+        # when reducing factor TIMES term | factor DIVIDE term
+        operador = p[2]
+        p.parser.cuads.pilaOperadores.append(operador)
+        print("pOperadores: ", p.parser.cuads.pilaOperadores)
+    except:
+        # when reducing only factor
+        pass
+    
 
 def p_factor(p):
     '''factor : OPPARENTH aritm CLPARENTH
@@ -217,6 +272,13 @@ def p_factor(p):
               | ID OPPARENTH args CLPARENTH
     '''
     print_control(p, "factor\t", 4)
+    if p[1] != "(":
+        p.parser.cuads.pilaOperandos.append(p[1])
+        print("pOperandos: ", p.parser.cuads.pilaOperandos)
+    else:
+        p.parser.cuads.pilaOperadores.append(p[1])
+        print("pOperadores: ", p.parser.cuads.pilaOperadores)
+        
 
 
 # def p_logic(p):
@@ -271,8 +333,7 @@ def p_lectura(p):
 
 
 def p_escritura(p):
-    '''escritura : WRITE OPPARENTH ID CLPARENTH
-                 | WRITE OPPARENTH ID dims CLPARENTH
+    '''escritura : WRITE OPPARENTH aritm CLPARENTH
                  | WRITE OPPARENTH CONST_STRING CLPARENTH
     '''
     print_control(p, "escritura", 5)

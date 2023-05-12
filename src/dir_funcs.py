@@ -19,8 +19,7 @@ class Dir_Funcs:
 
         # is the function's name already used?
         if func_name in self.funcs.keys():
-            print(f"func {func_name} already exists")
-            exit()
+            raise Exception(f"func {func_name} already exists")
 
         # adding func to funcDir    
         self.funcs[func_name] = {'func_type': func_type, 'dir_inicio': dir_inicio, 'recursos': recursos, 'params': params, 'vars': vars}

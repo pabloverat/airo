@@ -21,13 +21,11 @@ class Tabla_Vars:
         
         # is the address out of range?
         if var_address > self.vars_range[1]:
-            print("out of slots for vars")
-            exit()
+            raise Exception("out of slots for vars")
         
         # is the variable's name already used in the global scope?
         if var_name in self.vars.keys():
-            print(f"variable {var_name} already exists")
-            exit()
+            raise Exception(f"variable {var_name} already exists")
         
         # add variable to vars var_table
         self.vars[var_name] = {'tipo': var_type, 'address':var_address}
@@ -37,8 +35,7 @@ class Tabla_Vars:
         if var_name in self.vars:
             self.vars.pop(var_name)
         else:
-            print("not valid param for var_scope")
-            exit()
+            raise Exception("not valid param for var_scope")
 
 
     def calculate_resources(self) -> int:

@@ -7,8 +7,6 @@ import tokrules as tokrules
 from tokrules import tokens
 from grammar import *
 
-from dir_funcs import Dir_Funcs
-
 import sys
 from utils import read_file, print_tokens
 
@@ -46,7 +44,7 @@ def main():
     myParser = yacc.yacc()
     
     # agregando directorio de funciones
-    myParser.dir_funcs = Dir_Funcs()
+    # myParser.dir_funcs = Dir_Funcs()
     
     # "parseando"
     _ = myParser.parse(data, lexer=myLexer)
@@ -55,6 +53,10 @@ def main():
     # directorio de funciones
     print("dir_funcs:\n")
     myParser.dir_funcs.print_funcs()
+    
+    # cuádruplos
+    print("cuádruplos:\n")
+    myParser.cuads.print()
     
         
 if __name__ == "__main__":

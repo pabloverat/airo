@@ -9,7 +9,7 @@ main()
     y = 2
     x = y - 1
     write(z[x])
-    when (FALSE AND x>2) then {
+    when ( x>2) then {
         write(y)
     }
 }

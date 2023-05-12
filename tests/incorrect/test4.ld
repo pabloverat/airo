@@ -9,13 +9,13 @@ func myFoo() : void
     var b : int
     
     a = read()
-    b = x + 41 * (33-22/2+4*13)
+    b = x + 41 
 }
 
-func myFoo2(x : int, y : float) : int
+func myFoo(x : int, y : float) : int
 {
     var m : int
-    var n : float
+    var m : float
 
     while (m > x) then
     {
