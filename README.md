@@ -87,4 +87,11 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 100% Avance 2: dirFunc, varTable y Cubo Semántico listo
 
 - 12-Mayo
-    - 20% Avance 3: primera iteración cuádruplos para expresiones, ya se generan operador y operandos falta dónde se van a guardar y temporales 
+    - 20% Avance 3: primera iteración cuádruplos para expresiones, ya se generan operador y operandos falta dónde se van a guardar y temporales.
+
+- 13-Mayo
+    - 60% Avance 3:
+        - ya se guardan temporales
+        - listos cuádruplos para +, -, * y /
+        - ya se hace el primer goto a main
+        - falta código para el resto de las operaciones lineales(asignar, lectura, etc).

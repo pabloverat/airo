@@ -1,24 +1,24 @@
 # tokrules.py
 
 reserved = {
-    'AND': 'AND',
+    # 'AND': 'AND',
     'bool': 'BOOL',
     'char': 'CHAR',
     'else': 'ELSE',
-    'FALSE': 'FALSE',
+    # 'FALSE': 'FALSE',
     'float': 'FLOAT',
     'frame': 'FRAME',
     'func': 'FUNC',
     'int': 'INT',
     'load': 'LOAD',
     'main': 'MAIN',
-    'not': 'NOT',
-    'OR': 'OR',
+    # 'not': 'NOT',
+    # 'OR': 'OR',
     'Program': 'PROGRAM',
     'read':'READ',
     'return': 'RETURN',
     'then': 'THEN',
-    'TRUE': 'TRUE',
+    # 'TRUE': 'TRUE',
     'var': 'VAR',
     'void': 'VOID',
     'when': 'WHEN',
@@ -103,7 +103,8 @@ def t_newline(t):
 
 def t_error(t):
     print("Illegal character '%s'" % t.value[0])
-    t.lexer.skip(1)
+    #t.lexer.skip(1)
+    
 
 t_ignore = ' \t'
 #t_ignore = ' \t\n\r\f\v'

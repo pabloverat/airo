@@ -35,10 +35,11 @@ def p_encabezamiento(p):
     '''
     p.parser.dir_funcs = Dir_Funcs() # create dirFunc
     p.parser.cuads = Cuadruplos() # create cuadruplos list
-    p.parser.cuads.add_cuadruplo(operation='GOTO')#CONV['GOTO'])
+    p.parser.cuads.add_cuadruplo(idx=0, operation='GOTO')#CONV['GOTO'])
     
     print_control(p, "encabezamiento", 2)
     p.parser.context = p[2] # name of active func
+    p.parser.programName= p.parser.context
     func_type = encode_func_type("programa") # type of active func
     globalVars = Tabla_Vars()
     p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=func_type, dir_inicio=1, vars=globalVars)
@@ -48,6 +49,9 @@ def p_context_to_global(p):
     "context_to_global : "
     # p.parser.context = 0 # 0 for globals, 1 for locals
     print("Parsed context_to_global\t")
+    current_cuad = len(p.parser.cuads.cuadruplos)
+    p.parser.cuads.cuadruplos[0].result = current_cuad
+    p.parser.cuads.cuadruplos[0].print()
 
 
 def p_cuerpo(p):
@@ -94,11 +98,23 @@ def p_param_list(p):
     print_control(p, "param_list", 3)
 
 
+def p_save_array_size(p):
+    '''save_array_size : 
+    '''
+    print("save_array_size")
+    p.parser.cuads.pilaOperandos.pop()
+    p.parser.cuads.pilaTipos.pop()
+    print("pOperandos: ", p.parser.cuads.pilaOperandos)
+    print("pTipos: ", p.parser.cuads.pilaTipos)
+
+
+
 def p_dims(p):
-    '''dims : OPBRACKET aritm CLBRACKET
-            | OPBRACKET aritm CLBRACKET OPBRACKET CONST_INT CLBRACKET
+    '''dims : OPBRACKET aritm save_array_size CLBRACKET
+            | OPBRACKET aritm save_array_size CLBRACKET OPBRACKET aritm save_array_size CLBRACKET
     '''
     print_control(p, "dims\t", 6)
+    
 
 
 def p_func(p):
@@ -209,75 +225,210 @@ def p_func_typ(p):
     p.parser.func_type_read = encode_func_type(p[1])
 
 
-def p_aritm(p):
-    '''aritm : term PLUS aritm
-             | term MINUS aritm
-             | term
+def p_check_aritm_operation(p):
+    '''check_aritm_operation :
     '''
-    print_control(p, "aritm\t", 3)
+    print("parsed check_aritm_operation", p[-1])
     # punto neurálgico sumas-restas
-    if p.parser.cuads.pilaOperadores[-1] in ['+', '-']:
-        print(f"haz la {p.parser.cuads.pilaOperadores[-1]}")
-        right_operand = p.parser.cuads.pilaOperandos.pop()
-        left_operand = p.parser.cuads.pilaOperandos.pop()
-        operator = p.parser.cuads.pilaOperadores.pop()
-        p.parser.cuads.add_cuadruplo(operation=operator, leftOp=left_operand, rightOp=right_operand)
-        # result = left_operand + right_operand if operator == "+" else left_operand + right_operand
-        # p.parser.cuads.pilaOperandos.append(result)
-    
     try:
         # when reducing factor PLUS term | factor MINUS term
-        operador = p[2]
-        p.parser.cuads.pilaOperadores.append(operador)
+        operador = p[-1]
+        p.parser.cuads.pilaOperadores.append(CONV[operador])
         print("pOperadores: ", p.parser.cuads.pilaOperadores)
     except:
         # when reducing only term
-        print("aquí haría algo?")
-        pass
+        p.parser.cuads.print()
+        print("\n-----------------------------------------")
 
-
-def p_term(p):
-    '''term : factor TIMES term
-            | factor DIVIDE term
-            | factor
-    '''
-    print_control(p, "term\t", 3)
-    # punto neurálgico mults-divs
-    if p.parser.cuads.pilaOperadores[-1] in ['*', '/']:
-        print(f"haz la {p.parser.cuads.pilaOperadores[-1]}")
-        right_operand = p.parser.cuads.pilaOperandos.pop()
-        left_operand = p.parser.cuads.pilaOperandos.pop()
-        operator = p.parser.cuads.pilaOperadores.pop()
-        p.parser.cuads.add_cuadruplo(operation=operator, leftOp=left_operand, rightOp=right_operand)
-        # result = left_operand * right_operand if operator == "*" else left_operand / right_operand
-        # p.parser.cuads.pilaOperandos.append(result)
     
+def p_check_aritm(p):
+    '''check_aritm : 
+    '''
+    print("parsed check_aritm")
+    if p.parser.cuads.pilaOperadores[-1] in [CONV['+'], CONV['-']]:
+        current_func = p.parser.context
+        print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
+        right_operand = p.parser.cuads.pilaOperandos.pop()
+        right_type = p.parser.cuads.pilaTipos.pop()
+        left_operand = p.parser.cuads.pilaOperandos.pop()
+        left_type = p.parser.cuads.pilaTipos.pop()
+        operador = p.parser.cuads.pilaOperadores.pop()
+        try:
+            temp_type = CUBO[operador][left_type][right_type]
+        except:
+            raise Exception(f"operation {operador} between {left_type} and {right_type} invalid.")
+        
+        result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
+        p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
+        p.parser.cuads.pilaOperandos.append(result)
+        p.parser.cuads.pilaTipos.append(temp_type)
+    else:
+        print("not + nor - on top of the stack")
+        
+    print("pOperandos: ", p.parser.cuads.pilaOperandos)
+    print("pTipos: ", p.parser.cuads.pilaTipos)
+    print("pOperadores: ", p.parser.cuads.pilaOperadores)
+    p.parser.cuads.print()
+    print("\n-----------------------------------------")
+    
+
+def p_aritm(p):
+    '''aritm : term check_aritm PLUS check_aritm_operation aritm
+             | term check_aritm MINUS check_aritm_operation aritm
+             | term check_aritm
+    '''
+    print_control(p, "aritm\t", 4)
+
+
+def p_check_term_operation(p):
+    '''check_term_operation :
+    '''
+    print("parsed check_term_operation", p[-1])
+    # punto neurálgico mults-divs
     try:
         # when reducing factor TIMES term | factor DIVIDE term
-        operador = p[2]
-        p.parser.cuads.pilaOperadores.append(operador)
+        operador = p[-1]
+        p.parser.cuads.pilaOperadores.append(CONV[operador])
         print("pOperadores: ", p.parser.cuads.pilaOperadores)
     except:
         # when reducing only factor
-        pass
+        p.parser.cuads.print()
+        print("\n-----------------------------------------")
     
+def p_check_term(p):
+    '''check_term :
+    '''
+    print("parsed check term")
+    if p.parser.cuads.pilaOperadores[-1] in [CONV['*'], CONV['/']]:
+        current_func = p.parser.context
+        print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
+        right_operand = p.parser.cuads.pilaOperandos.pop()
+        right_type = p.parser.cuads.pilaTipos.pop()
+        left_operand = p.parser.cuads.pilaOperandos.pop()
+        left_type = p.parser.cuads.pilaTipos.pop()
+        operador = p.parser.cuads.pilaOperadores.pop()
+        try:
+            temp_type = CUBO[operador][left_type][right_type]
+        except:
+            raise Exception(f"operation {operador} between {left_type} and {right_type} invalid.")
+        
+        result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
+        p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
+        p.parser.cuads.pilaOperandos.append(result)
+        p.parser.cuads.pilaTipos.append(temp_type)
+    else:
+        print("not * nor / on top of the stack")
+    
+    print("pOperandos: ", p.parser.cuads.pilaOperandos)
+    print("pTipos: ", p.parser.cuads.pilaTipos)
+    print("pOperadores: ", p.parser.cuads.pilaOperadores)
+    p.parser.cuads.print()
+    print("\n-----------------------------------------")
+
+
+def p_term(p):
+    '''term : factor check_term TIMES check_term_operation term
+            | factor check_term DIVIDE check_term_operation term
+            | factor check_term
+    '''
+    print_control(p, "term\t", 4)
+    
+
+def p_factortype_const_int(p):
+    "factortype_const_int : "
+    print("viene un int")
+    # add factor type to pilaTipos
+    p.parser.cuads.pilaTipos.append(CONV["int"])
+    print("pTipos: ", p.parser.cuads.pilaTipos)
+
+
+def p_factortype_const_float(p):
+    "factortype_const_float : "
+    print("viene un float")
+    # add factor type to pilaTipos
+    p.parser.cuads.pilaTipos.append(CONV["float"])
+    print("pTipos: ", p.parser.cuads.pilaTipos)
+
+    
+def p_factor_const(p):
+    """factor_const : CONST_INT factortype_const_int
+                    | CONST_FLOAT factortype_const_float
+    """
+    print_control(p, "factor_const", 2)
+    # add factor to pilaOperandos
+    p.parser.cuads.pilaOperandos.append(p[1])
+    print("pOperandos: ", p.parser.cuads.pilaOperandos)
+
+
+def p_factor_var(p):
+    """factor_var : ID
+                  | ID dims
+    """
+    print_control(p, "factor_var", 2)
+    
+    try:
+        # looking for variable in local scope
+        current_func = p.parser.context
+        type = p.parser.dir_funcs.funcs[current_func]['vars'].vars[p[1]]['tipo']
+        
+        # add factor to pilaOperandos
+        p.parser.cuads.pilaOperandos.append(p[1])
+        print("pOperandos: ", p.parser.cuads.pilaOperandos)
+        # add factor type to pilaTipos
+        p.parser.cuads.pilaTipos.append(type)
+        print("pTipos: ", p.parser.cuads.pilaTipos)
+        
+    except:
+        try:
+            # looking for variable in global scope
+            type = p.parser.dir_funcs.funcs[p.parser.programName]['vars'].vars[p[1]]['tipo']
+            
+            # add factor to pilaOperandos
+            p.parser.cuads.pilaOperandos.append(p[1])
+            print("pOperandos: ", p.parser.cuads.pilaOperandos)
+            # add factor type to pilaTipos
+            p.parser.cuads.pilaTipos.append(type)
+            print("pTipos: ", p.parser.cuads.pilaTipos)
+        except:
+            raise Exception(f"Expression {p[1]} unknown")    
+
+
+def p_factor_function_call(p):
+    """factor_function_call : ID OPPARENTH CLPARENTH
+                              | ID OPPARENTH args CLPARENTH
+    """
+    print_control(p, "factor_function_call", 4)
+
 
 def p_factor(p):
     '''factor : OPPARENTH aritm CLPARENTH
-              | ID
-              | ID dims
-              | CONST_INT
-              | CONST_FLOAT
-              | ID OPPARENTH CLPARENTH
-              | ID OPPARENTH args CLPARENTH
+              | factor_function_call
+              | factor_var
+              | factor_const
     '''
-    print_control(p, "factor\t", 4)
-    if p[1] != "(":
-        p.parser.cuads.pilaOperandos.append(p[1])
-        print("pOperandos: ", p.parser.cuads.pilaOperandos)
-    else:
+    print_control(p, "factor\t", 3)
+    if p[1] == "(":
         p.parser.cuads.pilaOperadores.append(p[1])
         print("pOperadores: ", p.parser.cuads.pilaOperadores)
+
+
+# def p_factor(p):
+#     '''factor : OPPARENTH aritm CLPARENTH
+#               | ID factortype_var
+#               | ID dims factortype_var
+#               | CONST_INT factortype_const_int
+#               | CONST_FLOAT factortype_const_float
+#               | ID OPPARENTH CLPARENTH
+#               | ID OPPARENTH args CLPARENTH
+#     '''
+#     print_control(p, "factor\t", 4)
+#     if p[1] != "(":
+#         # add factor to pilaOperandos
+#         p.parser.cuads.pilaOperandos.append(p[1])
+#         print("pOperandos: ", p.parser.cuads.pilaOperandos)
+#     else:
+#         p.parser.cuads.pilaOperadores.append(p[1])
+#         print("pOperadores: ", p.parser.cuads.pilaOperadores)
         
 
 
@@ -354,6 +505,11 @@ def p_asign(p):
              | ID dims ASGNMNT aritm
              | ID dims ASGNMNT CONST_STRING
     '''
+    p.parser.cuads.pilaOperandos.pop()
+    p.parser.cuads.pilaTipos.pop()
+    print("pOperandos: ", p.parser.cuads.pilaOperandos)
+    print("pTipos: ", p.parser.cuads.pilaTipos)
     print_control(p, "asign\t", 4)
+    
 
 #--- END : funciones de la gramática formal ---

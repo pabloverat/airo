@@ -9,7 +9,7 @@ func myFoo() : void
     var b : int
     
     a = read()
-    b = x + 41 * (33-22/2+4*13)
+    b = x + 41.0 * (33-22.4/2+4*13)
 }
 
 func myFoo2(x : int, y : float) : int

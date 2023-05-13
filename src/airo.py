@@ -54,8 +54,13 @@ def main():
     print("dir_funcs:\n")
     myParser.dir_funcs.print_funcs()
     
+    # pilas
+    print("pOperadores: ", myParser.cuads.pilaOperadores)
+    print("pOperandos: ", myParser.cuads.pilaOperandos)
+    print("pTipos: ", myParser.cuads.pilaTipos)
+    
     # cuádruplos
-    print("cuádruplos:\n")
+    print("\ncuádruplos:\n")
     myParser.cuads.print()
     
         

@@ -14,6 +14,8 @@ def print_control(p, nonterminal: str, max_symbols: int):
         except:
             pass
     print("")
+    p.parser.cuads.print()
+    print("\n-----------------------------------------")
     
 # Función para imprimir tokens del código
 def print_tokens(myLexer):
