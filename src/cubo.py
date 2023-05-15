@@ -1,6 +1,6 @@
 # cubo.py
 
-CONV = {
+ENCODE = {
     # data types
     'programa': -1,
     'void': 0,
@@ -39,6 +39,11 @@ CONV = {
     'ERA': 51,
     'PARAM': 52,
     'ENDFUNC': 53,
+    
+    # I/O operators
+    'ASSIGN': 60,
+    'PRINT': 61,
+    'READ': 62
 }
 
 CUBO = {

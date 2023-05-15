@@ -67,7 +67,7 @@ class Tabla_Vars:
 
 
     def calculate_resources(self) -> int:
-        return [val['tipo'] for val in self.vars.values()] + [val['tipo'] for val in self.temps.values()]
+        return [val['tipo'] for val in self.vars.values()] + [temp['tipo'] for temp in self.temps.values()]
 
     def get_var_type(self, var_name: str) -> int:
         return self.vars[var_name]['tipo']

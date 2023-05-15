@@ -6,10 +6,11 @@ var z : int[5+2]
 
 main()
 {
-    y = 2
-    x = y-1 * 2.4-3 / 2*y
-    write(z[x])
-    when ( x>2) then {
+    x = y-1 * (2.4+400)-3 / 2*y
+    write(x)
+    write("hola")
+    y = 2+x
+    when ( x+4>2*y) then {
         write(y)
     }
 }

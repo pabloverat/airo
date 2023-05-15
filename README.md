@@ -95,3 +95,9 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - listos cuádruplos para +, -, * y /
         - ya se hace el primer goto a main
         - falta código para el resto de las operaciones lineales(asignar, lectura, etc).
+
+- 14-Mayo
+    - 90% Avance 3:
+        - listos cuádruplos para <, >, =<, =>, ==, !=
+        - listo cuádruplo para asignar, escribir
+        - falta código para leer
