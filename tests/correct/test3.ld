@@ -2,7 +2,7 @@ Program myProgCorrect
 
 var x : int
 var y : float
-var z : bool
+var z : int
 
 func myFoo() : void
 {

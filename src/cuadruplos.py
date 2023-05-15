@@ -39,15 +39,15 @@ class Cuadruplos:
     def add_cuadruplo(self, idx=None, operation=None, leftOp=None, rightOp=None, result=None) -> None:
         new_cuadruplo = Cuadruplo()
         idx = len(self.cuadruplos) if idx is None else idx
-        print("adding cuad: ", idx)
+        # print("adding cuad: ", idx)
         new_cuadruplo.set_values(idx=idx, operation=operation, leftOp=leftOp, rightOp=rightOp, result=result)
         self.cuadruplos = self.cuadruplos + [new_cuadruplo]
         
     def print(self) -> None:
         for cuad in self.cuadruplos:
-            print(f"{cuad.idx}\t" if cuad.idx else "None\t", end="")
-            print(f"{cuad.operation}\t" if cuad.operation else "None\t", end="")
-            print(f"{cuad.leftOp}\t" if cuad.leftOp else "None\t", end="")
-            print(f"{cuad.rightOp}\t" if cuad.rightOp else "None\t", end="")
-            print(f"{cuad.result}" if cuad.result else "None\t", end="")
+            print(f"{cuad.idx}\t" if cuad.idx else "-\t", end="")
+            print(f"{cuad.operation}\t" if cuad.operation else "-\t", end="")
+            print(f"{cuad.leftOp}\t" if cuad.leftOp else "-\t", end="")
+            print(f"{cuad.rightOp}\t" if cuad.rightOp else "-\t", end="")
+            print(f"{cuad.result}" if cuad.result else "-\t", end="")
             print("\n", end="")

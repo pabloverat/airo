@@ -45,9 +45,9 @@ def p_encabezamiento(p):
 
 def p_context_to_global(p):
     "context_to_global : "
+    p.parser.context = p.parser.programName
     current_cuad = len(p.parser.cuads.cuadruplos)
     p.parser.cuads.cuadruplos[0].result = current_cuad
-    # p.parser.cuads.cuadruplos[0].print()
     print("Parsed context_to_global\t")
 
 
@@ -100,11 +100,7 @@ def p_save_array_size(p):
     '''
     p[0] = p.parser.cuads.pilaOperandos.pop()
     p.parser.cuads.pilaTipos.pop()
-    print("save_array_size")
-    
-    # print("pOperandos: ", p.parser.cuads.pilaOperandos)
-    # print("pTipos: ", p.parser.cuads.pilaTipos)
-
+    # print("save_array_size")
 
 
 def p_dims(p):
@@ -148,15 +144,12 @@ def p_context_to_local(p):
 
 
 def p_ciclo(p):
-    # '''ciclo : WHILE OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
     '''ciclo : WHILE OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
     '''
     print_control(p, "ciclo\t", 8)
 
 
 def p_decision(p):
-    # '''decision : WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE
-            #    | WHEN OPPARENTH logic CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
     '''decision : WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
                | WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
     '''
@@ -235,24 +228,19 @@ def p_check_aritm_operation(p):
         # when reducing factor PLUS term | factor MINUS term
         operador = p[-1]
         p.parser.cuads.pilaOperadores.append(ENCODE[operador])
-        print("pOperadores: ", p.parser.cuads.pilaOperadores)
     except:
         # when reducing only term
-        # p.parser.cuads.print()
-        # print("\n-----------------------------------------")
         pass
 
-    print("parsed check_aritm_operation", p[-1])
+    #print("parsed check_aritm_operation", p[-1])
 
 
 def p_check_aritm(p):
     '''check_aritm : 
     '''
-    # print(p[-1])
-    # p.parser.last_aritm_read = p[-1]
     if p.parser.cuads.pilaOperadores[-1] in [ENCODE['+'], ENCODE['-']]:
         current_func = p.parser.context
-        print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
+        # print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
         right_operand = p.parser.cuads.pilaOperandos.pop()
         right_type = p.parser.cuads.pilaTipos.pop()
         left_operand = p.parser.cuads.pilaOperandos.pop()
@@ -270,13 +258,7 @@ def p_check_aritm(p):
     else:
         # print("not + nor - on top of the stack")
         pass
-        
-    # print("pOperandos: ", p.parser.cuads.pilaOperandos)
-    # print("pTipos: ", p.parser.cuads.pilaTipos)
-    # print("pOperadores: ", p.parser.cuads.pilaOperadores)
-    # p.parser.cuads.print()
-    # print("\n-----------------------------------------")
-    print("parsed check_aritm")
+    # print("parsed check_aritm")
     
 
 def p_aritm(p):
@@ -299,20 +281,16 @@ def p_check_term_operation(p):
         # when reducing factor TIMES term | factor DIVIDE term
         operador = p[-1]
         p.parser.cuads.pilaOperadores.append(ENCODE[operador])
-        print("pOperadores: ", p.parser.cuads.pilaOperadores)
     except:
-        # when reducing only factor
-        # p.parser.cuads.print()
-        # print("\n-----------------------------------------")
         pass
-    print("parsed check_term_operation", p[-1])
+    # print("parsed check_term_operation", p[-1])
     
 def p_check_term(p):
     '''check_term :
     '''
     if p.parser.cuads.pilaOperadores[-1] in [ENCODE['*'], ENCODE['/']]:
         current_func = p.parser.context
-        print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
+        # print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
         right_operand = p.parser.cuads.pilaOperandos.pop()
         right_type = p.parser.cuads.pilaTipos.pop()
         left_operand = p.parser.cuads.pilaOperandos.pop()
@@ -330,14 +308,6 @@ def p_check_term(p):
     else:
         # print("not * nor / on top of the stack")
         pass
-    
-    # print("pOperandos: ", p.parser.cuads.pilaOperandos)
-    # print("pTipos: ", p.parser.cuads.pilaTipos)
-    # print("pOperadores: ", p.parser.cuads.pilaOperadores)
-    # p.parser.cuads.print()
-
-    # print("parsed check term")
-    # print("\n-----------------------------------------")
 
 
 def p_term(p):
@@ -349,15 +319,13 @@ def p_term(p):
         p[0] = p[1,3,5]
     except: 
         p[0] = p[1]
-    # print("pOperandos: ", p.parser.cuads.pilaOperandos)
     print_control(p, "term\t", 5)
     
 
 def p_factortype_const_int(p):
     "factortype_const_int : "
     # add factor type to pilaTipos
-    p.parser.cuads.pilaTipos.append(ENCODE["int"])    
-    # print("viene un int") 
+    p.parser.cuads.pilaTipos.append(ENCODE["int"])
 
 
 def p_factortype_const_float(p):
@@ -375,8 +343,6 @@ def p_factor_const(p):
     p[0] = p[1]
     # add factor to pilaOperandos
     p.parser.cuads.pilaOperandos.append(p[1])
-    print("pOperandos: ", p.parser.cuads.pilaOperandos)
-    print("pTipos: ", p.parser.cuads.pilaTipos)
 
 
 def p_factor_var(p):
@@ -393,10 +359,8 @@ def p_factor_var(p):
         
         # add factor to pilaOperandos
         p.parser.cuads.pilaOperandos.append(p[1])
-        # print("pOperandos: ", p.parser.cuads.pilaOperandos)
         # add factor type to pilaTipos
         p.parser.cuads.pilaTipos.append(type)
-        # print("pTipos: ", p.parser.cuads.pilaTipos)
         
     except:
         try:
@@ -405,15 +369,12 @@ def p_factor_var(p):
             
             # add factor to pilaOperandos
             p.parser.cuads.pilaOperandos.append(p[1])
-            # print("pOperandos: ", p.parser.cuads.pilaOperandos)
             # add factor type to pilaTipos
             p.parser.cuads.pilaTipos.append(type)
-            # print("pTipos: ", p.parser.cuads.pilaTipos)
         except:
             raise Exception(f"Expression {p[1]} unknown")
         
     print_control(p, "factor_var", 2)
-    # print("\n-----------------------------------------") 
 
 
 def p_factor_function_call(p):
@@ -430,7 +391,6 @@ def p_check_parenth(p):
         p.parser.cuads.pilaOperadores.append("(")
     elif p[-1] == ")":
         oper = p.parser.cuads.pilaOperadores.pop()
-        print("ojo ojo vi un oper")
         if oper != "(":
             raise Exception("Unexpected behaviour, didn't find a (")
 
@@ -449,53 +409,6 @@ def p_factor(p):
     print_control(p, "factor\t", 3)
 
 
-# def p_factor(p):
-#     '''factor : OPPARENTH aritm CLPARENTH
-#               | ID factortype_var
-#               | ID dims factortype_var
-#               | CONST_INT factortype_const_int
-#               | CONST_FLOAT factortype_const_float
-#               | ID OPPARENTH CLPARENTH
-#               | ID OPPARENTH args CLPARENTH
-#     '''
-#     print_control(p, "factor\t", 4)
-#     if p[1] != "(":
-#         # add factor to pilaOperandos
-#         p.parser.cuads.pilaOperandos.append(p[1])
-#         print("pOperandos: ", p.parser.cuads.pilaOperandos)
-#     else:
-#         p.parser.cuads.pilaOperadores.append(p[1])
-#         print("pOperadores: ", p.parser.cuads.pilaOperadores)
-        
-
-
-# def p_logic(p):
-#     '''logic : oprnd AND logic
-#              | oprnd OR logic
-#              | NOT oprnd
-#              | oprnd
-#     '''
-#     print_control(p, "logic\t", 3)
-
-
-# def p_expr(p):
-#     '''expr : aritm
-#             | logic
-#             | ID OPPARENTH CLPARENTH
-#             | ID OPPARENTH args CLPARENTH
-#     '''
-#     print_control(p, "expr\t", 1)
-
-
-# def p_oprnd(p):
-#     '''oprnd : FALSE
-#              | TRUE
-#              | relac
-#              | OPPARENTH logic CLPARENTH
-#     '''
-#     print_control(p, "oprnd\t", 3)
-
-
 def p_relac(p):
     '''relac : aritm EQUAL aritm
              | aritm UNEQUAL aritm
@@ -505,7 +418,7 @@ def p_relac(p):
              | aritm GREATEREQ aritm
     '''
     p.parser.cuads.pilaOperadores.append(ENCODE[p[2]])
-    print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
+    # print(f"{p.parser.cuads.pilaOperadores[-1]} <- haz esto")
     current_func = p.parser.context
     right_operand = p.parser.cuads.pilaOperandos.pop()
     right_type = p.parser.cuads.pilaTipos.pop()
@@ -519,8 +432,6 @@ def p_relac(p):
     
     result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
     p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
-    # p.parser.cuads.pilaOperandos.append(result)
-    # p.parser.cuads.pilaTipos.append(temp_type)
     print_control(p, "relac\t", 3)
 
 
@@ -534,6 +445,14 @@ def p_args(p):
 def p_lectura(p):
     '''lectura : READ OPPARENTH CLPARENTH
     '''
+    # p[0] = float(input())
+    
+    current_func = p.parser.context
+    result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=ENCODE["float"])
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["READ"], result=result)
+    
+    p.parser.cuads.pilaOperandos.append(result)
+    p.parser.cuads.pilaTipos.append(ENCODE["float"])
     print_control(p, "lectura", 3)
 
 
@@ -542,17 +461,11 @@ def p_escritura(p):
                  | WRITE OPPARENTH CONST_STRING CLPARENTH
     '''
     if p.parser.cuads.pilaOperandos[-1] == "$":
-        # print(p[3])
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=p[3])
     else:
-        # print("pOperandos", p.parser.cuads.pilaOperandos)
-        # print("pTipos", p.parser.cuads.pilaTipos)
         operando = p.parser.cuads.pilaOperandos.pop()
         tipo = p.parser.cuads.pilaTipos.pop()
-        # print(f"System.out: \"operando {operando} de tipo {tipo}\"")
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=operando)
-        # print("pOperandos", p.parser.cuads.pilaOperandos)
-        # print("pTipos", p.parser.cuads.pilaTipos)
         
     print_control(p, "escritura", 5)
 
@@ -577,15 +490,9 @@ def p_asign(p):
         _ = p.parser.cuads.pilaTipos.pop()
         
         p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=p[1])
-        
-        
-        print("pOperandos: ", p.parser.cuads.pilaOperandos)
-        print("pTipos: ", p.parser.cuads.pilaTipos)
     else:
         raise Exception("Unexpected behaviour: pilaOperandos is empty")
-    
-    
-    
+
     print_control(p, "asign\t", 4)
     
 

@@ -74,6 +74,9 @@ class Tabla_Vars:
 
 
     def print_vars(self) -> None:
-        # pretty = json.dumps(sel_f.vars, indent=4, sort_keys=False)
-        print("vars", self.vars)
-        print("temps", self.temps)
+        pretty_vars = json.dumps(self.vars, indent=4, sort_keys=False)
+        pretty_temps = json.dumps(self.temps, indent=4, sort_keys=False)
+        print("vars", pretty_vars)
+        print("temps", pretty_temps)
+        # print("vars", self.vars)
+        # print("temps", self.temps)

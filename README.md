@@ -101,3 +101,9 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - listos cuádruplos para <, >, =<, =>, ==, !=
         - listo cuádruplo para asignar, escribir
         - falta código para leer
+
+- 15-Mayo
+    - 100% Avance 3:
+        - listo cuádruplos para lectura read()
+        - limpieza de código
+        - falta agregar comentarios al código en gral
