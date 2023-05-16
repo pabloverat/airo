@@ -29,14 +29,14 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Semántica Básica de Expresiones
 
 #### Avance 3
-    🟡 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
+    🟢 Generación de Código de Expresiones Aritméticas y estatutos secuenciales
 
 #### Avance 4
-    🔴 Generación de Código de Estatutos Condicionales (Decisiones)
-    🔴 Generación de Código de Estatutos Condicionales (Ciclos)
+    🟢 Generación de Código de Estatutos Condicionales (Decisiones)
+    🟡 Generación de Código de Estatutos Condicionales (Ciclos)
 
 #### Avance 5
-    ⚪ Generación de Código de Funciones
+    🔴 Generación de Código de Funciones
 
 #### Avance 6
     ⚪ Mapa de Memoria de Ejecución para la Máquina Virtual
