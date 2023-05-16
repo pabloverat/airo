@@ -107,3 +107,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - listo cuádruplos para lectura read()
         - limpieza de código
         - falta agregar comentarios al código en gral
+
+- 16-Mayo
+    - 50% Avance 4:
+        - cuádruplos para if e if-else listos
+        - agregué type checking que faltaba al asignar

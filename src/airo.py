@@ -58,6 +58,7 @@ def main():
     print("pOperadores: ", myParser.cuads.pilaOperadores)
     print("pOperandos: ", myParser.cuads.pilaOperandos)
     print("pTipos: ", myParser.cuads.pilaTipos)
+    print("pSaltos: ", myParser.cuads.pilaSaltos)
     
     # cuádruplos
     print("\ncuádruplos:\n")

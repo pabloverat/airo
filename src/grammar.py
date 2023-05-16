@@ -149,11 +149,37 @@ def p_ciclo(p):
     print_control(p, "ciclo\t", 8)
 
 
-def p_decision(p):
-    '''decision : WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
-               | WHEN OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE OPBRACE estat_list CLBRACE
+def p_conditional_q1(p):
+    '''conditional_q1 : 
     '''
-    print_control(p, "decision", 12)
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTOF"], leftOp=p[-1])
+    p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
+    print("conditional_q1", p[-1])
+
+
+def p_conditional_q2(p):
+    '''conditional_q2 : 
+    '''
+    else_cuad = len(p.parser.cuads.cuadruplos)
+    gotof_cuad = p.parser.cuads.pilaSaltos.pop()
+    p.parser.cuads.cuadruplos[gotof_cuad-1].result = else_cuad
+
+    
+def p_conditional_q3(p):
+    '''conditional_q3 : 
+    '''
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTO"])
+    false = p.parser.cuads.pilaSaltos.pop()
+    p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
+    
+    p.parser.cuads.cuadruplos[false-1].result = len(p.parser.cuads.cuadruplos)
+    
+
+def p_decision(p):
+    '''decision : WHEN OPPARENTH relac conditional_q1 CLPARENTH THEN OPBRACE estat_list CLBRACE conditional_q2
+                | WHEN OPPARENTH relac conditional_q1 CLPARENTH THEN OPBRACE estat_list CLBRACE ELSE conditional_q3 OPBRACE estat_list CLBRACE conditional_q2
+    '''
+    print_control(p, "decision", 16 )
 
 
 def p_func_cont(p):
@@ -432,6 +458,7 @@ def p_relac(p):
     
     result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
     p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
+    p[0] = result
     print_control(p, "relac\t", 3)
 
 
@@ -486,6 +513,29 @@ def p_asign(p):
              | ID dims ASGNMNT CONST_STRING
     '''
     if p.parser.cuads.pilaOperandos[-1] != "$":
+        try:
+            # looking for variable in local scope
+            current_func = p.parser.context
+            type = p.parser.dir_funcs.funcs[current_func]['vars'].vars[p[1]]['tipo']
+            
+            # # add factor to pilaOperandos
+            # p.parser.cuads.pilaOperandos.append(p[1])
+            # # add factor type to pilaTipos
+            # p.parser.cuads.pilaTipos.append(type)
+            
+        except:
+            try:
+                # looking for variable in global scope
+                type = p.parser.dir_funcs.funcs[p.parser.programName]['vars'].vars[p[1]]['tipo']
+                
+                # # add factor to pilaOperandos
+                # p.parser.cuads.pilaOperandos.append(p[1])
+                # # add factor type to pilaTipos
+                # p.parser.cuads.pilaTipos.append(type)
+            except:
+                raise Exception(f"Expression {p[1]} unknown")
+        
+        
         operando = p.parser.cuads.pilaOperandos.pop()
         _ = p.parser.cuads.pilaTipos.pop()
         
