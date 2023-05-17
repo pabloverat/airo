@@ -32,7 +32,7 @@ def p_encabezamiento(p):
     '''
     p.parser.dir_funcs = Dir_Funcs() # create dirFunc
     p.parser.cuads = Cuadruplos() # create cuadruplos list
-    p.parser.cuads.add_cuadruplo(idx=0, operation='GOTO')#ENCODE['GOTO'])
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
     
     p.parser.context = p[2] # name of active func
     p.parser.programName= p.parser.context
@@ -143,8 +143,23 @@ def p_context_to_local(p):
     print("Parsed context_to_local\t")
 
 
+def p_ciclo_q1(p):
+    '''ciclo_q1 : 
+    '''
+    p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
+
+    
+def p_ciclo_q2(p):
+    '''ciclo_q2 :
+    '''
+    end = p.parser.cuads.pilaSaltos.pop()
+    ret = p.parser.cuads.pilaSaltos.pop()
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTO"], result=ret)
+    p.parser.cuads.cuadruplos[end-1].result = len(p.parser.cuads.cuadruplos)
+        
+
 def p_ciclo(p):
-    '''ciclo : WHILE OPPARENTH relac CLPARENTH THEN OPBRACE estat_list CLBRACE
+    '''ciclo : WHILE ciclo_q1 OPPARENTH relac conditional_q1 CLPARENTH THEN OPBRACE estat_list CLBRACE ciclo_q2
     '''
     print_control(p, "ciclo\t", 8)
 

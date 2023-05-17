@@ -4,22 +4,21 @@ var x : int
 var y : float
 var z : int
 
-func myFoo() : void
-{
-    var a : char
-    var b : int
-    
-    a = read()
-    b = x + 41 
-}
-
 main()
 {
-    y = 2
-    x = y - 1
+    x = y-1 * (2.4+400)-3 / 2*y
+    while ( z>2*x) then {
+	  z = z-2*x
+        write(z)
+    }    
     write(x)
-    when (y>x) then
-    {
-        myFoo()
+    y = read()
+    write("hola")
+    y = 2+x*y
+    when ( x+4>2*y) then {
+	  z = 2*x
+        write(y)
+    } else {
+	  z = 2/x
     }
 }

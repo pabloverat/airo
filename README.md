@@ -33,10 +33,10 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 
 #### Avance 4
     🟢 Generación de Código de Estatutos Condicionales (Decisiones)
-    🟡 Generación de Código de Estatutos Condicionales (Ciclos)
+    🟢 Generación de Código de Estatutos Condicionales (Ciclos)
 
 #### Avance 5
-    🔴 Generación de Código de Funciones
+    🟡 Generación de Código de Funciones
 
 #### Avance 6
     ⚪ Mapa de Memoria de Ejecución para la Máquina Virtual
@@ -112,3 +112,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 50% Avance 4:
         - cuádruplos para if e if-else listos
         - agregué type checking que faltaba al asignar
+
+- 17-Mayo
+    - 100% Avance 4:
+        - avance completado
+        - cuádruplos para while listos (saltos de gotof y goto de vuelta)

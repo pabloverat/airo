@@ -7,7 +7,7 @@ var z : int[5+2]
 main()
 {
     x = y-1 * (2.4+400)-3 / 2*y
-    when ( z>2*x) then {
+    while ( z>2*x) then {
 	  z = z-2*x
         write(z)
     }    
