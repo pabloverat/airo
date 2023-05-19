@@ -139,7 +139,8 @@ def p_context_to_local(p):
     
     funcVars = Tabla_Vars()
     p.parser.context = "temp" 
-    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=None, dir_inicio=1, vars=funcVars)
+    dir_inicio = len(p.parser.cuads.cuadruplos)
+    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=None, dir_inicio=dir_inicio, vars=funcVars)
     print("Parsed context_to_local\t")
 
 
@@ -169,7 +170,7 @@ def p_conditional_q1(p):
     '''
     p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTOF"], leftOp=p[-1])
     p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
-    print("conditional_q1", p[-1])
+    # print("conditional_q1", p[-1])
 
 
 def p_conditional_q2(p):

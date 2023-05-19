@@ -1,7 +1,7 @@
 Program myProgCorrect
 
 var x : int
-var y : float
+var y : float[5+2]
 
 func myFoo() : void
 {

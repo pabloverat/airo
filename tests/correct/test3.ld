@@ -3,6 +3,11 @@ Program myProgCorrect
 var x : int
 var y : float
 var z : int
+var A : float
+var B : float
+var C : float
+var D : float
+
 
 main()
 {
@@ -15,10 +20,19 @@ main()
     y = read()
     write("hola")
     y = 2+x*y
-    when ( x+4>2*y) then {
-	  z = 2*x
-        write(y)
-    } else {
-	  z = 2/x
+    when (A + B < C) then
+    {
+        A = B + C
+        while (A > B + C) then
+        {
+            A = A - 1
+        }
+    } else
+    {
+        while (B > C + D) then
+        {
+            A = B + C * D
+            B = A-D
+        }
     }
 }
