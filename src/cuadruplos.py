@@ -45,9 +45,9 @@ class Cuadruplos:
         
     def print(self) -> None:
         for cuad in self.cuadruplos:
-            print(f"{cuad.idx}\t" if cuad.idx else "-\t", end="")
-            print(f"{cuad.operation}\t" if cuad.operation else "-\t", end="")
-            print(f"{cuad.leftOp}\t" if cuad.leftOp else "-\t", end="")
-            print(f"{cuad.rightOp}\t" if cuad.rightOp else "-\t", end="")
-            print(f"{cuad.result}" if cuad.result else "-\t", end="")
+            print(f"{cuad.idx}\t"       if cuad.idx       is not None else "-\t", end="")
+            print(f"{cuad.operation}\t" if cuad.operation is not None else "-\t", end="")
+            print(f"{cuad.leftOp}\t"    if cuad.leftOp    is not None else "-\t", end="")
+            print(f"{cuad.rightOp}\t"   if cuad.rightOp   is not None else "-\t", end="")
+            print(f"{cuad.result}"      if cuad.result    is not None else "-\t", end="")
             print("\n", end="")

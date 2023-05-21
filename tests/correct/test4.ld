@@ -1,7 +1,8 @@
 Program myProgCorrect
 
+var w : int
 var x : int
-var y : float[5+2]
+var y : float[5+2][6]
 
 func myFoo() : void
 {
@@ -12,7 +13,7 @@ func myFoo() : void
     b = x + 41.0 * (33-22.4/2+4*13)
 }
 
-func myFoo2(x : int, y : float) : int
+func myFoo2(x : int, y : float) : float
 {
     var m : int
     var n : float
@@ -23,7 +24,15 @@ func myFoo2(x : int, y : float) : int
         n = n + 1.5
     }
 
-    return m + myFoo2(m, n)*2
+    return n + 2
+}
+
+func myFoo3(m: int) : float
+{
+    var n : float
+
+    write("hello")
+    return myFoo2(m, 4.5)*2
 }
 
 main()

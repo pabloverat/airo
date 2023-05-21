@@ -36,11 +36,11 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Generación de Código de Estatutos Condicionales (Ciclos)
 
 #### Avance 5
-    🟡 Generación de Código de Funciones
+    🟢 Generación de Código de Funciones
 
 #### Avance 6
-    ⚪ Mapa de Memoria de Ejecución para la Máquina Virtual
-    ⚪ Máquina Virtual: Ejecución de Expresiones aritméticas
+    🟡 Mapa de Memoria de Ejecución para la Máquina Virtual
+    🔴 Máquina Virtual: Ejecución de Expresiones aritméticas
 
 #### Avance 7
     ⚪ Generación de Código de Arreglos / Tipos estructurados
@@ -117,3 +117,13 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 100% Avance 4:
         - avance completado
         - cuádruplos para while listos (saltos de gotof y goto de vuelta)
+
+- 19-Mayo
+    - 25% Avance 5:
+        - agregué dirInicio a funciones
+        - puntos neurálgicos y cuadruplos para declaración funciones
+
+- 21-Mayo
+    - 100% Avance 6:
+        - avance completado
+        - puntos neurálgicos y cuadruplos para llamada a funciones

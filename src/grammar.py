@@ -4,7 +4,7 @@ from utils import print_control, encode_var_type, encode_func_type
 from dir_funcs import Dir_Funcs
 from tabla_vars import Tabla_Vars
 from cuadruplos import Cuadruplos
-from cubo import ENCODE, CUBO
+from cubo import ENCODE, DECODE, CUBO
 
 #--- START : funciones de la gramática formal ---
 
@@ -14,6 +14,7 @@ def p_start(p):
                | encabezamiento func_list cuerpo
                | encabezamiento cuerpo
     '''
+    p[0] = "start"
     print_control(p, "S\t", 5)
     # DELETE DIR_FUNC AND GLOBAL VAR_TABLE
     
@@ -22,8 +23,9 @@ def p_calcula_globales(p):
     '''calcula_globales :
     '''
     current_func = p.parser.context
-    recursos = p.parser.dir_funcs.funcs[current_func]['vars'].calculate_resources()
+    recursos = p.parser.dir_funcs.funcs[current_func]['varTable'].calculate_resources()
     p.parser.dir_funcs.funcs[current_func]['recursos'] = recursos
+    p[0] = "calcula_globales"
     print("Parsed calcula_globales")
 
 
@@ -33,12 +35,13 @@ def p_encabezamiento(p):
     p.parser.dir_funcs = Dir_Funcs() # create dirFunc
     p.parser.cuads = Cuadruplos() # create cuadruplos list
     p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
+    # p.parser.funcCall = None
     
     p.parser.context = p[2] # name of active func
     p.parser.programName= p.parser.context
     func_type = encode_func_type("programa") # type of active func
     globalVars = Tabla_Vars()
-    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=func_type, dir_inicio=1, vars=globalVars)
+    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=func_type, dir_inicio=1, varTable=globalVars)
     
     print_control(p, "encabezamiento", 2)
 
@@ -48,6 +51,7 @@ def p_context_to_global(p):
     p.parser.context = p.parser.programName
     current_cuad = len(p.parser.cuads.cuadruplos)
     p.parser.cuads.cuadruplos[0].result = current_cuad
+    p[0] = "ɛ"
     print("Parsed context_to_global\t")
 
 
@@ -63,7 +67,7 @@ def p_variable(p):
     '''
     p[0] = p[2]
     current_func = p.parser.context
-    p.parser.dir_funcs.funcs[current_func]['vars'].add_var(p[2], ENCODE[p[4]])
+    p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[2], ENCODE[p[4]])
     print_control(p, "var\t", 5)
 
 
@@ -71,6 +75,10 @@ def p_var_list(p):
     '''var_list : variable var_list
                 | variable
     '''
+    try:
+        p[0] = f"{p[1]}\t{p[2]}"
+    except:
+        p[0] = p[1]
     print_control(p, "var_list", 2)
 
 
@@ -98,8 +106,9 @@ def p_param_list(p):
 def p_save_array_size(p):
     '''save_array_size : 
     '''
-    p[0] = p.parser.cuads.pilaOperandos.pop()
-    p.parser.cuads.pilaTipos.pop()
+    p[0] = "ɛ"
+    _ = p.parser.cuads.pilaOperandos.pop()
+    _ = p.parser.cuads.pilaTipos.pop()
     # print("save_array_size")
 
 
@@ -107,40 +116,61 @@ def p_dims(p):
     '''dims : OPBRACKET aritm save_array_size CLBRACKET
             | OPBRACKET aritm save_array_size CLBRACKET OPBRACKET aritm save_array_size CLBRACKET
     '''
-    print_control(p, "dims\t", 6)
+    try:
+        p[0] = f"{p[1]}{p[2]}{p[4]}{p[5]}{p[6]}{p[8]}"
+    except:
+        p[0] = f"{p[1]}{p[2]}{p[4]}"
+    print_control(p, "dims\t", 8)
     
+    
+def p_save_global_func(p):
+    '''save_global_func :
+    '''
+    func_name = p[-6] if p[-6] != "ɛ" else p[-7]
+    func_type = p[-1]
+    
+    # si la función tiene return, agregar una variable global son su nombre
+    if func_type not in ['void']:
+        p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_var(var_name=func_name, var_type=func_type)    
+    
+    p[0] = "ɛ"
+    print("save_global_func")
 
 
 def p_func(p):
-    '''func : FUNC context_to_local ID OPPARENTH CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
-            | FUNC context_to_local ID OPPARENTH param_list CLPARENTH COLON func_typ OPBRACE func_cont CLBRACE
+    '''func : FUNC ID context_to_local OPPARENTH CLPARENTH COLON func_typ save_global_func OPBRACE func_cont CLBRACE
+            | FUNC ID context_to_local OPPARENTH param_list CLPARENTH COLON func_typ save_global_func OPBRACE func_cont CLBRACE
     '''
-    func_name = p[3]
-    p[0] = func_name
+    func_name = p[2]
+    # p[0] = func_name
+    
+    # agregar tipo de función
+    func_type = p[7] if p[7] != ':' else p[8]
+    p.parser.dir_funcs.funcs[func_name]['func_type'] = ENCODE[func_type]
+    
+    # agregar recursos utilizados por función
+    recursos = p.parser.dir_funcs.funcs[func_name]['varTable'].calculate_resources()
+    p.parser.dir_funcs.funcs[func_name]['recursos'] = recursos
+    
+    # generar cuádruplo de ENDFUNC
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["ENDFUNC"], leftOp=p.parser.context)
+    
+    print_control(p, "func\t", 12)
+
+
+def p_context_to_local(p):
+    "context_to_local :"
+    p.parser.context = p[-1]
+    func_name = p[-1] 
     
     # check if the function's name is already used
     if func_name in p.parser.dir_funcs.funcs.keys():
         raise Exception(f"func {func_name} already exists")
     
-    # agregar nombre y tipo de función a temporal que estaba en dirfunc
-    p.parser.dir_funcs.funcs[func_name] = p.parser.dir_funcs.funcs["temp"]
-    del p.parser.dir_funcs.funcs["temp"]
-    p.parser.dir_funcs.funcs[func_name]['func_type'] = p.parser.func_type_read
-    
-    # agregar recursos utilizados por función
-    recursos = p.parser.dir_funcs.funcs[func_name]['vars'].calculate_resources()
-    p.parser.dir_funcs.funcs[func_name]['recursos'] = recursos
-    
-    print_control(p, "func\t", 11)
-
-
-def p_context_to_local(p):
-    "context_to_local :"
-    
     funcVars = Tabla_Vars()
-    p.parser.context = "temp" 
     dir_inicio = len(p.parser.cuads.cuadruplos)
-    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=None, dir_inicio=dir_inicio, vars=funcVars)
+    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=None, dir_inicio=dir_inicio, varTable=funcVars)
+    p[0] = "ɛ"
     print("Parsed context_to_local\t")
 
 
@@ -148,6 +178,7 @@ def p_ciclo_q1(p):
     '''ciclo_q1 : 
     '''
     p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
+    p[0] = "ɛ"
 
     
 def p_ciclo_q2(p):
@@ -157,6 +188,7 @@ def p_ciclo_q2(p):
     ret = p.parser.cuads.pilaSaltos.pop()
     p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTO"], result=ret)
     p.parser.cuads.cuadruplos[end-1].result = len(p.parser.cuads.cuadruplos)
+    p[0] = "ɛ"
         
 
 def p_ciclo(p):
@@ -170,7 +202,7 @@ def p_conditional_q1(p):
     '''
     p.parser.cuads.add_cuadruplo(operation=ENCODE["GOTOF"], leftOp=p[-1])
     p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
-    # print("conditional_q1", p[-1])
+    p[0] = "ɛ"
 
 
 def p_conditional_q2(p):
@@ -179,6 +211,7 @@ def p_conditional_q2(p):
     else_cuad = len(p.parser.cuads.cuadruplos)
     gotof_cuad = p.parser.cuads.pilaSaltos.pop()
     p.parser.cuads.cuadruplos[gotof_cuad-1].result = else_cuad
+    p[0] = "ɛ"
 
     
 def p_conditional_q3(p):
@@ -189,6 +222,7 @@ def p_conditional_q3(p):
     p.parser.cuads.pilaSaltos.append(len(p.parser.cuads.cuadruplos))
     
     p.parser.cuads.cuadruplos[false-1].result = len(p.parser.cuads.cuadruplos)
+    p[0] = "ɛ"
     
 
 def p_decision(p):
@@ -198,13 +232,22 @@ def p_decision(p):
     print_control(p, "decision", 16 )
 
 
+def p_save_return_value(p):
+    '''save_return_value :
+    '''
+    returnValue = p.parser.cuads.pilaOperandos.pop()
+    returnType = p.parser.cuads.pilaTipos.pop()
+    p[0] = "ɛ"
+
+
 def p_func_cont(p):
-    '''func_cont : var_list estat_list RETURN aritm
-                 | estat_list RETURN aritm
+    '''func_cont : var_list estat_list RETURN aritm save_return_value
+                 | estat_list RETURN aritm save_return_value
                  | var_list estat_list
                  | estat_list
     '''
     print_control(p, "func_cont", 4)
+    
 
 
 def p_estat(p):
@@ -233,7 +276,7 @@ def p_param(p):
     '''
     p[0] = p[1]
     current_func = p.parser.context
-    p.parser.dir_funcs.funcs[current_func]['vars'].add_var(p[1], ENCODE[p[3]])
+    p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[1], ENCODE[p[3]])
     p.parser.dir_funcs.funcs[current_func]['params'] = p.parser.dir_funcs.funcs[current_func]['params']+[ENCODE[p[3]]]    
     print_control(p, "param\t", 4)
 
@@ -246,7 +289,6 @@ def p_var_typ(p):
                | FRAME
     '''
     p[0] = p[1]
-    # print_control(p, "var_typ", 1)
 
 
 def p_func_typ(p):
@@ -258,7 +300,6 @@ def p_func_typ(p):
                 | VOID
     '''
     p[0] = p[1]
-    p.parser.func_type_read = encode_func_type(p[1])
     print_control(p, "func_typ", 1)
 
 
@@ -274,7 +315,7 @@ def p_check_aritm_operation(p):
         # when reducing only term
         pass
 
-    #print("parsed check_aritm_operation", p[-1])
+    p[0] = "ɛ"
 
 
 def p_check_aritm(p):
@@ -291,16 +332,16 @@ def p_check_aritm(p):
         try:
             temp_type = CUBO[operador][left_type][right_type]
         except:
-            raise Exception(f"operation {operador} between {left_type} and {right_type} invalid.")
+            raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
         
-        result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
+        result = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
         p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
         p.parser.cuads.pilaOperandos.append(result)
         p.parser.cuads.pilaTipos.append(temp_type)
     else:
         # print("not + nor - on top of the stack")
         pass
-    # print("parsed check_aritm")
+    p[0] = "ɛ"
     
 
 def p_aritm(p):
@@ -325,7 +366,9 @@ def p_check_term_operation(p):
         p.parser.cuads.pilaOperadores.append(ENCODE[operador])
     except:
         pass
-    # print("parsed check_term_operation", p[-1])
+
+    p[0] = "ɛ"
+
     
 def p_check_term(p):
     '''check_term :
@@ -341,15 +384,17 @@ def p_check_term(p):
         try:
             temp_type = CUBO[operador][left_type][right_type]
         except:
-            raise Exception(f"operation {operador} between {left_type} and {right_type} invalid.")
+            raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
         
-        result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
+        result = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
         p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
         p.parser.cuads.pilaOperandos.append(result)
         p.parser.cuads.pilaTipos.append(temp_type)
     else:
         # print("not * nor / on top of the stack")
         pass
+    
+    p[0] = "ɛ"
 
 
 def p_term(p):
@@ -358,9 +403,10 @@ def p_term(p):
             | factor check_term
     '''
     try:
-        p[0] = p[1,3,5]
+        p[0] = f"{p[1]} {p[3]} {p[5]}"
     except: 
         p[0] = p[1]
+
     print_control(p, "term\t", 5)
     
 
@@ -368,13 +414,14 @@ def p_factortype_const_int(p):
     "factortype_const_int : "
     # add factor type to pilaTipos
     p.parser.cuads.pilaTipos.append(ENCODE["int"])
+    p[0] = "ɛ"
 
 
 def p_factortype_const_float(p):
     "factortype_const_float : "
     # add factor type to pilaTipos
     p.parser.cuads.pilaTipos.append(ENCODE["float"])
-    # print("viene un float")
+    p[0] = "ɛ"
 
     
 def p_factor_const(p):
@@ -395,7 +442,7 @@ def p_factor_var(p):
     try:
         # looking for variable in local scope
         current_func = p.parser.context
-        type = p.parser.dir_funcs.funcs[current_func]['vars'].vars[p[1]]['tipo']
+        type = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]['tipo']
         
         p[0] = p[1]
         
@@ -407,7 +454,7 @@ def p_factor_var(p):
     except:
         try:
             # looking for variable in global scope
-            type = p.parser.dir_funcs.funcs[p.parser.programName]['vars'].vars[p[1]]['tipo']
+            type = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[p[1]]['tipo']
             
             # add factor to pilaOperandos
             p.parser.cuads.pilaOperandos.append(p[1])
@@ -419,12 +466,51 @@ def p_factor_var(p):
     print_control(p, "factor_var", 2)
 
 
+def p_function_call_q1(p):
+    '''function_call_q1 :
+    '''
+    assert p[-2] in p.parser.dir_funcs.funcs.keys(), f"function {p[-2]} unknown"
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["ERA"], leftOp=p[-2])
+    p.parser.funcCall = p[-2]
+    p.parser.paramsK = 0
+    p[0] = "ɛ"
+
+
+def p_function_call_q2(p):
+    '''function_call_q2 :
+    '''
+    try:
+        _ = p.parser.dir_funcs.funcs[p.parser.funcCall]['params'][p.parser.paramsK]
+        raise Exception(f"missing arguments in call to {p.parser.funcCall}")
+    except:
+        pass
+    
+    dirInicio = p.parser.dir_funcs.funcs[p.parser.funcCall]['dir_inicio']
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["GOSUB"], leftOp=p.parser.funcCall, result=dirInicio)
+    p[0] = "ɛ"  
+
+
 def p_factor_function_call(p):
-    """factor_function_call : ID OPPARENTH CLPARENTH
-                            | ID OPPARENTH args CLPARENTH
+    """factor_function_call : ID OPPARENTH function_call_q1 CLPARENTH function_call_q2
+                            | ID OPPARENTH function_call_q1 args CLPARENTH function_call_q2
     """
+    # returnValue = p.parser.cuads.pilaOperandos[-1] # .pop()
+    # returnType = p.parser.cuads.pilaTipos[-1] # .pop()
+    # print(returnValue)
+    # p[0] = returnValue
+    try: 
+        func_var = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[p[1]]
+    except:
+        raise Exception("func not found in global vars")
+    
+    p.parser.cuads.pilaOperandos.append(p[1])
+    p.parser.cuads.pilaTipos.append(ENCODE[func_var['tipo']])
+    print("pOperandos", p.parser.cuads.pilaOperandos)
+    print("pTipos", p.parser.cuads.pilaTipos)
+    
     p[0] = p[1]
-    print_control(p, "factor_function_call", 4)
+    print_control(p, "factor_function_call", 6)
+    
 
 def p_check_parenth(p):
     '''check_parenth : 
@@ -435,6 +521,8 @@ def p_check_parenth(p):
         oper = p.parser.cuads.pilaOperadores.pop()
         if oper != "(":
             raise Exception("Unexpected behaviour, didn't find a (")
+    
+    p[0] = "ɛ"
 
 
 def p_factor(p):
@@ -444,11 +532,11 @@ def p_factor(p):
               | factor_const
     '''
     if p[1] == "(":
-        p[0] = p[3]
+        p[0] = f"({p[3]})"
     else:
         p[0] = p[1]
         
-    print_control(p, "factor\t", 3)
+    print_control(p, "factor\t", 5)
 
 
 def p_relac(p):
@@ -470,28 +558,55 @@ def p_relac(p):
     try:
         temp_type = CUBO[operador][left_type][right_type]
     except:
-        raise Exception(f"operation {operador} between {left_type} and {right_type} invalid.")
+        raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
     
-    result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=temp_type)
+    result = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
     p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=result)
     p[0] = result
     print_control(p, "relac\t", 3)
 
 
-def p_args(p):
-    '''args : aritm COMMA args
-            | aritm
+def p_arg_q1(p):
+    '''arg_q1 :
     '''
-    print_control(p, "args\t", 3)
+    arg = None
+    arg = p.parser.cuads.pilaOperandos.pop()
+    
+    argType = p.parser.cuads.pilaTipos.pop()
+    try:
+        paramType = p.parser.dir_funcs.funcs[p.parser.funcCall]['params'][p.parser.paramsK]
+        assert argType == paramType, f"argType mismatch paramType: {DECODE[argType]} != {DECODE[paramType]}"
+    except:
+        raise Exception(f"error in call to {p.parser.funcCall}")
+    
+    p.parser.cuads.add_cuadruplo(operation=ENCODE["PARAM"], leftOp=arg, rightOp=p.parser.paramsK)
+    p[0] = "ɛ"
+    
+def p_arg_q2(p):
+    '''arg_q2 :
+    '''
+    p.parser.paramsK += 1
+    p[0] = "ɛ"
+
+
+def p_args(p):
+    '''args : aritm arg_q1 COMMA arg_q2 args
+            | aritm arg_q1
+    '''
+    try:
+        p[0] = f"{p[1]}, {p[5]}"
+    except:
+        p[0] = p[1]
+    print_control(p, "args\t", 5)
 
 
 def p_lectura(p):
     '''lectura : READ OPPARENTH CLPARENTH
     '''
-    # p[0] = float(input())
+    p[0] = p[1]
     
     current_func = p.parser.context
-    result = p.parser.dir_funcs.funcs[current_func]['vars'].add_temp(temp_type=ENCODE["float"])
+    result = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=ENCODE["float"])
     p.parser.cuads.add_cuadruplo(operation=ENCODE["READ"], result=result)
     
     p.parser.cuads.pilaOperandos.append(result)
@@ -509,13 +624,14 @@ def p_escritura(p):
         operando = p.parser.cuads.pilaOperandos.pop()
         tipo = p.parser.cuads.pilaTipos.pop()
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=operando)
-        
+    
+    p[0] = p[1]
     print_control(p, "escritura", 5)
 
 
 def p_llam_void(p):
-    '''llam_void : ID OPPARENTH CLPARENTH
-                 | ID OPPARENTH args CLPARENTH
+    '''llam_void : ID OPPARENTH function_call_q1 CLPARENTH function_call_q2
+                 | ID OPPARENTH function_call_q1 args CLPARENTH function_call_q2
     '''
     print_control(p, "llam_void", 4)
 
@@ -532,22 +648,13 @@ def p_asign(p):
         try:
             # looking for variable in local scope
             current_func = p.parser.context
-            type = p.parser.dir_funcs.funcs[current_func]['vars'].vars[p[1]]['tipo']
-            
-            # # add factor to pilaOperandos
-            # p.parser.cuads.pilaOperandos.append(p[1])
-            # # add factor type to pilaTipos
-            # p.parser.cuads.pilaTipos.append(type)
+            type = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]['tipo']
             
         except:
             try:
                 # looking for variable in global scope
-                type = p.parser.dir_funcs.funcs[p.parser.programName]['vars'].vars[p[1]]['tipo']
-                
-                # # add factor to pilaOperandos
-                # p.parser.cuads.pilaOperandos.append(p[1])
-                # # add factor type to pilaTipos
-                # p.parser.cuads.pilaTipos.append(type)
+                type = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[p[1]]['tipo']
+
             except:
                 raise Exception(f"Expression {p[1]} unknown")
         

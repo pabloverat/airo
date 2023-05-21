@@ -9,7 +9,7 @@ class Dir_Funcs:
         self.funcs = {}
 
 
-    def add_func(self, func_name: str, func_type: int, dir_inicio: int, recursos: int = None, params: list = [], vars: Tabla_Vars = None) -> None:
+    def add_func(self, func_name: str, func_type: int, dir_inicio: int, recursos: int = None, params: list = [], varTable: Tabla_Vars = None) -> None:
         """
         func types:
         -1 -> programa
@@ -22,7 +22,7 @@ class Dir_Funcs:
             raise Exception(f"func {func_name} already exists")
 
         # adding func to funcDir    
-        self.funcs[func_name] = {'func_type': func_type, 'dir_inicio': dir_inicio, 'recursos': recursos, 'params': params, 'vars': vars}
+        self.funcs[func_name] = {'func_type': func_type, 'dir_inicio': dir_inicio, 'recursos': recursos, 'params': params, 'varTable': varTable}
 
 
     def get_func_type(self, func_name: str) -> int:
@@ -36,9 +36,9 @@ class Dir_Funcs:
     def print_funcs(self) -> None:
         for func in self.funcs.items():
             temp_dict = func[1].copy()
-            temp_dict.pop("vars")
+            temp_dict.pop("varTable")
             pretty = json.dumps(temp_dict, indent=4, sort_keys=False)
             print(func[0]) # function name
             print(pretty) # function atributes
-            func[1]['vars'].print_vars() # function variables
+            func[1]['varTable'].print_vars() # function variables
             print()
