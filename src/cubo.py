@@ -9,6 +9,7 @@ ENCODE = {
     'int': 3,
     'float': 4,
     'frame': 5,
+    'string': 6,
     
     # arithmetic operators
     '+': 10,

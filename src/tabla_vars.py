@@ -9,10 +9,10 @@ class Tabla_Vars:
         self.vars_range = (1000, 4999)
         
         self.temps = {}
-        self.temps_range = (5000, 9999)    
+        self.temps_range = (5000, 9999)
 
 
-    def add_temp(self, temp_type: int):# -> None:
+    def add_temp(self, temp_type: int) -> str:
         """
         temp types:
         1 - bool    2 - char    3 - int
@@ -76,7 +76,7 @@ class Tabla_Vars:
     def print_vars(self) -> None:
         pretty_vars = json.dumps(self.vars, indent=4, sort_keys=False)
         pretty_temps = json.dumps(self.temps, indent=4, sort_keys=False)
-        print("vars", pretty_vars)
-        print("temps", pretty_temps)
+        print("vars: ", pretty_vars)
+        print("temps: ", pretty_temps)
         # print("vars", self.vars)
         # print("temps", self.temps)

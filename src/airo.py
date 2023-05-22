@@ -54,6 +54,9 @@ def main():
     print("dir_funcs:\n")
     myParser.dir_funcs.print_funcs()
     
+    # tabla de constantes
+    myParser.const_table.print()
+    
     # pilas
     print("pOperadores: ", myParser.cuads.pilaOperadores)
     print("pOperandos: ", myParser.cuads.pilaOperandos)

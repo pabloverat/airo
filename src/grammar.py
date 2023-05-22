@@ -1,8 +1,9 @@
 # grammar.py
 
-from utils import print_control, encode_var_type, encode_func_type
+from utils import print_control
 from dir_funcs import Dir_Funcs
 from tabla_vars import Tabla_Vars
+from tabla_consts import Tabla_Consts
 from cuadruplos import Cuadruplos
 from cubo import ENCODE, DECODE, CUBO
 
@@ -32,16 +33,25 @@ def p_calcula_globales(p):
 def p_encabezamiento(p):
     '''encabezamiento : PROGRAM ID
     '''
-    p.parser.dir_funcs = Dir_Funcs() # create dirFunc
-    p.parser.cuads = Cuadruplos() # create cuadruplos list
-    p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
-    # p.parser.funcCall = None
+    # create dirFunc
+    p.parser.dir_funcs = Dir_Funcs()
+    # create cuadruplos list
+    p.parser.cuads = Cuadruplos()
+    # creando tabla de constantes
+    p.parser.const_table = Tabla_Consts()
     
-    p.parser.context = p[2] # name of active func
-    p.parser.programName= p.parser.context
-    func_type = encode_func_type("programa") # type of active func
+    # guardando nombre de contexto actual
+    p.parser.context = p[2]
+    # guardando nombre del programa
+    p.parser.programName = p.parser.context
+    
+    # creando tabla de variables globales
     globalVars = Tabla_Vars()
-    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=func_type, dir_inicio=1, varTable=globalVars)
+    # guardando programa como una función den directorio de funciones
+    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=ENCODE["programa"], dir_inicio=1, varTable=globalVars)
+    
+    # generar primer cuadruplo "go to main"
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
     
     print_control(p, "encabezamiento", 2)
 
@@ -265,7 +275,7 @@ def p_estat(p):
 
 def p_carga_dt(p):
     '''carga_dt : ID ASGNMNT LOAD OPPARENTH ID CLPARENTH
-                | ID ASGNMNT LOAD OPPARENTH CONST_STRING CLPARENTH 
+                | ID ASGNMNT LOAD OPPARENTH CONST_STRING add_string_const CLPARENTH 
     '''
     print_control(p, "carga_dt", 6)
 
@@ -414,6 +424,9 @@ def p_factortype_const_int(p):
     "factortype_const_int : "
     # add factor type to pilaTipos
     p.parser.cuads.pilaTipos.append(ENCODE["int"])
+    # add factor_const to const_table
+    p.parser.const_table.add_const(const=p[-1], type=ENCODE["int"])
+    # p.parser.dir_funcs.funcs[p.parser.programName]
     p[0] = "ɛ"
 
 
@@ -421,6 +434,8 @@ def p_factortype_const_float(p):
     "factortype_const_float : "
     # add factor type to pilaTipos
     p.parser.cuads.pilaTipos.append(ENCODE["float"])
+    # add factor_const to const_table
+    p.parser.const_table.add_const(const=p[-1], type=ENCODE["float"])
     p[0] = "ɛ"
 
     
@@ -428,10 +443,10 @@ def p_factor_const(p):
     """factor_const : CONST_INT factortype_const_int
                     | CONST_FLOAT factortype_const_float
     """
-    print_control(p, "factor_const", 2)
-    p[0] = p[1]
     # add factor to pilaOperandos
     p.parser.cuads.pilaOperandos.append(p[1])
+    p[0] = p[1]
+    print_control(p, "factor_const", 2)
 
 
 def p_factor_var(p):
@@ -616,9 +631,10 @@ def p_lectura(p):
 
 def p_escritura(p):
     '''escritura : WRITE OPPARENTH aritm CLPARENTH
-                 | WRITE OPPARENTH CONST_STRING CLPARENTH
+                 | WRITE OPPARENTH CONST_STRING add_string_const CLPARENTH
     '''
     if p.parser.cuads.pilaOperandos[-1] == "$":
+        # si no hay nada en la pila de operandos entonces se está usando la segunda regla
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=p[3])
     else:
         operando = p.parser.cuads.pilaOperandos.pop()
@@ -635,14 +651,20 @@ def p_llam_void(p):
     '''
     print_control(p, "llam_void", 4)
 
+def p_add_string_const(p):
+    '''add_string_const : 
+    '''
+    # add factor_const to const_table
+    p.parser.const_table.add_const(const=p[-1], type=ENCODE["string"])
+
 
 def p_asign(p):
     '''asign : ID ASGNMNT lectura
              | ID ASGNMNT aritm
-             | ID ASGNMNT CONST_STRING
+             | ID ASGNMNT CONST_STRING add_string_const
              | ID dims ASGNMNT lectura
              | ID dims ASGNMNT aritm
-             | ID dims ASGNMNT CONST_STRING
+             | ID dims ASGNMNT CONST_STRING add_string_const
     '''
     if p.parser.cuads.pilaOperandos[-1] != "$":
         try:

@@ -124,6 +124,10 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - puntos neurálgicos y cuadruplos para declaración funciones
 
 - 21-Mayo
-    - 100% Avance 6:
+    - 100% Avance 5:
         - avance completado
         - puntos neurálgicos y cuadruplos para llamada a funciones
+
+- 22-Mayo
+    - 10% Avance 6:
+        - agregué tabla de constantes: diccionario que indexa una tupla con una dirección dentro de un rango predeterminado y el tipo de la constante
