@@ -135,3 +135,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 - 28-Mayo
     - 20% Avance 6:
         - ahora se generan los cuádruplos con direcciones, también se siguen generando con nombres para debugging
+    
+- 29-Mayo
+    - 30% Avance 6:
+        - se genera el archivo ovejota y se recrean cuadruplos, dirFuncs y constsTable desde maq virtual

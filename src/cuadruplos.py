@@ -1,5 +1,7 @@
 # cuadruplo.py
 
+import json
+
 class Cuadruplo:
     
     def __init__(self, idx=None, operation=None, leftOp=None, rightOp=None, result=None) -> None:
@@ -51,3 +53,23 @@ class Cuadruplos:
             print(f"{cuad.rightOp}\t"   if cuad.rightOp   is not None else "-\t", end="")
             print(f"{cuad.result}"      if cuad.result    is not None else "-\t", end="")
             print("\n", end="")
+            
+    def get_ovejota_str(self) -> str:
+        pretty_cuads = [(cuad.idx, cuad.operation, cuad.leftOp, cuad.rightOp, cuad.result) for cuad in self.cuadruplos]
+        return json.dumps(pretty_cuads)
+    
+    
+    def export(self) -> None:
+        out_str = ""
+        for cuad in self.cuadruplos:
+            out_str += "".join([
+                str(f"{cuad.idx}\t"       if cuad.idx       is not None else "-\t"),
+                str(f"{cuad.operation}\t" if cuad.operation is not None else "-\t"), 
+                str(f"{cuad.leftOp}\t"    if cuad.leftOp    is not None else "-\t"), 
+                str(f"{cuad.rightOp}\t"   if cuad.rightOp   is not None else "-\t"), 
+                str(f"{cuad.result}"      if cuad.result    is not None else "-\t"), 
+                str("\n")
+            ])
+            
+        with open("./ovejota.obj", "w+") as f:
+            f.write(out_str)

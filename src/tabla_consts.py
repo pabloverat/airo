@@ -31,3 +31,8 @@ class Tabla_Consts:
     def print(self) -> None:
         pretty_consts = json.dumps(self.consts, indent=4, sort_keys=False)
         print(pretty_consts, "\n")
+
+
+    def get_ovejota_str(self) -> str:
+        pretty_consts = json.dumps(self.consts)
+        return pretty_consts

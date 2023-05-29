@@ -9,6 +9,7 @@ from grammar import *
 
 import sys
 from utils import read_file, print_tokens
+from output_formatter import Output_Formatter
 
 # entry point
 def main():
@@ -67,6 +68,14 @@ def main():
     print("\ncuádruplos con direcciones:\n")
     myParser.cuads.print()
     
-        
+    
+    out = Output_Formatter()
+    out.cuads = myParser.cuads.get_ovejota_str()
+    out.consts = myParser.const_table.get_ovejota_str()
+    out.dir_funcs = myParser.dir_funcs.get_ovejota_str()
+    out.build_ovejota()
+
+    
+    
 if __name__ == "__main__":
     main()
