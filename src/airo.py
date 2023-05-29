@@ -43,9 +43,6 @@ def main():
     # construyendo parser
     myParser = yacc.yacc()
     
-    # agregando directorio de funciones
-    # myParser.dir_funcs = Dir_Funcs()
-    
     # "parseando"
     _ = myParser.parse(data, lexer=myLexer)
     print("terminé el parsing\n")
@@ -55,6 +52,7 @@ def main():
     myParser.dir_funcs.print_funcs()
     
     # tabla de constantes
+    print("const_table:\n")
     myParser.const_table.print()
     
     # pilas
@@ -64,7 +62,9 @@ def main():
     print("pSaltos: ", myParser.cuads.pilaSaltos)
     
     # cuádruplos
-    print("\ncuádruplos:\n")
+    print("\ncuádruplos con nombres:\n")
+    myParser.aux_cuads.print()
+    print("\ncuádruplos con direcciones:\n")
     myParser.cuads.print()
     
         

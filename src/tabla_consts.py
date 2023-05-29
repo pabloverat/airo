@@ -6,13 +6,13 @@ class Tabla_Consts:
     
     def __init__(self) -> None:
         self.consts = {}
-        self.consts_range = (0, 999)
+        self.consts_range = (10_000, 10_999)
         
-    def add_const(self, const: int|float|str, type: int) -> None:
+    def add_const(self, const: int|float|str, type: int) -> int:
         
         # is the variable's name already used?
         if const in self.consts.keys():
-            print(f"const {const} already in table")
+            # print(f"const {const} already in table")
             return
         
         # possible virtual address for const
@@ -25,6 +25,9 @@ class Tabla_Consts:
         # add const to const_table
         self.consts[const] = (const_address, type)
         
+        return const_address
+    
+        
     def print(self) -> None:
         pretty_consts = json.dumps(self.consts, indent=4, sort_keys=False)
-        print("consts: ", pretty_consts, "\n")
+        print(pretty_consts, "\n")

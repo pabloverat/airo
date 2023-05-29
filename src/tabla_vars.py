@@ -1,15 +1,44 @@
 # tabla_vars.py
 
 import json
+from cubo import ENCODE, DECODE, CUBO
 
 class Tabla_Vars:
 
     def __init__(self) -> None:
         self.vars = {}
-        self.vars_range = (1000, 4999)
+        # self.vars_range = (1000, 4999)
+        self.vars_range = {
+            ENCODE["bool"]:  (1_000, 1_999),
+            ENCODE["char"]:  (2_000, 2_999),
+            ENCODE["int"]:   (3_000, 4_999),
+            ENCODE["float"]: (4_000, 4_999),
+            ENCODE["frame"]: (5_000, 9_999),
+        }
+        self.vars_counts = {
+            ENCODE["bool"]:  0,
+            ENCODE["char"]:  0,
+            ENCODE["int"]:   0,
+            ENCODE["float"]: 0,
+            ENCODE["frame"]: 0,
+        }
         
         self.temps = {}
-        self.temps_range = (5000, 9999)
+        # self.temps_range = (5000, 9999)
+        self.temps_range = {
+            ENCODE["bool"]:  (11_000, 11_999),
+            ENCODE["char"]:  (12_000, 12_999),
+            ENCODE["int"]:   (13_000, 14_999),
+            ENCODE["float"]: (14_000, 14_999),
+            ENCODE["frame"]: (15_000, 19_999),
+        }
+        self.temps_counts = {
+            ENCODE["bool"]:  0,
+            ENCODE["char"]:  0,
+            ENCODE["int"]:   0,
+            ENCODE["float"]: 0,
+            ENCODE["frame"]: 0,
+        }
 
 
     def add_temp(self, temp_type: int) -> str:
@@ -20,12 +49,12 @@ class Tabla_Vars:
         """
 
         # possible virtual address for temp
-        temp_address = self.temps_range[0] + len(self.temps)
-        temp_name = "t" + str(len(self.temps))
+        temp_address = self.temps_range[temp_type][0] + self.temps_counts[temp_type]
+        temp_name = "t" + DECODE[temp_type] + str(self.temps_counts[temp_type])
 
         # is the address out of range?
-        if temp_address > self.temps_range[1]:
-            raise Exception("out of slots for temps")
+        if temp_address > self.temps_range[temp_type][1]:
+            raise Exception(f"out of slots for temps of type {DECODE[temp_type]}")
         
         # is the variable's name already used?
         if temp_name in self.temps.keys():
@@ -33,8 +62,9 @@ class Tabla_Vars:
         
         # add variable to vars var_table
         self.temps[temp_name] = {'tipo': temp_type, 'address': temp_address}
+        self.temps_counts[temp_type] += 1
         
-        return temp_name
+        return temp_name, temp_address
 
 
     def add_var(self, var_name: str, var_type: int) -> None:
@@ -45,10 +75,10 @@ class Tabla_Vars:
         """
         
         # possible virtual address for variable
-        var_address = self.vars_range[0] + len(self.vars)
+        var_address = self.vars_range[var_type][0] + self.vars_counts[var_type]
         
         # is the address out of range?
-        if var_address > self.vars_range[1]:
+        if var_address > self.vars_range[var_type][1]:
             raise Exception("out of slots for vars")
         
         # is the variable's name already used?
@@ -57,6 +87,7 @@ class Tabla_Vars:
         
         # add variable to vars var_table
         self.vars[var_name] = {'tipo': var_type, 'address':var_address}
+        self.vars_counts[var_type] += 1
 
         
     def remove_var(self, var_name: str) -> None:

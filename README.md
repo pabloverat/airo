@@ -43,8 +43,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🔴 Máquina Virtual: Ejecución de Expresiones aritméticas
 
 #### Avance 7
-    ⚪ Generación de Código de Arreglos / Tipos estructurados
-    ⚪ Máquina Virtual: ejecución de estatutos secuenciales y condicionales
+    🔴 Generación de Código de Arreglos / Tipos estructurados
+    🔴 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
 
 #### Avance 8
     ⚪ 1era versión de Documentación
@@ -131,3 +131,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 - 22-Mayo
     - 10% Avance 6:
         - agregué tabla de constantes: diccionario que indexa una tupla con una dirección dentro de un rango predeterminado y el tipo de la constante
+
+- 28-Mayo
+    - 20% Avance 6:
+        - ahora se generan los cuádruplos con direcciones, también se siguen generando con nombres para debugging
