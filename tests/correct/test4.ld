@@ -7,10 +7,11 @@ var y : float[5+2][6]
 func myFoo() : void
 {
     var a : char
-    var b : int
+    var b : float
     
-    a = read()
+    b = read()
     b = x + 41.0 * (33-22.4/2+4*13)
+    write(b)
 }
 
 func myFoo2(x : int, y : float) : float
@@ -37,8 +38,8 @@ func myFoo3(m: int) : float
 
 main()
 {
-    y = 2
-    x = y - 1
+    x = 1
+    y = 2.0 
     write(x)
     when (y!=x) then
     {

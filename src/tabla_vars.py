@@ -1,6 +1,7 @@
 # tabla_vars.py
 
 import json
+from collections import Counter
 from cubo import ENCODE, DECODE, CUBO
 
 class Tabla_Vars:
@@ -95,8 +96,15 @@ class Tabla_Vars:
             raise Exception("not valid param for var_scope")
 
 
-    def calculate_resources(self) -> int:
-        return [val['tipo'] for val in self.vars.values()] + [temp['tipo'] for temp in self.temps.values()]
+    # def calculate_resources(self) -> int:
+    def calculate_resources(self):
+        vars = [var['tipo'] for var in self.vars.values()]
+        vars_count = Counter(vars)
+        temps = [temp['tipo'] for temp in self.temps.values()]
+        temps_count = Counter(temps)
+        # print((vars_count, temps_count))
+        return (vars_count, temps_count)
+
 
     def get_var_type(self, var_name: str) -> int:
         return self.vars[var_name]['tipo']

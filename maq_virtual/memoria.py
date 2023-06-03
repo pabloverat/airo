@@ -2,13 +2,14 @@
 
 import math
 import json
+from utils import DECODE
 
 class Memoria:
     
     def __init__(self) -> None:
         
         self.values_mapper = {
-            "vars_bool"   : [],
+            # "vars_bool"   : [],
             "vars_char"   : [],
             "vars_int"    : [],
             "vars_float"  : [],
@@ -30,6 +31,16 @@ class Memoria:
             'temps_int':   0,
             'temps_float': 0,
         }
+
+
+    def era(self, resources_tuple) -> None:
+        vars_resources, temps_resources = resources_tuple
+        # vars
+        temp_dict = {str("vars_"+DECODE[int(tipo)]): amount for tipo, amount in vars_resources.items()}
+        self.values_mapper.update({k: [None]*amount for k, amount in temp_dict.items()})
+        # temps
+        temp_dict = {str("temps_"+DECODE[int(k)]): v for k, v in temps_resources.items()}
+        self.values_mapper.update({k: [None]*amount for k, amount in temp_dict.items()})
 
     
     def set_base(self,
@@ -56,6 +67,7 @@ class Memoria:
         
     def find_type_from_address_base(self, address_base) -> str:
         if address_base not in self.base_addresses_mapper.values():
+            print("address_base", address_base)
             raise Exception("address not admittable to one of the bases")
             
         mydict = self.base_addresses_mapper
@@ -66,13 +78,15 @@ class Memoria:
         item_base = math.floor(address/1000)*1000
         type = self.find_type_from_address_base(address_base=item_base)
         cast = getattr(self, type[type.find("_")+1:])
-        return cast(self.values_mapper[type][address-item_base])
+        value = self.values_mapper[type][address-item_base]
+        # if value is None:
+        #     raise Exception("variable referenced before assignment")
+        return cast(value)
         
     
     def set_registry(self, value, address) -> None:
         item_base = math.floor(address/1000)*1000
         type = self.find_type_from_address_base(address_base=item_base)
-        # print("item_base", item_base)
         self.values_mapper[type].append(None)
         self.values_mapper[type][address-item_base] = value
     
@@ -91,6 +105,9 @@ class Memoria:
     
     def float(self, val) -> float:
         return float(val)
+    
+    def bool(self, val) -> bool:
+        return bool(val)
     
     def string(self, val) -> str:
         return str(val)

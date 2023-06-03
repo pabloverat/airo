@@ -79,6 +79,8 @@ def p_context_to_global(p):
     current_cuad = len(p.parser.cuads.cuadruplos)
     p.parser.cuads.cuadruplos[0].result = current_cuad
     p.parser.aux_cuads.cuadruplos[0].result = current_cuad
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['ERA'], leftOp=p.parser.context)
+    p.parser.aux_cuads.add_cuadruplo(operation='ERA', leftOp=p.parser.context)
     p[0] = "ɛ"
     print("Parsed context_to_global\t")
 

@@ -1,4 +1,10 @@
-# utiks.py
+# utils.py
+
+def get_resources_from_dir_func(dir_funcs, func_type=None, func_name=None):
+    if func_type:
+        return list({k:v for k,v in dir_funcs.items() if v['func_type']==func_type}.values())[0]['recursos']
+    if func_name:
+        return dir_funcs[func_name]['recursos']
 
 ENCODE = {
     # data types
@@ -45,4 +51,46 @@ ENCODE = {
     'ASSIGN': 60,
     'PRINT': 61,
     'READ': 62
+}
+
+
+DECODE = {
+    # data types
+    -1: 'programa',
+    0: 'void',
+    1: 'bool',
+    2: 'char',
+    3: 'int',
+    4: 'float',
+    5: 'frame',
+    
+    # arithmetic operators
+    10: '+',
+    11: '-',
+    12: '*',
+    13: '/',
+    
+    # relational operators
+    30: '==',
+    31: '!=',
+    32: '>',
+    33: '>=',
+    34: '<',
+    35: '<=',
+    
+    # jumping operators
+    40: 'GOTO',
+    41: 'GOTOF',
+    42: 'GOTOV',
+    
+    # modules operators
+    50: 'GOSUB',
+    51: 'ERA',
+    52: 'PARAM',
+    53: 'ENDFUNC',
+    
+    # I/O operators
+    60: 'ASSIGN',
+    61: 'PRINT',
+    62: 'READ',
 }
