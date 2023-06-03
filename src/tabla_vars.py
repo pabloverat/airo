@@ -7,11 +7,10 @@ class Tabla_Vars:
 
     def __init__(self) -> None:
         self.vars = {}
-        # self.vars_range = (1000, 4999)
         self.vars_range = {
             ENCODE["bool"]:  (1_000, 1_999),
             ENCODE["char"]:  (2_000, 2_999),
-            ENCODE["int"]:   (3_000, 4_999),
+            ENCODE["int"]:   (3_000, 3_999),
             ENCODE["float"]: (4_000, 4_999),
             ENCODE["frame"]: (5_000, 9_999),
         }
@@ -24,20 +23,19 @@ class Tabla_Vars:
         }
         
         self.temps = {}
-        # self.temps_range = (5000, 9999)
         self.temps_range = {
-            ENCODE["bool"]:  (11_000, 11_999),
-            ENCODE["char"]:  (12_000, 12_999),
-            ENCODE["int"]:   (13_000, 14_999),
-            ENCODE["float"]: (14_000, 14_999),
-            ENCODE["frame"]: (15_000, 19_999),
+            ENCODE["bool"]:  (101_000, 101_999),
+            # ENCODE["char"]:  (102_000, 102_999),
+            ENCODE["int"]:   (103_000, 103_999),
+            ENCODE["float"]: (104_000, 104_999),
+            # ENCODE["frame"]: (105_000, 109_999),
         }
         self.temps_counts = {
             ENCODE["bool"]:  0,
-            ENCODE["char"]:  0,
+            # ENCODE["char"]:  0,
             ENCODE["int"]:   0,
             ENCODE["float"]: 0,
-            ENCODE["frame"]: 0,
+            # ENCODE["frame"]: 0,
         }
 
 

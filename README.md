@@ -39,17 +39,17 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Generación de Código de Funciones
 
 #### Avance 6
-    🟡 Mapa de Memoria de Ejecución para la Máquina Virtual
-    🔴 Máquina Virtual: Ejecución de Expresiones aritméticas
+    🟢 Mapa de Memoria de Ejecución para la Máquina Virtual
+    🟢 Máquina Virtual: Ejecución de Expresiones aritméticas
 
 #### Avance 7
-    🔴 Generación de Código de Arreglos / Tipos estructurados
-    🔴 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
+    🟡 Generación de Código de Arreglos / Tipos estructurados
+    🟡 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
 
 #### Avance 8
-    ⚪ 1era versión de Documentación
-    ⚪ Máquina virtual: ejecución de módulos y arreglos
-    ⚪ Generación de código y Máquina virtual para una parte de la aplicación
+    🔴 1era versión de Documentación
+    🔴 Máquina virtual: ejecución de módulos y arreglos
+    🔴 Generación de código y Máquina virtual para una parte de la aplicación
 
 ### Actividades realizadas
 % de complitud
@@ -139,3 +139,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
 - 29-Mayo
     - 30% Avance 6:
         - se genera el archivo ovejota y se recrean cuadruplos, dirFuncs y constsTable desde maq virtual
+
+- 02-Junio
+    - 100% Avance 6:
+        - mapa de memoria creado con una clase que tiene dos diccionarios: uno con listas para guardar los valores que estarán en la memoria, y uno con las direcciones base
+        - ya hace operaciones binarias

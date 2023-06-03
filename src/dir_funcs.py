@@ -44,12 +44,11 @@ class Dir_Funcs:
             print()
             
     def get_ovejota_str(self) -> str:
-        pretty_funcs = []
+        pretty_funcs = {}
         
         for func in self.funcs.items():
             temp_dict = func[1].copy()
             temp_dict.pop("varTable")
-            pretty_funcs.append(temp_dict)
-            # pretty = json.dumps(temp_dict, indent=4, sort_keys=False)
+            pretty_funcs[func[0]] = temp_dict
         
         return json.dumps(pretty_funcs)

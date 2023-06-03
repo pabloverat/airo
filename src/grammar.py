@@ -49,6 +49,20 @@ def p_encabezamiento(p):
     
     # creando tabla de variables globales
     globalVars = Tabla_Vars()
+    globalVars.vars_range = {
+        ENCODE["bool"]:  (11_000, 11_999),
+        ENCODE["char"]:  (12_000, 12_999),
+        ENCODE["int"]:   (13_000, 14_999),
+        ENCODE["float"]: (14_000, 14_999),
+        ENCODE["frame"]: (15_000, 19_999),
+    }
+    globalVars.temps_range = {
+        ENCODE["bool"]:  (111_000, 111_999),
+        # ENCODE["char"]:  (112_000, 112_999),
+        ENCODE["int"]:   (113_000, 114_999),
+        ENCODE["float"]: (114_000, 114_999),
+        # ENCODE["frame"]: (115_000, 119_999),
+    }
     # guardando programa como una función den directorio de funciones
     p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=ENCODE["programa"], dir_inicio=1, varTable=globalVars)
     
@@ -779,7 +793,9 @@ def p_asign(p):
                 raise Exception(f"Expression {p[1]} unknown")
         
         operando = p.parser.cuads.pilaOperandos.pop()
-        _ = p.parser.cuads.pilaTipos.pop()        
+        operando_type = p.parser.cuads.pilaTipos.pop()        
+        if operando_type != var_found['tipo']:
+            raise Exception(f"assigning {DECODE[operando_type]} to a variable of type {DECODE[var_found['tipo']]}")
         p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=var_found['address'])
         
         operando = p.parser.aux_cuads.pilaOperandos.pop()
