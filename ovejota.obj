@@ -1,5 +1,5 @@
-[[0, 40, null, null, 10], [1, 61, 3000, null, null], [2, 32, 3000, 23002, 101000], [3, 41, 101000, null, 8], [4, 51, "hola", null, null], [5, 11, 3000, 23003, 103000], [6, 52, 103000, 0, null], [7, 50, "hola", null, 1], [8, 61, 3000, null, null], [9, 53, "hola", null, null], [10, 51, "Program", null, null], [11, 60, 23001, null, 13001], [12, 51, "hola", null, null], [13, 11, 13001, 23003, 113000], [14, 52, 113000, 0, null], [15, 50, "hola", null, 1]]
+[[0, 40, null, null, 5], [1, 12, 3000, 23002, 103000], [2, 60, 103000, null, 3000], [3, 54, 3000, null, null], [4, 53, "pordiez", null, null], [5, 51, "Program", null, null], [6, 60, 23003, null, 13001], [7, 51, "pordiez", null, null], [8, 11, 13001, 23004, 113000], [9, 52, 113000, 0, null], [10, 50, "pordiez", null, 1], [11, 60, 13002, null, 13001], [12, 61, 13001, null, null]]
 -#-#-#-#-#-
-{"Program": {"func_type": -1, "dir_inicio": 1, "recursos": [{"3": 2, "4": 1}, {"3": 1}], "params": [], "params_addresses": []}, "hola": {"func_type": 0, "dir_inicio": 1, "recursos": [{"3": 1}, {"1": 1, "3": 1}], "params": [3], "params_addresses": [3000]}}
+{"Program": {"func_type": -1, "dir_inicio": 1, "recursos": [{"3": 3, "4": 1}, {"3": 1}], "params": [], "params_addresses": []}, "pordiez": {"func_type": 3, "dir_inicio": 1, "recursos": [{"3": 1}, {"3": 1}], "params": [3], "params_addresses": [3000]}}
 -#-#-#-#-#-
-{"5": 23000, "6": 23001, "0": 23002, "1": 23003}
+{"5": 23000, "6": 23001, "10": 23002, "4": 23003, "1": 23004}

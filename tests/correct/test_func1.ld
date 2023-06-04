@@ -7,13 +7,13 @@ var y : float[5][6]
 
 func pordiez(i: int) : int
 {
-    write(i)
     i = i*10
-    write(i)
+    return i
 }
 
 main()
 {
     x = 4
-    podiez(x-1)
+    x = pordiez(x-1)
+    write(x)
 }

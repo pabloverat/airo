@@ -165,6 +165,9 @@ def p_save_global_func(p):
     
     print(func_name, ":", func_type)
     
+    # agregar tipo de función a dir_funcs
+    p.parser.dir_funcs.funcs[func_name]['func_type'] = ENCODE[func_type]
+    
     # si la función tiene return, agregar una variable global son su nombre
     if func_type not in ['void']:
         p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_var(var_name=func_name, var_type=ENCODE[func_type])    
@@ -179,10 +182,6 @@ def p_func(p):
     '''
     func_name = p[2]
     # p[0] = func_name
-    
-    # agregar tipo de función
-    func_type = p[7] if p[7] != ':' else p[8]
-    p.parser.dir_funcs.funcs[func_name]['func_type'] = ENCODE[func_type]
     
     # agregar recursos utilizados por función
     recursos = p.parser.dir_funcs.funcs[func_name]['varTable'].calculate_resources()
@@ -289,11 +288,19 @@ def p_decision(p):
 def p_save_return_value(p):
     '''save_return_value :
     '''
-    returnValue = p.parser.cuads.pilaOperandos.pop()
-    returnType = p.parser.cuads.pilaTipos.pop()
+    return_value = p.parser.cuads.pilaOperandos.pop()
+    return_type = p.parser.cuads.pilaTipos.pop()
+    current_func = p.parser.context
+    function_type = p.parser.dir_funcs.funcs[current_func]['func_type']
+
+    if function_type != return_type:
+        raise Exception(f"return type {DECODE[return_type]} mismatch with function type {DECODE[function_type]}")
+
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['RETURN'], leftOp=return_value)
     
-    returnValue = p.parser.aux_cuads.pilaOperandos.pop()
-    returnType = p.parser.aux_cuads.pilaTipos.pop()
+    return_value = p.parser.aux_cuads.pilaOperandos.pop()
+    return_type = p.parser.aux_cuads.pilaTipos.pop()
+    p.parser.aux_cuads.add_cuadruplo(operation='RETURN', leftOp=return_value)
     p[0] = "ɛ"
 
 

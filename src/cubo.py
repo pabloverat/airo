@@ -40,6 +40,7 @@ ENCODE = {
     'ERA': 51,
     'PARAM': 52,
     'ENDFUNC': 53,
+    'RETURN': 54,
     
     # I/O operators
     'ASSIGN': 60,
@@ -81,6 +82,7 @@ DECODE = {
     51: 'ERA',
     52: 'PARAM',
     53: 'ENDFUNC',
+    54: 'RETURN',
     
     # I/O operators
     60: 'ASSIGN',
