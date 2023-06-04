@@ -9,7 +9,7 @@ class Dir_Funcs:
         self.funcs = {}
 
 
-    def add_func(self, func_name: str, func_type: int, dir_inicio: int, recursos: int = None, params: list = [], params_addresses : list = [], varTable: Tabla_Vars = None) -> None:
+    def add_func(self, func_name: str, func_type: int, dir_inicio: int, recursos: int = None, params: list = [], params_addresses : list = [], varTable: Tabla_Vars = None, return_address: int = None) -> None:
         """
         func types:
         -1 -> programa
@@ -22,7 +22,7 @@ class Dir_Funcs:
             raise Exception(f"func {func_name} already exists")
 
         # adding func to funcDir    
-        self.funcs[func_name] = {'func_type': func_type, 'dir_inicio': dir_inicio, 'recursos': recursos, 'params': params, 'params_addresses': params_addresses, 'varTable': varTable}
+        self.funcs[func_name] = {'func_type': func_type, 'dir_inicio': dir_inicio, 'recursos': recursos, 'params': params, 'params_addresses': params_addresses, 'varTable': varTable, 'return_address': return_address}
 
 
     def get_func_type(self, func_name: str) -> int:

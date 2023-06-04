@@ -2,7 +2,7 @@
 
 from obj_parser import Obj_Parser
 from memoria import Memoria
-from utils import ENCODE, get_resources_from_dir_func, get_param_address_from_dir_func
+from utils import ENCODE, get_resources_from_dir_func, get_param_address_from_dir_func, get_return_address_from_dir_func
 from memory_bases import global_mem_bases, local_mem_bases, consts_mem_bases
 import operator as opp
 from operator import attrgetter
@@ -14,12 +14,12 @@ def main():
     objParser = Obj_Parser(obj_dir="./ovejota.obj")
     cuads, dir_funcs, consts = objParser.parse()
     
-    # print(json.dumps(dir_funcs, indent=4))
+    print(json.dumps(dir_funcs, indent=4))
     # print(consts)
     
     # MEMORY STACK FOR CALL FUNCTIONS
     mem_stack = ["$"] # bottom of the stack
-    current_context = None
+    current_context = [] # None
     passing_params = False
         
     # CONSTANTS MEMORY
@@ -67,11 +67,11 @@ def main():
         result_val = f(left_val, right_val)
         try_set_registry(result_val, result)
     
-    # RUN VIRTUAL MACHINE
     
+    # RUN VIRTUAL MACHINE
     ip = 0
     while ip < len(cuads):
-        print(cuads[ip])
+        # print(cuads[ip])
         _, operation, left, right, result = cuads[ip]
         
         # arithmetic operators
@@ -138,7 +138,9 @@ def main():
             ip = result
 
         if operation == ENCODE['ERA']:
-            current_context = left
+            # print(cuads[ip])
+            
+            current_context.append(left)
             resources = get_resources_from_dir_func(dir_funcs, func_name=left)
             if left == "Program":
                 # GLOBAL MEMORY
@@ -147,12 +149,13 @@ def main():
                 global_mem.func_name = "Program"
                 global_mem.era(resources)
                 mem_stack.append(global_mem)
+                
             else:
                 # new local memory for context's resources 
                 local_mem = Memoria()
                 local_mem.set_base(**local_mem_bases)
                 local_mem.era(resources)
-                local_mem.func_name = current_context
+                local_mem.func_name = current_context[-1]
                 
                 # stacking memory in case of recursion
                 local_mem.ret = ip
@@ -165,7 +168,7 @@ def main():
             arg_address = left
             arg_value = try_get_registry(arg_address)
             k = right
-            param_address = get_param_address_from_dir_func(dir_funcs=dir_funcs, func_name=current_context, k=k)
+            param_address = get_param_address_from_dir_func(dir_funcs=dir_funcs, func_name=current_context[-1], k=k)
             # suspending passing params just to pass result to new memory
             passing_params=False
             try_set_registry(value=arg_value, address=param_address)
@@ -174,14 +177,21 @@ def main():
             ip += 1
         
         if operation == ENCODE['ENDFUNC']:
-            # free current context and local memory
-            current_context = None
+            # free current context and local memory  
+            current_context.pop()
             mem_stack[-1].free()
             
             # reobtaining stacked memory for recursion
             old_mem = mem_stack.pop()
             ret = old_mem.ret
             ip = ret + 1
+            
+        if operation == ENCODE['RETURN']:
+            address_to_return = left
+            value_to_return = try_get_registry(address=address_to_return)
+            address_to_catch = get_return_address_from_dir_func(dir_funcs=dir_funcs, func_name=current_context[-1])
+            try_set_registry(value=value_to_return, address=address_to_catch)
+            ip += 1
         
 
         # I/O operators

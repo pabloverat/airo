@@ -12,6 +12,12 @@ def get_param_address_from_dir_func(dir_funcs, func_name=None, k=None):
     except:
         raise Exception(f"failed when attempting to get param address of func {func_name}")
 
+def get_return_address_from_dir_func(dir_funcs, func_name=None):
+    try:
+        return dir_funcs[func_name]['return_address']
+    except:
+        raise Exception(f"failed when attempting to get return address of func {func_name}")
+
 ENCODE = {
     # data types
     'programa': -1,

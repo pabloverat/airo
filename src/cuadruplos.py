@@ -47,11 +47,11 @@ class Cuadruplos:
         
     def print(self) -> None:
         for cuad in self.cuadruplos:
-            print(f"{cuad.idx}\t"       if cuad.idx       is not None else "ɛ\t", end="")
-            print(f"{cuad.operation}\t" if cuad.operation is not None else "ɛ\t", end="")
-            print(f"{cuad.leftOp}\t"    if cuad.leftOp    is not None else "ɛ\t", end="")
-            print(f"{cuad.rightOp}\t"   if cuad.rightOp   is not None else "ɛ\t", end="")
-            print(f"{cuad.result}"      if cuad.result    is not None else "ɛ\t", end="")
+            print((f"{str(cuad.idx)[:7]}\t"       if cuad.idx       is not None else "ɛ\t"), end="")
+            print((f"{str(cuad.operation)[:7]}\t" if cuad.operation is not None else "ɛ\t"), end="")
+            print((f"{str(cuad.leftOp)[:7]}\t"    if cuad.leftOp    is not None else "ɛ\t"), end="")
+            print((f"{str(cuad.rightOp)[:7]}\t"   if cuad.rightOp   is not None else "ɛ\t"), end="")
+            print((f"{str(cuad.result)[:7]}"      if cuad.result    is not None else "ɛ\t"), end="")
             print("\n", end="")
             
     def get_ovejota_str(self) -> str:

@@ -27,7 +27,7 @@ def p_calcula_globales(p):
     recursos = p.parser.dir_funcs.funcs[current_func]['varTable'].calculate_resources()
     p.parser.dir_funcs.funcs[current_func]['recursos'] = recursos
     p[0] = "calcula_globales"
-    print(p.parser.dir_funcs.funcs[current_func]['varTable'].temps)
+    # print(p.parser.dir_funcs.funcs[current_func]['varTable'].temps)
     print("Parsed calcula_globales")
 
 
@@ -163,14 +163,15 @@ def p_save_global_func(p):
     func_name = p[-6] if p[-6] != "ɛ" else p[-7]
     func_type = p[-1]
     
-    print(func_name, ":", func_type)
+    # print(func_name, ":", func_type)
     
-    # agregar tipo de función a dir_funcs
+    # agregar tipo de función a dir_funcs   
     p.parser.dir_funcs.funcs[func_name]['func_type'] = ENCODE[func_type]
     
     # si la función tiene return, agregar una variable global son su nombre
     if func_type not in ['void']:
-        p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_var(var_name=func_name, var_type=ENCODE[func_type])    
+        p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_var(var_name=func_name, var_type=ENCODE[func_type])
+        p.parser.dir_funcs.funcs[func_name]['return_address'] = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[func_name]['address']
     
     p[0] = "ɛ"
     print("save_global_func")
@@ -181,7 +182,6 @@ def p_func(p):
             | FUNC ID context_to_local OPPARENTH param_list CLPARENTH COLON func_typ save_global_func OPBRACE func_cont CLBRACE
     '''
     func_name = p[2]
-    # p[0] = func_name
     
     # agregar recursos utilizados por función
     recursos = p.parser.dir_funcs.funcs[func_name]['varTable'].calculate_resources()
@@ -581,6 +581,10 @@ def p_function_call_q1(p):
     '''function_call_q1 :
     '''
     assert p[-2] in p.parser.dir_funcs.funcs.keys(), f"function {p[-2]} unknown"
+    
+    p.parser.cuads.pilaOperadores.append("(")
+    p.parser.aux_cuads.pilaOperadores.append("(")
+    
     p.parser.cuads.add_cuadruplo(operation=ENCODE["ERA"], leftOp=p[-2])
     p.parser.funcCall = p[-2]
     p.parser.paramsK = 0
@@ -596,6 +600,11 @@ def p_function_call_q2(p):
         raise Exception(f"missing arguments in call to {p.parser.funcCall}")
     except:
         pass
+    
+    oper = p.parser.cuads.pilaOperadores.pop()
+    oper = p.parser.aux_cuads.pilaOperadores.pop()
+    if oper != "(":
+        raise Exception("Unexpected behaviour, didn't find a (")
     
     dirInicio = p.parser.dir_funcs.funcs[p.parser.funcCall]['dir_inicio']
     p.parser.cuads.add_cuadruplo(operation=ENCODE["GOSUB"], leftOp=p.parser.funcCall, result=dirInicio)

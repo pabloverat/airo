@@ -152,3 +152,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - implementación de pila de memorias para recursión
         - la máquina virtual ya ejecuta cuádruplos para módulos tipo void 
         - prueba de recursión con void 'tests/test_void2.ld' completada
+
+- 04-Junio
+    - 33% Avance 8:
+        - la máquina virtual ya ejecuta cuádruplos para módulos con return
+        - pruebas de recursión fibonacci y factorial completadas
