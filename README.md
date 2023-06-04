@@ -43,12 +43,12 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Máquina Virtual: Ejecución de Expresiones aritméticas
 
 #### Avance 7
-    🟡 Generación de Código de Arreglos / Tipos estructurados
-    🟡 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
+    🔴 Generación de Código de Arreglos / Tipos estructurados
+    🟢 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
 
 #### Avance 8
     🔴 1era versión de Documentación
-    🔴 Máquina virtual: ejecución de módulos y arreglos
+    🟡 Máquina virtual: ejecución de módulos y arreglos
     🔴 Generación de código y Máquina virtual para una parte de la aplicación
 
 ### Actividades realizadas
@@ -144,3 +144,11 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     - 100% Avance 6:
         - mapa de memoria creado con una clase que tiene dos diccionarios: uno con listas para guardar los valores que estarán en la memoria, y uno con las direcciones base
         - ya hace operaciones binarias
+
+- 03-Junio
+    - 50% Avance 7:
+        - la máquina virtual ya ejecuta cuádruplos para estatutos secuenciales, condicionales y ciclos.
+    - 25% Avance 8:
+        - implementación de pila de memorias para recursión
+        - la máquina virtual ya ejecuta cuádruplos para módulos tipo void 
+        - prueba de recursión con void 'tests/test_void2.ld' completada

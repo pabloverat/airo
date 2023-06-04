@@ -4,23 +4,22 @@ var w : int
 var x : int
 var y : float[5][6]
 
-func myFoo() : void
+func myFoo(c: int, b: float) : void
 {
-    var a : char
-    var b : float
+    var a : float
     
-    b = read()
-    b = x + 41.0 * (33-22.4/2+4*13)
-    write(b)
+    a = b + 41.0 * (c-22.4/2+4*13)
+    write(a)
 }
 
 main()
 {
     x = 1
-    y = 2.0 
     write(x)
+    y = read()
+    w = 33
     when (y!=x) then
     {
-        myFoo()
+        myFoo(w, y)
     }
 }

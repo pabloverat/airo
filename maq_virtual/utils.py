@@ -5,6 +5,12 @@ def get_resources_from_dir_func(dir_funcs, func_type=None, func_name=None):
         return list({k:v for k,v in dir_funcs.items() if v['func_type']==func_type}.values())[0]['recursos']
     if func_name:
         return dir_funcs[func_name]['recursos']
+    
+def get_param_address_from_dir_func(dir_funcs, func_name=None, k=None):
+    try:
+        return dir_funcs[func_name]['params_addresses'][k]
+    except:
+        raise Exception(f"failed when attempting to get param address of func {func_name}")
 
 ENCODE = {
     # data types

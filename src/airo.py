@@ -63,10 +63,10 @@ def main():
     print("pSaltos: ", myParser.cuads.pilaSaltos)
     
     # cuádruplos
-    print("\ncuádruplos con nombres:\n")
-    myParser.aux_cuads.print()
     print("\ncuádruplos con direcciones:\n")
     myParser.cuads.print()
+    print("\ncuádruplos con nombres:\n")
+    myParser.aux_cuads.print()
     
     
     out = Output_Formatter()

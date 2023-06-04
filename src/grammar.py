@@ -23,10 +23,11 @@ def p_start(p):
 def p_calcula_globales(p):
     '''calcula_globales :
     '''
-    current_func = p.parser.context
+    current_func = p.parser.programName
     recursos = p.parser.dir_funcs.funcs[current_func]['varTable'].calculate_resources()
     p.parser.dir_funcs.funcs[current_func]['recursos'] = recursos
     p[0] = "calcula_globales"
+    print(p.parser.dir_funcs.funcs[current_func]['varTable'].temps)
     print("Parsed calcula_globales")
 
 
@@ -42,10 +43,10 @@ def p_encabezamiento(p):
     # creando tabla de constantes
     p.parser.const_table = Tabla_Consts()
     
-    # guardando nombre de contexto actual
-    p.parser.context = p[2]
     # guardando nombre del programa
-    p.parser.programName = p.parser.context
+    p.parser.programName = "Program"
+    # guardando nombre de contexto actual
+    p.parser.context = p.parser.programName
     
     # creando tabla de variables globales
     globalVars = Tabla_Vars()
@@ -64,7 +65,7 @@ def p_encabezamiento(p):
         # ENCODE["frame"]: (115_000, 119_999),
     }
     # guardando programa como una función den directorio de funciones
-    p.parser.dir_funcs.add_func(func_name=p.parser.context, func_type=ENCODE["programa"], dir_inicio=1, varTable=globalVars)
+    p.parser.dir_funcs.add_func(func_name=p.parser.programName, func_type=ENCODE["programa"], dir_inicio=1, varTable=globalVars)
     
     # generar primer cuadruplo "go to main"
     p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
@@ -79,8 +80,8 @@ def p_context_to_global(p):
     current_cuad = len(p.parser.cuads.cuadruplos)
     p.parser.cuads.cuadruplos[0].result = current_cuad
     p.parser.aux_cuads.cuadruplos[0].result = current_cuad
-    p.parser.cuads.add_cuadruplo(operation=ENCODE['ERA'], leftOp=p.parser.context)
-    p.parser.aux_cuads.add_cuadruplo(operation='ERA', leftOp=p.parser.context)
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['ERA'], leftOp=p.parser.programName)
+    p.parser.aux_cuads.add_cuadruplo(operation='ERA', leftOp=p.parser.programName)
     p[0] = "ɛ"
     print("Parsed context_to_global\t")
 
@@ -334,6 +335,8 @@ def p_param(p):
     current_func = p.parser.context
     p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[1], ENCODE[p[3]])
     p.parser.dir_funcs.funcs[current_func]['params'] = p.parser.dir_funcs.funcs[current_func]['params']+[ENCODE[p[3]]]    
+    param_address = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]['address']
+    p.parser.dir_funcs.funcs[current_func]['params_addresses'] = p.parser.dir_funcs.funcs[current_func]['params_addresses']+[param_address]
     print_control(p, "param\t", 4)
 
 

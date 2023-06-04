@@ -2,9 +2,11 @@
 
 from obj_parser import Obj_Parser
 from memoria import Memoria
-from utils import ENCODE, get_resources_from_dir_func
+from utils import ENCODE, get_resources_from_dir_func, get_param_address_from_dir_func
+from memory_bases import global_mem_bases, local_mem_bases, consts_mem_bases
 import operator as opp
 from operator import attrgetter
+import json
 
 def main():
     
@@ -12,75 +14,48 @@ def main():
     objParser = Obj_Parser(obj_dir="./ovejota.obj")
     cuads, dir_funcs, consts = objParser.parse()
     
-    print(dir_funcs)
-
-    # MEMORY STACK
-    mem_stack = [("$", "$")] # bottom of the stack (mem, dirRet)
+    # print(json.dumps(dir_funcs, indent=4))
+    # print(consts)
     
-    # GLOBAL MEMORY
-    global_mem = Memoria()
-    global_resources = get_resources_from_dir_func(dir_funcs, func_type=-1)
-    global_mem.era(global_resources)
-    global_mem.set_base(
-        # vars_bool=11_000,
-        vars_char=12_000,
-        vars_int=13_000,
-        vars_float=14_000,
-        vars_frame=15_000,
-        temps_bool=111_000,
-        temps_int=113_000,
-        temps_float=114_000,
-    )
+    # MEMORY STACK FOR CALL FUNCTIONS
+    mem_stack = ["$"] # bottom of the stack
+    current_context = None
+    passing_params = False
         
     # CONSTANTS MEMORY
     consts_mem = Memoria()
-    consts_mem.set_base(
-        vars_int=23_000,
-        vars_float=24_000,
-        vars_string=25_000,
-    )
+    consts_mem.set_base(**consts_mem_bases)
     consts_mem.fill_from_dict(consts)
-        
-    # LOCAL MEMORY
-    local_mem = Memoria()
-    local_mem.set_base(
-        vars_bool=1_000,
-        vars_char=2_000,
-        vars_int=3_000,
-        vars_float=4_000,
-        vars_frame=5_000,
-        temps_bool=101_000,
-        temps_int=103_000,
-        temps_float=104_000,
-    )
+    consts_mem.func_name = "consts"
     
     
-    def try_get_registry(address):
-        # print(address)
+    def try_get_registry(address, depth_in_stack=1):
         try:
             val = consts_mem.get_registry(address=address)
             return val
         except:
             try:
-                val = global_mem.get_registry(address=address)
+                val = mem_stack[1].get_registry(address=address)
                 return val
             except:
                 try:
-                    val = local_mem.get_registry(address=address)
+                    depth_in_stack = 2 if passing_params and mem_stack[-2].func_name != "Program" else 1
+                    val = mem_stack[-depth_in_stack].get_registry(address=address)
                     return val
                 except:
                     raise Exception("get_registry impossible: address couldn't be resolved")
         
                 
-    def try_set_registry(value, address):
+    def try_set_registry(value, address, depth_in_stack=1):
         try:
             consts_mem.set_registry(value=value, address=address)
         except:
             try:
-                global_mem.set_registry(value=value, address=address)
+                mem_stack[1].set_registry(value=value, address=address)
             except:
                 try:
-                    local_mem.set_registry(value=value, address=address)
+                    depth_in_stack = 2 if passing_params and mem_stack[-2].func_name != "Program" else 1
+                    mem_stack[-depth_in_stack].set_registry(value=value, address=address)
                 except:
                     raise Exception("set_registry impossible: address couldn't be resolved")
     
@@ -91,6 +66,8 @@ def main():
         f = attrgetter(operator)(opp)
         result_val = f(left_val, right_val)
         try_set_registry(result_val, result)
+    
+    # RUN VIRTUAL MACHINE
     
     ip = 0
     while ip < len(cuads):
@@ -156,32 +133,72 @@ def main():
 
         # modules operators
         if operation == ENCODE['GOSUB']:
-            breadcrumb = ip
+            passing_params = False
+            mem_stack[-1].ret = ip
             ip = result
 
         if operation == ENCODE['ERA']:
+            current_context = left
+            resources = get_resources_from_dir_func(dir_funcs, func_name=left)
+            if left == "Program":
+                # GLOBAL MEMORY
+                global_mem = Memoria()
+                global_mem.set_base(**global_mem_bases)
+                global_mem.func_name = "Program"
+                global_mem.era(resources)
+                mem_stack.append(global_mem)
+            else:
+                # new local memory for context's resources 
+                local_mem = Memoria()
+                local_mem.set_base(**local_mem_bases)
+                local_mem.era(resources)
+                local_mem.func_name = current_context
+                
+                # stacking memory in case of recursion
+                local_mem.ret = ip
+                mem_stack.append(local_mem)
+                passing_params = True
+                
             ip += 1
 
         if operation == ENCODE['PARAM']:
+            arg_address = left
+            arg_value = try_get_registry(arg_address)
+            k = right
+            param_address = get_param_address_from_dir_func(dir_funcs=dir_funcs, func_name=current_context, k=k)
+            # suspending passing params just to pass result to new memory
+            passing_params=False
+            try_set_registry(value=arg_value, address=param_address)
+            passing_params=True
+            # resuming passsing params in case there are more params
             ip += 1
         
         if operation == ENCODE['ENDFUNC']:
-            ip = breadcrumb+1
+            # free current context and local memory
+            current_context = None
+            mem_stack[-1].free()
+            
+            # reobtaining stacked memory for recursion
+            old_mem = mem_stack.pop()
+            ret = old_mem.ret
+            ip = ret + 1
         
 
         # I/O operators
         if operation == ENCODE['ASSIGN']:
             value = try_get_registry(address=left)
             try_set_registry(value=value, address=result)
+            
             ip += 1
         
         if operation == ENCODE['PRINT']:
+            # print("\t", mem_stack[-1].values_mapper)
             value = try_get_registry(address=left)
-            print(value)
+            print("output:", value)
             ip += 1
         
         if operation == ENCODE['READ']:
-            value = float(input())
+            value = float(input("input:"))
             try_set_registry(value=value, address=result)
             ip += 1
 

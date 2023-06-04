@@ -8,6 +8,9 @@ class Memoria:
     
     def __init__(self) -> None:
         
+        self.func_name = ""
+        self.ret = None
+        
         self.values_mapper = {
             # "vars_bool"   : [],
             "vars_char"   : [],
@@ -30,6 +33,19 @@ class Memoria:
             'temps_bool':  0,
             'temps_int':   0,
             'temps_float': 0,
+        }
+
+    def free(self) -> None:
+        self.values_mapper = {
+            # "vars_bool"   : [],
+            "vars_char"   : [],
+            "vars_int"    : [],
+            "vars_float"  : [],
+            "vars_frame"  : [],
+            "vars_string" : [],
+            "temps_bool"  : [],
+            "temps_int"   : [],
+            "temps_float" : [],
         }
 
 
@@ -67,8 +83,7 @@ class Memoria:
         
     def find_type_from_address_base(self, address_base) -> str:
         if address_base not in self.base_addresses_mapper.values():
-            print("address_base", address_base)
-            raise Exception("address not admittable to one of the bases")
+            raise Exception(f"address not admittable to one of the bases in func {self.func_name}")
             
         mydict = self.base_addresses_mapper
         return list(mydict.keys())[list(mydict.values()).index(address_base)]
