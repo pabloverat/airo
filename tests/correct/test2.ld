@@ -1,8 +1,10 @@
 Program myProgCorrect
 
-var x : int
+var x : float
 var y : float
-var z : int[5+2]
+var z : float
+var a : int[1:2][3:5]
+var b : int[5:8]
 
 main()
 {
@@ -17,7 +19,7 @@ main()
     y = 2+x*y
     when ( x+4>2*y) then {
 	  z = 2*x
-        write(y)
+        write(a)
     } else {
 	  z = 2/x
     }

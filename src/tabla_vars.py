@@ -66,7 +66,7 @@ class Tabla_Vars:
         return temp_name, temp_address
 
 
-    def add_var(self, var_name: str, var_type: int) -> None:
+    def add_var(self, var_name: str, var_type: int, size: int=1, dims=None) -> None:
         """
         var types:
         1 - bool    2 - char    3 - int
@@ -85,8 +85,19 @@ class Tabla_Vars:
             raise Exception(f"variable {var_name} already exists")
         
         # add variable to vars var_table
-        self.vars[var_name] = {'tipo': var_type, 'address':var_address}
-        self.vars_counts[var_type] += 1
+        if dims:
+            # arrays
+            print("DIMS 1 size:", dims.r)
+            size = dims.r
+        elif dims.next:
+            # matrices
+            print("DIMS 2 size:", dims.next.r)
+            size = dims.next.r
+        else:
+            size = 1
+            
+        self.vars[var_name] = {'tipo': var_type, 'address':var_address, 'dims':dims}
+        self.vars_counts[var_type] += size
 
         
     def remove_var(self, var_name: str) -> None:

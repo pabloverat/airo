@@ -5,6 +5,7 @@ from dir_funcs import Dir_Funcs
 from tabla_vars import Tabla_Vars
 from tabla_consts import Tabla_Consts
 from cuadruplos import Cuadruplos
+from dim_node import Dim_Node
 from cubo import ENCODE, DECODE, CUBO
 
 #--- START : funciones de la gramática formal ---
@@ -27,7 +28,6 @@ def p_calcula_globales(p):
     recursos = p.parser.dir_funcs.funcs[current_func]['varTable'].calculate_resources()
     p.parser.dir_funcs.funcs[current_func]['recursos'] = recursos
     p[0] = "calcula_globales"
-    # print(p.parser.dir_funcs.funcs[current_func]['varTable'].temps)
     print("Parsed calcula_globales")
 
 
@@ -36,6 +36,7 @@ def p_encabezamiento(p):
     '''
     # create dirFunc
     p.parser.dir_funcs = Dir_Funcs()
+    
     # create cuadruplos list
     p.parser.cuads = Cuadruplos()
     p.parser.aux_cuads = Cuadruplos()
@@ -45,6 +46,7 @@ def p_encabezamiento(p):
     
     # guardando nombre del programa
     p.parser.programName = "Program"
+    
     # guardando nombre de contexto actual
     p.parser.context = p.parser.programName
     
@@ -94,11 +96,20 @@ def p_cuerpo(p):
 
 def p_variable(p):
     '''variable : VAR ID COLON var_typ
-                | VAR ID COLON var_typ dims
+                | VAR ID COLON var_typ declare_dims
     '''
     p[0] = p[2]
     current_func = p.parser.context
-    p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[2], ENCODE[p[4]])
+    
+    try:
+        # when dims are declared
+        _ = p[5]
+        dims = p.parser.temp_dims
+        p.parser.temp_dims = None
+        p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[2], ENCODE[p[4]], dims=dims)
+    except:
+        # when dims are not declared
+        p.parser.dir_funcs.funcs[current_func]['varTable'].add_var(p[2], ENCODE[p[4]])
     print_control(p, "var\t", 5)
 
 
@@ -112,13 +123,11 @@ def p_var_list(p):
         p[0] = p[1]
     print_control(p, "var_list", 2)
 
-
 def p_func_list(p):
     '''func_list : func func_list
                  | func
     '''
     print_control(p, "func_list", 2)
-
 
 def p_estat_list(p):
     '''estat_list : estat estat_list
@@ -126,29 +135,102 @@ def p_estat_list(p):
     '''
     print_control(p, "estat_list", 2)
 
-
 def p_param_list(p):
     '''param_list : param COMMA param_list 
                   | param
     '''
     print_control(p, "param_list", 3)
 
-
 def p_save_array_size(p):
     '''save_array_size : 
     '''
     p[0] = "ɛ"
-    _ = p.parser.cuads.pilaOperandos.pop()
-    _ = p.parser.cuads.pilaTipos.pop()
+
+    lim_inf = p[-4]
+    lim_sup = p[-2]
+    assert lim_sup>lim_inf, f"ArraysLimitsError: {lim_inf} !< {lim_sup}"
     
-    _ = p.parser.aux_cuads.pilaOperandos.pop()
+    dim1 = Dim_Node(lim_inf=lim_inf, lim_sup=lim_sup)
+    dim1.set_values(dim=1)
+    m0 = dim1.calc_r()
+    dim1.set_values(r=m0)
+    m1 = dim1.calc_m(prev_m=m0)
+    dim1.set_values(m=m1)
+    assert m1 == 1, "ArrayError: m1 not equal to 1"
+    offset = dim1.calc_offset()
+    dim1.set_values(minus_k=(-1)*offset)
+    
+    p.parser.temp_dims = dim1
+
+def p_save_matrix_size(p):
+    '''save_matrix_size : 
+    '''
+    p[0] = "ɛ"
+    current_func = p.parser.context
+    
+    # Primera dimensión
+    lim_inf1 = p[-9]
+    lim_sup1 = p[-7]
+    assert lim_sup1>lim_inf1, f"ArraysLimitsError: {lim_inf1} !< {lim_sup1}"
+    dim1 = Dim_Node(lim_inf=lim_inf1, lim_sup=lim_sup1)
+    dim1.set_values(dim=1)
+    
+    # Segunda dimensión
+    lim_inf2 = p[-4]
+    lim_sup2 = p[-2]
+    assert lim_sup2>lim_inf2, f"MatrixLimitsError: {lim_inf2} !< {lim_sup2}"
+    dim2 = Dim_Node(lim_inf=lim_inf2, lim_sup=lim_sup2)
+    dim2.set_values(dim=2)
+    dim1.set_values(next=dim2)
+    dim2.set_values(prev=dim1)
+    
+    
+    r1 = dim1.calc_r()
+    dim1.set_values(r=r1)
+    m0 = dim2.calc_r()
+    dim2.set_values(r=m0)
+    m1 = dim1.calc_m(prev_m=m0)
+    dim1.set_values(m=m1)
+    offset1 = dim1.calc_offset()
+    dim1.set_values(offset=offset1)
+    m2 = dim2.calc_m(prev_m=m1)
+    dim2.set_values(m=m2)
+    assert m2 == 1, "MatrixError: m2 not equal to 1"
+    offset2 = dim2.calc_offset()
+    dim2.set_values(minus_k=(-1)*offset2)
+    
+    p.parser.temp_dims = dim1
+    
+def p_declare_dims(p):
+    '''declare_dims : OPBRACKET CONST_INT COLON CONST_INT CLBRACKET save_array_size
+                    | OPBRACKET CONST_INT COLON CONST_INT CLBRACKET OPBRACKET CONST_INT COLON CONST_INT CLBRACKET save_matrix_size
+    '''
+    
+    try:
+        p[0] = f"{p[1]}{p[2]}{p[3]}{p[4]}{p[5]}{p[6]}{p[7]}{p[8]}{p[9]}{p[10]}"
+    except:
+        p[0] = f"{p[1]}{p[2]}{p[3]}{p[4]}{p[5]}"
+        
+    print_control(p, "declare_dims\t", 11)
+
+
+def p_save_array_index(p):
+    '''save_array_index : 
+    '''
+    p[0] = "ɛ"
+    dim_type = p.parser.cuads.pilaTipos.pop()
+    assert dim_type != ENCODE['INT'], f"trying to index array with an element of type {dim_type}"
+    dim_value = p.parser.cuads.pilaOperandos.pop()
+    # p.parser.dim_values.append(dim_value)
+    
     _ = p.parser.aux_cuads.pilaTipos.pop()
+    _ = p.parser.aux_cuads.pilaOperandos.pop()
     # print("save_array_size")
 
 
 def p_dims(p):
-    '''dims : OPBRACKET aritm save_array_size CLBRACKET
-            | OPBRACKET aritm save_array_size CLBRACKET OPBRACKET aritm save_array_size CLBRACKET
+    '''dims : OPBRACKET aritm save_array_index CLBRACKET
+            | OPBRACKET aritm save_array_index CLBRACKET OPBRACKET aritm save_array_index CLBRACKET
     '''
     try:
         p[0] = f"{p[1]}{p[2]}{p[4]}{p[5]}{p[6]}{p[8]}"
@@ -162,9 +244,7 @@ def p_save_global_func(p):
     '''
     func_name = p[-6] if p[-6] != "ɛ" else p[-7]
     func_type = p[-1]
-    
-    # print(func_name, ":", func_type)
-    
+        
     # agregar tipo de función a dir_funcs   
     p.parser.dir_funcs.funcs[func_name]['func_type'] = ENCODE[func_type]
     

@@ -43,7 +43,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Máquina Virtual: Ejecución de Expresiones aritméticas
 
 #### Avance 7
-    🔴 Generación de Código de Arreglos / Tipos estructurados
+    🟡 Generación de Código de Arreglos / Tipos estructurados
     🟢 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
 
 #### Avance 8
@@ -154,6 +154,8 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
         - prueba de recursión con void 'tests/test_void2.ld' completada
 
 - 04-Junio
+    - 75% Avance 7:
+        - ya se pueden declarar arreglos y se guarda en tabla de variables 
     - 33% Avance 8:
         - la máquina virtual ya ejecuta cuádruplos para módulos con return
         - pruebas de recursión fibonacci y factorial completadas
