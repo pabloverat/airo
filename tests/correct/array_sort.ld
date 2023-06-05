@@ -36,8 +36,7 @@ func bubbleSort(n: int): void
             j = j+1
         }
         i = i+1
-    }
-
+    }   
 }
 
 main()

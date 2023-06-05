@@ -6,16 +6,13 @@ from utils import ENCODE, get_resources_from_dir_func, get_param_address_from_di
 from memory_bases import global_mem_bases, local_mem_bases, consts_mem_bases
 import operator as opp
 from operator import attrgetter
-import json
+
 
 def main():
     
     # PARSING OVEJOTA
     objParser = Obj_Parser(obj_dir="./ovejota.obj")
     cuads, dir_funcs, consts = objParser.parse()
-    
-    # print(consts)
-    # print(json.dumps(dir_funcs, indent=4))
     
     # MEMORY STACK FOR CALL FUNCTIONS
     mem_stack = ["$"] # bottom of the stack
@@ -205,7 +202,6 @@ def main():
             ip += 1
         
         if operation == ENCODE['PRINT']:
-            # print("\t", mem_stack[-1].values_mapper)
             value = try_get_registry(address=left)
             print("output:", value)
             ip += 1
@@ -216,8 +212,11 @@ def main():
             ip += 1
 
         if operation == ENCODE['VERIFY']:
+            value = try_get_registry(address=left)
+            # print(right, value, result)
+            if not (value>=right and value<=result):
+                raise Exception("Index out of bounds")
             ip += 1
-            pass
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-Program factorial_ciclo
+Program factorial_recursivo
 
 var n: int
 var f: int

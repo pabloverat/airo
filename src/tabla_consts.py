@@ -34,7 +34,7 @@ class Tabla_Consts:
 
         # is the address out of range?
         if const_address > self.consts_range[type][1]:
-            raise Exception(f"out of slots for consts of type {type}")
+            raise Exception(f"outOfSlots: for consts of type {type}")
         
         # add const to const_table
         self.consts[const] = const_address

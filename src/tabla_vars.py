@@ -48,17 +48,13 @@ class Tabla_Vars:
         1 - bool    2 - char    3 - int
         4 - float   5 - frame   6 - ptr
         """
-        # print(self.temps_range)
-        # print(temp_type)
-        # print(self.temps_range[temp_type])
-        # print("got here")
         # possible virtual address for temp
         temp_address_temp = self.temps_range[temp_type][0]
         temp_address = temp_address_temp + self.temps_counts[temp_type]
         temp_name = "t" + DECODE[temp_type] + str(self.temps_counts[temp_type])
         # is the address out of range?
         if temp_address > self.temps_range[temp_type][1]:
-            raise Exception(f"out of slots for temps of type {DECODE[temp_type]}")
+            raise Exception(f"outOfSlots: for temps of type {DECODE[temp_type]}")
         
         # is the variable's name already used?
         if temp_name in self.temps.keys():
@@ -83,11 +79,11 @@ class Tabla_Vars:
         
         # is the address out of range?
         if var_address > self.vars_range[var_type][1]:
-            raise Exception("out of slots for vars")
+            raise Exception(f"outOfSlots: for var of type {var_type}")
         
         # is the variable's name already used?
         if var_name in self.vars.keys():
-            raise Exception(f"variable {var_name} already exists")
+            raise Exception(f"duplicateVariable: {var_name} already exists")
         
         # for when var is array or matrix
         if dims:
@@ -112,14 +108,7 @@ class Tabla_Vars:
             raise Exception("not valid param for var_scope")
 
 
-    # def calculate_resources(self) -> int:
     def calculate_resources(self):
-        # vars = [var['tipo'] for var in self.vars.values()]
-        # vars_count = Counter(vars)
-        # temps = [temp['tipo'] for temp in self.temps.values()]
-        # temps_count = Counter(temps)
-        # # print((vars_count, temps_count))
-        # return (vars_count, temps_count)
         return (self.vars_counts, self.temps_counts)
 
 
@@ -142,5 +131,3 @@ class Tabla_Vars:
         pretty_temps = json.dumps(self.temps, indent=4, sort_keys=False)
         print("vars: ", pretty_vars)
         print("temps: ", pretty_temps)
-        # print("vars", self.vars)
-        # print("temps", self.temps)

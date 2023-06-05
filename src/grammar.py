@@ -182,7 +182,7 @@ def p_save_matrix_size(p):
     # Primera dimensión
     lim_inf1 = p[-9]
     lim_sup1 = p[-7]
-    assert lim_sup1>lim_inf1, f"ArraysLimitsError: {lim_inf1} !< {lim_sup1}"
+    assert lim_sup1>lim_inf1, f"MatrixLimitsError: {lim_inf1} !< {lim_sup1}"
     dim1 = Dim_Node(lim_inf=lim_inf1, lim_sup=lim_sup1)
     dim1.set_values(dim=1)
     
@@ -211,8 +211,6 @@ def p_save_matrix_size(p):
     dim2.set_values(minus_k=(-1)*offset2)
     
     p.parser.temp_dims = dim1
-    print("dim1", dim1.to_dict())
-    print("dim2", dim2.to_dict())
 
 
 def p_declare_dims(p):
@@ -238,20 +236,13 @@ def p_save_array_index(p):
 def p_dims_q1(p):
     '''dims_q1 : 
     '''
-    print("pOperadores0:", p.parser.cuads.pilaOperadores)
-    print("pOperandos0:", p.parser.cuads.pilaOperandos)
-    print("pTipos0:", p.parser.cuads.pilaTipos)
-    print("DIMS1:", p.parser.DIMS)
     # stashing variable that is trying to be indexed
-    print(p.parser.dims_var)
     current_var, var_found = list(p.parser.dims_var.items())[0]
 
-    assert var_found['dims'] is not None, f"variable {current_var} trying to be indexed is not indexable"
+    assert var_found['dims'] is not None, f"NotIndexable: variable {current_var} trying to be indexed is not indexable"
     
     p.parser.cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
-    # print("pOperadores2:", p.parser.cuads.pilaOperadores)
     p.parser.cuads.pilaOperadores.append("[")
-    print("pOperadores2:", p.parser.cuads.pilaOperadores)
     
     p.parser.aux_cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
     p.parser.aux_cuads.pilaOperadores.append("[")
@@ -273,7 +264,7 @@ def p_dims_q2(p):
     lim_sup = dim_node.lim_sup
 
     dim_type = p.parser.cuads.pilaTipos[-1]
-    assert dim_type == ENCODE['int'], f"trying to index array with an element of type {dim_type}"
+    assert dim_type == ENCODE['int'], f"WrongIndexing: trying to index array with an element of type {dim_type}"
     dim_value = p.parser.cuads.pilaOperandos[-1]
 
     p.parser.cuads.add_cuadruplo(operation=ENCODE['VERIFY'], leftOp=dim_value, rightOp=lim_inf, result=lim_sup)
@@ -421,7 +412,7 @@ def p_context_to_local(p):
     
     # check if the function's name is already used
     if func_name in p.parser.dir_funcs.funcs.keys():
-        raise Exception(f"func {func_name} already exists")
+        raise Exception(f"DuplicateFunction: func {func_name} already exists")
     
     funcVars = Tabla_Vars()
     dir_inicio = len(p.parser.cuads.cuadruplos)
@@ -514,7 +505,7 @@ def p_save_return_value(p):
     function_type = p.parser.dir_funcs.funcs[current_func]['func_type']
 
     if function_type != return_type:
-        raise Exception(f"return type {DECODE[return_type]} mismatch with function type {DECODE[function_type]}")
+        raise Exception(f"returnMissmatch: return type {DECODE[return_type]} mismatch with function type {DECODE[function_type]}")
 
     p.parser.cuads.add_cuadruplo(operation=ENCODE['RETURN'], leftOp=return_value)
     
@@ -643,7 +634,7 @@ def p_check_aritm(p):
         try:
             temp_type = CUBO[operador][left_type][right_type]
         except:
-            raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
+            raise Exception(f"OperationInvalid: operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
         
         temp_name, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
         p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=temp_address)
@@ -707,7 +698,7 @@ def p_check_term(p):
         try:
             temp_type = CUBO[operador][left_type][right_type]
         except:
-            raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
+            raise Exception(f"OperationInvalid: operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
         
         temp_name, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
         p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=temp_address)
@@ -869,8 +860,6 @@ def p_factor_function_call(p):
     
     p.parser.cuads.pilaOperandos.append(func_var['address'])
     p.parser.cuads.pilaTipos.append(func_var['tipo'])
-    # print("pOperandos", p.parser.cuads.pilaOperandos)
-    # print("pTipos", p.parser.cuads.pilaTipos)
     
     p.parser.aux_cuads.pilaOperandos.append(p[1])
     p.parser.aux_cuads.pilaTipos.append(func_var['tipo'])
@@ -928,7 +917,7 @@ def p_relac(p):
     try:
         temp_type = CUBO[operador][left_type][right_type]
     except:
-        raise Exception(f"operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
+        raise Exception(f"InvalidOperation: operation {DECODE[operador]} between {DECODE[left_type]} and {DECODE[right_type]} invalid.")
     
     temp_name, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=temp_type)
     p.parser.cuads.add_cuadruplo(operation=operador, leftOp=left_operand, rightOp=right_operand, result=temp_address)
@@ -1012,8 +1001,6 @@ def p_escritura(p):
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=p[4])
         p.parser.aux_cuads.add_cuadruplo(operation="PRINT", leftOp=p[3])
     else:
-        print("pOperandos23:", p.parser.cuads.pilaOperandos)
-        print("pTipos23:", p.parser.cuads.pilaTipos)
         operando = p.parser.cuads.pilaOperandos.pop()
         tipo = p.parser.cuads.pilaTipos.pop()
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=operando)
@@ -1063,22 +1050,17 @@ def p_asign(p):
             except:
                 raise Exception(f"Expression {p[1]} unknown")
         
-        print("pOperandos8:", p.parser.cuads.pilaOperandos)
-        print("Tipos8:", p.parser.cuads.pilaTipos)
         operando = p.parser.cuads.pilaOperandos.pop()
         operando_type = p.parser.cuads.pilaTipos.pop()        
         if operando_type != var_found['tipo']:
-            raise Exception(f"assigning {DECODE[operando_type]} to a variable of type {DECODE[var_found['tipo']]}")
+            raise Exception(f"Type Missmatch: assigning {DECODE[operando_type]} to a variable of type {DECODE[var_found['tipo']]}")
         
         try:
             # for arrays and matrices
             _ = p[5]
             ptr_address = p.parser.cuads.pilaOperandos.pop()
-            print("pOperandos9:", p.parser.cuads.pilaOperandos)
             _ = p.parser.cuads.pilaTipos.pop()
-            print("ptr_address:", ptr_address)
             p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=ptr_address)
-            print("got here")
         except:
             # for normal vars
             p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=var_found['address'])
