@@ -352,7 +352,7 @@ def p_dims(p):
     # sumando dirección base
     base_dir = var_found['address']
     base_dir_address = p.parser.const_table.add_const(const=base_dir, type=ENCODE['int'])
-    tempn_name, tempn_address = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_temp(ENCODE['ptr'])
+    tempn_name, tempn_address = p.parser.dir_funcs.funcs[p.parser.dims_var_scope]['varTable'].add_temp(ENCODE['ptr'])
     p.parser.cuads.add_cuadruplo(operation=ENCODE['+'], leftOp=tempi_address, rightOp=base_dir_address, result=tempn_address)    
     p.parser.cuads.pilaOperandos.append(tempn_address)
     print("pOperandos3:", p.parser.cuads.pilaOperandos)
@@ -567,9 +567,11 @@ def p_save_dims_var(p):
     current_func = p.parser.context
     if current_var in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.keys():
         # looking for variable in local scope
+        p.parser.dims_var_scope = current_func
         p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.items() if current_var == k}
     elif current_var in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.keys():
         # looking for variable in global scope
+        p.parser.dims_var_scope = p.parser.programName
         p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.items() if current_var == k}
     else:
         raise Exception(f"Expression {current_var} unknown")
