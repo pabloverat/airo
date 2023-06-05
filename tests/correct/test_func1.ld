@@ -2,7 +2,7 @@ Program myProgCorrect
 
 var w : float
 var x : int
-var y : float[5][6]
+var y : float
 
 func entrediez(i: float) : float
 {

@@ -28,6 +28,7 @@ ENCODE = {
     'float': 4,
     'frame': 5,
     'string': 6,
+    'ptr': 7,
     
     # arithmetic operators
     '+': 10,
@@ -63,9 +64,11 @@ ENCODE = {
     # I/O operators
     'ASSIGN': 60,
     'PRINT': 61,
-    'READ': 62
+    'READ': 62,
+    
+    # non-atomic operators
+    'VERIFY': 70,
 }
-
 
 DECODE = {
     # data types
@@ -76,6 +79,8 @@ DECODE = {
     3: 'int',
     4: 'float',
     5: 'frame',
+    6: 'string',
+    7: 'ptr',
     
     # arithmetic operators
     10: '+',
@@ -107,4 +112,7 @@ DECODE = {
     60: 'ASSIGN',
     61: 'PRINT',
     62: 'READ',
+    
+    # non-atomic operators
+    70: 'VERIFY',
 }

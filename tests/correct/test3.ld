@@ -1,18 +1,20 @@
 Program myProgCorrect
 
-var x : int
+var x : float
 var y : float
-var z : int
-var A : float
-var B : float
-var C : float
-var D : float
+var z : float
+var A : int
+var B : int
+var C : int
+var D : int
 
 
 main()
 {
+    y = 2.0
     x = y-1 * (2.4+400)-3 / 2*y
-    while ( z>2*x) then {
+    z = x - 1
+    when ( z>2*x) then {
 	  z = z-2*x
         write(z)
     }    
@@ -20,6 +22,11 @@ main()
     y = read()
     write("hola")
     y = 2+x*y
+
+    A = 1
+    B = 2
+    C = 3
+    D = 4
     when (A + B < C) then
     {
         A = B + C
@@ -29,10 +36,15 @@ main()
         }
     } else
     {
-        while (B > C + D) then
+        while (B < C + D) then
         {
-            A = B + C * D
-            B = A-D
+            B = B+1
+	    write(B)
         }
     }
+
+    write("-------")
+    write(A)
+    write(B)
+    write(C)
 }

@@ -36,6 +36,7 @@ class Cuadruplos:
         self.pilaTipos = ['$']
         self.pilaOperandos = ['$']
         self.pilaOperadores = ['$']
+        self.pilaDimensiones = ['$']
         
             
     def add_cuadruplo(self, idx=None, operation=None, leftOp=None, rightOp=None, result=None) -> None:

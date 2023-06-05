@@ -14,8 +14,8 @@ def main():
     objParser = Obj_Parser(obj_dir="./ovejota.obj")
     cuads, dir_funcs, consts = objParser.parse()
     
-    print(json.dumps(dir_funcs, indent=4))
     # print(consts)
+    # print(json.dumps(dir_funcs, indent=4))
     
     # MEMORY STACK FOR CALL FUNCTIONS
     mem_stack = ["$"] # bottom of the stack
@@ -29,40 +29,44 @@ def main():
     consts_mem.func_name = "consts"
     
     
-    def try_get_registry(address, depth_in_stack=1):
+    def try_get_registry(address, depth_in_stack=1, operator=None):
         try:
-            val = consts_mem.get_registry(address=address)
+            # print("trying in consts")
+            val = consts_mem.get_registry(address=address, operator=operator)
             return val
         except:
             try:
-                val = mem_stack[1].get_registry(address=address)
+                # print("trying in globals")
+                val = mem_stack[1].get_registry(address=address, operator=operator)
                 return val
             except:
                 try:
+                    # print("trying in locals")
                     depth_in_stack = 2 if passing_params and mem_stack[-2].func_name != "Program" else 1
-                    val = mem_stack[-depth_in_stack].get_registry(address=address)
+                    val = mem_stack[-depth_in_stack].get_registry(address=address, operator=operator)
                     return val
                 except:
                     raise Exception("get_registry impossible: address couldn't be resolved")
         
                 
-    def try_set_registry(value, address, depth_in_stack=1):
+    def try_set_registry(value, address, depth_in_stack=1, operator=None):
         try:
-            consts_mem.set_registry(value=value, address=address)
+            consts_mem.set_registry(value=value, address=address, operator=operator)
         except:
             try:
-                mem_stack[1].set_registry(value=value, address=address)
+                # print(mem_stack[1].print())
+                mem_stack[1].set_registry(value=value, address=address, operator=operator)
             except:
                 try:
                     depth_in_stack = 2 if passing_params and mem_stack[-2].func_name != "Program" else 1
-                    mem_stack[-depth_in_stack].set_registry(value=value, address=address)
+                    mem_stack[-depth_in_stack].set_registry(value=value, address=address, operator=operator)
                 except:
                     raise Exception("set_registry impossible: address couldn't be resolved")
     
     
     def binary_operation(left, right, operator):
-        left_val = try_get_registry(left)
-        right_val = try_get_registry(right)
+        left_val = try_get_registry(left, operator=operator)
+        right_val = try_get_registry(right, operator=operator)
         f = attrgetter(operator)(opp)
         result_val = f(left_val, right_val)
         try_set_registry(result_val, result)
@@ -197,8 +201,7 @@ def main():
         # I/O operators
         if operation == ENCODE['ASSIGN']:
             value = try_get_registry(address=left)
-            try_set_registry(value=value, address=result)
-            
+            try_set_registry(value=value, address=result, operator='assign')
             ip += 1
         
         if operation == ENCODE['PRINT']:
@@ -208,10 +211,13 @@ def main():
             ip += 1
         
         if operation == ENCODE['READ']:
-            value = float(input("input:"))
+            value = float(input("input: "))
             try_set_registry(value=value, address=result)
             ip += 1
 
+        if operation == ENCODE['VERIFY']:
+            ip += 1
+            pass
 
 
 if __name__ == "__main__":

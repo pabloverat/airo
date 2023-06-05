@@ -10,6 +10,7 @@ global_mem_bases = dict(
     temps_bool=111_000,
     temps_int=113_000,
     temps_float=114_000,
+    temps_ptr=119_000,
 )
 
 # local memory bases
@@ -22,6 +23,7 @@ local_mem_bases = dict(
     temps_bool=101_000,
     temps_int=103_000,
     temps_float=104_000,
+    temps_ptr=109_000,
 )
 
 # consts bases

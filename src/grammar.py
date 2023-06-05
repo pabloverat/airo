@@ -53,21 +53,26 @@ def p_encabezamiento(p):
     # creando tabla de variables globales
     globalVars = Tabla_Vars()
     globalVars.vars_range = {
-        ENCODE["bool"]:  (11_000, 11_999),
-        ENCODE["char"]:  (12_000, 12_999),
-        ENCODE["int"]:   (13_000, 14_999),
-        ENCODE["float"]: (14_000, 14_999),
-        ENCODE["frame"]: (15_000, 19_999),
+        ENCODE["bool"]:    (11_000, 11_999),
+        ENCODE["char"]:    (12_000, 12_999),
+        ENCODE["int"]:     (13_000, 13_999),
+        ENCODE["float"]:   (14_000, 14_999),
+        ENCODE["frame"]:   (15_000, 18_999),
+        ENCODE["ptr"]: (19_000, 19_999),
     }
     globalVars.temps_range = {
-        ENCODE["bool"]:  (111_000, 111_999),
+        ENCODE["bool"]:    (111_000, 111_999),
         # ENCODE["char"]:  (112_000, 112_999),
-        ENCODE["int"]:   (113_000, 114_999),
-        ENCODE["float"]: (114_000, 114_999),
-        # ENCODE["frame"]: (115_000, 119_999),
+        ENCODE["int"]:     (113_000, 113_999),
+        ENCODE["float"]:   (114_000, 114_999),
+        # ENCODE["frame"]: (115_000, 118_999),
+        ENCODE["ptr"]: (119_000, 119_999),
     }
     # guardando programa como una función den directorio de funciones
     p.parser.dir_funcs.add_func(func_name=p.parser.programName, func_type=ENCODE["programa"], dir_inicio=1, varTable=globalVars)
+    
+    # variable para pila de dimensiones para arreglos
+    p.parser.DIMS = 1
     
     # generar primer cuadruplo "go to main"
     p.parser.cuads.add_cuadruplo(operation=ENCODE['GOTO'])
@@ -123,11 +128,13 @@ def p_var_list(p):
         p[0] = p[1]
     print_control(p, "var_list", 2)
 
+
 def p_func_list(p):
     '''func_list : func func_list
                  | func
     '''
     print_control(p, "func_list", 2)
+
 
 def p_estat_list(p):
     '''estat_list : estat estat_list
@@ -135,11 +142,13 @@ def p_estat_list(p):
     '''
     print_control(p, "estat_list", 2)
 
+
 def p_param_list(p):
     '''param_list : param COMMA param_list 
                   | param
     '''
     print_control(p, "param_list", 3)
+
 
 def p_save_array_size(p):
     '''save_array_size : 
@@ -161,6 +170,8 @@ def p_save_array_size(p):
     dim1.set_values(minus_k=(-1)*offset)
     
     p.parser.temp_dims = dim1
+    print("dim1", dim1.to_dict())
+
 
 def p_save_matrix_size(p):
     '''save_matrix_size : 
@@ -196,11 +207,14 @@ def p_save_matrix_size(p):
     m2 = dim2.calc_m(prev_m=m1)
     dim2.set_values(m=m2)
     assert m2 == 1, "MatrixError: m2 not equal to 1"
-    offset2 = dim2.calc_offset()
+    offset2 = dim2.calc_offset(prev_offset=offset1)
     dim2.set_values(minus_k=(-1)*offset2)
     
     p.parser.temp_dims = dim1
-    
+    print("dim1", dim1.to_dict())
+    print("dim2", dim2.to_dict())
+
+
 def p_declare_dims(p):
     '''declare_dims : OPBRACKET CONST_INT COLON CONST_INT CLBRACKET save_array_size
                     | OPBRACKET CONST_INT COLON CONST_INT CLBRACKET OPBRACKET CONST_INT COLON CONST_INT CLBRACKET save_matrix_size
@@ -218,20 +232,146 @@ def p_save_array_index(p):
     '''save_array_index : 
     '''
     p[0] = "ɛ"
-    dim_type = p.parser.cuads.pilaTipos.pop()
-    assert dim_type != ENCODE['INT'], f"trying to index array with an element of type {dim_type}"
-    dim_value = p.parser.cuads.pilaOperandos.pop()
-    # p.parser.dim_values.append(dim_value)
-    
-    _ = p.parser.aux_cuads.pilaTipos.pop()
-    _ = p.parser.aux_cuads.pilaOperandos.pop()
     # print("save_array_size")
 
 
-def p_dims(p):
-    '''dims : OPBRACKET aritm save_array_index CLBRACKET
-            | OPBRACKET aritm save_array_index CLBRACKET OPBRACKET aritm save_array_index CLBRACKET
+def p_dims_q1(p):
+    '''dims_q1 : 
     '''
+    print("pOperadores0:", p.parser.cuads.pilaOperadores)
+    print("pOperandos0:", p.parser.cuads.pilaOperandos)
+    print("pTipos0:", p.parser.cuads.pilaTipos)
+    print("DIMS1:", p.parser.DIMS)
+    # stashing variable that is trying to be indexed
+    print(p.parser.dims_var)
+    current_var, var_found = list(p.parser.dims_var.items())[0]
+
+    assert var_found['dims'] is not None, f"variable {current_var} trying to be indexed is not indexable"
+    
+    p.parser.cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
+    # print("pOperadores2:", p.parser.cuads.pilaOperadores)
+    p.parser.cuads.pilaOperadores.append("[")
+    print("pOperadores2:", p.parser.cuads.pilaOperadores)
+    
+    p.parser.aux_cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
+    p.parser.aux_cuads.pilaOperadores.append("[")
+
+
+def p_dims_q2(p):
+    '''dims_q2 : 
+    '''
+    current_var, var_found = list(p.parser.dims_var.items())[0]
+    if p.parser.DIMS == 1:
+        dim_node = var_found['dims']
+    elif p.parser.DIMS == 2:
+        dim_node = var_found['dims'].next
+    else:
+        print(p.parser.DIMS)
+        raise Exception("dims diff than 1 or 2")
+
+    lim_inf = dim_node.lim_inf
+    lim_sup = dim_node.lim_sup
+
+    dim_type = p.parser.cuads.pilaTipos[-1]
+    assert dim_type == ENCODE['int'], f"trying to index array with an element of type {dim_type}"
+    dim_value = p.parser.cuads.pilaOperandos[-1]
+
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['VERIFY'], leftOp=dim_value, rightOp=lim_inf, result=lim_sup)
+    # aux_cuads
+    p.parser.aux_cuads.add_cuadruplo(operation='VERIFY', leftOp=dim_value, rightOp=lim_inf, result=lim_sup)
+    
+    current_func = p.parser.context
+    
+    print("DIMS2:", p.parser.DIMS)
+    if dim_node.next:
+        print("pOperandos1:", p.parser.cuads.pilaOperandos)
+        print("pTipos1:", p.parser.cuads.pilaTipos)
+        aux = p.parser.cuads.pilaOperandos.pop()
+        aux_type = p.parser.cuads.pilaTipos.pop()
+        print("pOperandos1.2:", p.parser.cuads.pilaOperandos)
+        print("pTipos1.2:", p.parser.cuads.pilaTipos)
+        m = dim_node.m
+        m_address = p.parser.const_table.add_const(const=m, type=ENCODE['float'])
+        
+        temp_name, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=ENCODE['float'])
+        p.parser.cuads.add_cuadruplo(operation=ENCODE['*'], leftOp=aux, rightOp=m_address, result=temp_address)
+        p.parser.cuads.pilaOperandos.append(temp_address)
+        print("pOperandos1.5:", p.parser.cuads.pilaOperandos)
+        print("pTipos1.5:", p.parser.cuads.pilaTipos)
+        # aux_cuads
+        aux = p.parser.aux_cuads.pilaOperandos.pop()
+        # aux_type = p.parser.aux_cuads.pilaTipos.pop()
+        p.parser.aux_cuads.add_cuadruplo(operation='*', leftOp=aux, rightOp=m, result=temp_name)
+        p.parser.aux_cuads.pilaOperandos.append(temp_name)
+
+
+    if p.parser.DIMS == 2:
+        aux2 = p.parser.cuads.pilaOperandos.pop()
+        # aux2_type = p.parser.cuads.pilaTipos.pop()
+        aux1 = p.parser.cuads.pilaOperandos.pop()
+        # aux1_type = p.parser.cuads.pilaTipos.pop()
+        temp_name, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(temp_type=ENCODE['float'])
+        p.parser.cuads.add_cuadruplo(operation=ENCODE['+'], leftOp=aux1, rightOp=aux2, result=temp_address)
+        p.parser.cuads.pilaOperandos.append(temp_address)
+        print("pOperandos2.5:", p.parser.cuads.pilaOperandos)
+        print("pTipos2:", p.parser.cuads.pilaTipos)
+        # aux_cuads
+        aux2 = p.parser.aux_cuads.pilaOperandos.pop()
+        # aux2_type = p.parser.aux_cuads.pilaTipos.pop()
+        aux1 = p.parser.aux_cuads.pilaOperandos.pop()
+        # aux1_type = p.parser.aux_cuads.pilaTipos.pop()
+        p.parser.aux_cuads.add_cuadruplo(operation='+', leftOp=aux1, rightOp=aux2, result=temp_name)
+        p.parser.aux_cuads.pilaOperandos.append(temp_name)
+
+
+    p.parser.DIMS += 1
+    _ = p.parser.cuads.pilaDimensiones.pop()
+    p.parser.cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
+    
+    _ = p.parser.aux_cuads.pilaDimensiones.pop()
+    p.parser.aux_cuads.pilaDimensiones.append((current_var, p.parser.DIMS))
+    
+    
+
+
+def p_dims(p):
+    '''dims : OPBRACKET dims_q1 aritm dims_q2 CLBRACKET
+            | OPBRACKET dims_q1 aritm dims_q2 CLBRACKET OPBRACKET aritm dims_q2 CLBRACKET
+    '''
+    
+    current_func = p.parser.context
+    current_var, var_found = list(p.parser.dims_var.items())[0]
+    
+    aux1 = p.parser.cuads.pilaOperandos.pop()
+    print("DIMS3:", p.parser.DIMS)
+    # sumando -k
+    minus_k = var_found['dims'].next.minus_k if p.parser.DIMS == 3 else var_found['dims'].minus_k
+    minus_k_address = p.parser.const_table.add_const(const=minus_k, type=ENCODE['int'])
+    tempi_name, tempi_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(ENCODE['float'])
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['+'], leftOp=aux1, rightOp=minus_k_address, result=tempi_address)
+    # sumando dirección base
+    base_dir = var_found['address']
+    base_dir_address = p.parser.const_table.add_const(const=base_dir, type=ENCODE['int'])
+    tempn_name, tempn_address = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].add_temp(ENCODE['ptr'])
+    p.parser.cuads.add_cuadruplo(operation=ENCODE['+'], leftOp=tempi_address, rightOp=base_dir_address, result=tempn_address)    
+    p.parser.cuads.pilaOperandos.append(tempn_address)
+    print("pOperandos3:", p.parser.cuads.pilaOperandos)
+    print("pTipos3:", p.parser.cuads.pilaTipos)
+
+    # aux_cuads
+    aux1 = p.parser.aux_cuads.pilaOperandos.pop()
+    p.parser.aux_cuads.add_cuadruplo(operation='+', leftOp=aux1, rightOp=minus_k, result=tempi_name)
+    # _, temp_address = p.parser.dir_funcs.funcs[current_func]['varTable'].add_temp(ENCODE['ptr'])
+    p.parser.aux_cuads.add_cuadruplo(operation='+', leftOp=tempi_name, rightOp=base_dir, result=tempn_name)
+    p.parser.aux_cuads.pilaOperandos.append(tempn_name)
+    
+    
+    
+    assert p.parser.cuads.pilaOperadores[-1] == "[", "ArrayError: something left in pilaOperadores when closing array indexing"
+    _ = p.parser.cuads.pilaOperadores.pop()
+    _ = p.parser.aux_cuads.pilaOperadores.pop()
+        
+    p.parser.DIMS = 1
     try:
         p[0] = f"{p[1]}{p[2]}{p[4]}{p[5]}{p[6]}{p[8]}"
     except:
@@ -393,7 +533,6 @@ def p_func_cont(p):
     print_control(p, "func_cont", 4)
     
 
-
 def p_estat(p):
     '''estat : asign
              | llam_void
@@ -414,9 +553,42 @@ def p_carga_dt(p):
     print_control(p, "carga_dt", 6)
 
 
+def p_save_dims_var(p):
+    '''save_dims_var : 
+    '''
+    # stashing variable that is trying to be indexed
+    if p[-2] == ":":
+        # variable trying to be indexed is being passed as parameter
+        current_var = p[-3]
+    else:
+        current_var = p[-1]
+
+    # looking for variable in varTables
+    current_func = p.parser.context
+    if current_var in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.keys():
+        # looking for variable in local scope
+        p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.items() if current_var == k}
+    elif current_var in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.keys():
+        # looking for variable in global scope
+        p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.items() if current_var == k}
+    else:
+        raise Exception(f"Expression {current_var} unknown")
+        
+    # try:
+    
+    #     current_func = p.parser.context
+    #     print(current_func)
+    #     p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.items() if current_var == k}
+    # except:
+    #     try:
+    #         p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.items() if current_var == k}
+    #     except:
+    #         raise Exception(f"Expression {current_var} unknown")
+        
+
 def p_param(p):
     '''param : ID COLON var_typ
-             | ID COLON var_typ dims
+             | ID COLON var_typ save_dims_var dims
     '''
     p[0] = p[1]
     current_func = p.parser.context
@@ -424,7 +596,7 @@ def p_param(p):
     p.parser.dir_funcs.funcs[current_func]['params'] = p.parser.dir_funcs.funcs[current_func]['params']+[ENCODE[p[3]]]    
     param_address = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]['address']
     p.parser.dir_funcs.funcs[current_func]['params_addresses'] = p.parser.dir_funcs.funcs[current_func]['params_addresses']+[param_address]
-    print_control(p, "param\t", 4)
+    print_control(p, "param\t", 5)
 
 
 def p_var_typ(p):
@@ -576,7 +748,6 @@ def p_term(p):
         p[0] = f"{p[1]} {p[3]} {p[5]}"
     except: 
         p[0] = p[1]
-
     print_control(p, "term\t", 5)
     
 
@@ -620,40 +791,44 @@ def p_factor_const(p):
 
 def p_factor_var(p):
     """factor_var : ID
-                  | ID dims
+                  | ID save_dims_var dims
     """
     p[0] = p[1]
     try:
-        # looking for variable in local scope
-        current_func = p.parser.context
-        var_found = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]#['address']
-        
-        p[0] = p[1]
-        
-        # add factor to pilaOperandos
-        p.parser.cuads.pilaOperandos.append(var_found['address'])
-        # add factor type to pilaTipos
-        p.parser.cuads.pilaTipos.append(var_found['tipo'])
-        
-        p.parser.aux_cuads.pilaOperandos.append(p[1])
-        p.parser.aux_cuads.pilaTipos.append(var_found['tipo'])
-        
+        # for arrays and matrices
+        _ = p[3]
     except:
         try:
-            # looking for variable in global scope
-            var_found = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[p[1]]#['tipo']
+            # looking for variable in local scope
+            current_func = p.parser.context
+            var_found = p.parser.dir_funcs.funcs[current_func]['varTable'].vars[p[1]]#['address']
+            
+            p[0] = p[1]
             
             # add factor to pilaOperandos
             p.parser.cuads.pilaOperandos.append(var_found['address'])
             # add factor type to pilaTipos
             p.parser.cuads.pilaTipos.append(var_found['tipo'])
-        
+            
             p.parser.aux_cuads.pilaOperandos.append(p[1])
             p.parser.aux_cuads.pilaTipos.append(var_found['tipo'])
             
         except:
-            raise Exception(f"Expression {p[1]} unknown")
-        
+            try:
+                # looking for variable in global scope
+                var_found = p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars[p[1]]#['tipo']
+                
+                # add factor to pilaOperandos
+                p.parser.cuads.pilaOperandos.append(var_found['address'])
+                # add factor type to pilaTipos
+                p.parser.cuads.pilaTipos.append(var_found['tipo'])
+            
+                p.parser.aux_cuads.pilaOperandos.append(p[1])
+                p.parser.aux_cuads.pilaTipos.append(var_found['tipo'])
+                
+            except:
+                raise Exception(f"Expression {p[1]} unknown")
+            
     print_control(p, "factor_var", 2)
 
 
@@ -799,7 +974,8 @@ def p_arg_q1(p):
     argType = p.parser.aux_cuads.pilaTipos.pop()
     p.parser.aux_cuads.add_cuadruplo(operation="PARAM", leftOp=arg, rightOp=p.parser.paramsK)
     p[0] = "ɛ"
-    
+
+  
 def p_arg_q2(p):
     '''arg_q2 :
     '''
@@ -845,6 +1021,8 @@ def p_escritura(p):
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=p[4])
         p.parser.aux_cuads.add_cuadruplo(operation="PRINT", leftOp=p[3])
     else:
+        print("pOperandos23:", p.parser.cuads.pilaOperandos)
+        print("pTipos23:", p.parser.cuads.pilaTipos)
         operando = p.parser.cuads.pilaOperandos.pop()
         tipo = p.parser.cuads.pilaTipos.pop()
         p.parser.cuads.add_cuadruplo(operation=ENCODE["PRINT"], leftOp=operando)
@@ -863,6 +1041,7 @@ def p_llam_void(p):
     '''
     print_control(p, "llam_void", 4)
 
+
 def p_add_string_const(p):
     '''add_string_const : 
     '''
@@ -875,9 +1054,9 @@ def p_asign(p):
     '''asign : ID ASGNMNT lectura
              | ID ASGNMNT aritm
              | ID ASGNMNT CONST_STRING add_string_const
-             | ID dims ASGNMNT lectura
-             | ID dims ASGNMNT aritm
-             | ID dims ASGNMNT CONST_STRING add_string_const
+             | ID save_dims_var dims ASGNMNT lectura
+             | ID save_dims_var dims ASGNMNT aritm
+             | ID save_dims_var dims ASGNMNT CONST_STRING add_string_const
     '''
     if p.parser.cuads.pilaOperandos[-1] != "$":
         try:
@@ -893,11 +1072,25 @@ def p_asign(p):
             except:
                 raise Exception(f"Expression {p[1]} unknown")
         
+        print("pOperandos8:", p.parser.cuads.pilaOperandos)
+        print("Tipos8:", p.parser.cuads.pilaTipos)
         operando = p.parser.cuads.pilaOperandos.pop()
         operando_type = p.parser.cuads.pilaTipos.pop()        
         if operando_type != var_found['tipo']:
             raise Exception(f"assigning {DECODE[operando_type]} to a variable of type {DECODE[var_found['tipo']]}")
-        p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=var_found['address'])
+        
+        try:
+            # for arrays and matrices
+            _ = p[5]
+            ptr_address = p.parser.cuads.pilaOperandos.pop()
+            print("pOperandos9:", p.parser.cuads.pilaOperandos)
+            _ = p.parser.cuads.pilaTipos.pop()
+            print("ptr_address:", ptr_address)
+            p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=ptr_address)
+            print("got here")
+        except:
+            # for normal vars
+            p.parser.cuads.add_cuadruplo(operation=ENCODE["ASSIGN"], leftOp=operando, result=var_found['address'])
         
         operando = p.parser.aux_cuads.pilaOperandos.pop()
         _ = p.parser.aux_cuads.pilaTipos.pop()
@@ -906,6 +1099,5 @@ def p_asign(p):
         raise Exception("Unexpected behaviour: pilaOperandos is empty")
 
     print_control(p, "asign\t", 4)
-    
 
 #--- END : funciones de la gramática formal ---

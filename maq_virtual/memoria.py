@@ -21,6 +21,7 @@ class Memoria:
             "temps_bool"  : [],
             "temps_int"   : [],
             "temps_float" : [],
+            "temps_ptr" : [],
         }
 
         self.base_addresses_mapper = {
@@ -33,6 +34,7 @@ class Memoria:
             'temps_bool':  0,
             'temps_int':   0,
             'temps_float': 0,
+            'temps_ptr':   0,
         }
 
     def free(self) -> None:
@@ -46,6 +48,7 @@ class Memoria:
             "temps_bool"  : [],
             "temps_int"   : [],
             "temps_float" : [],
+            "temps_ptr" : [],
         }
 
 
@@ -55,6 +58,8 @@ class Memoria:
         temp_dict = {str("vars_"+DECODE[int(tipo)]): amount for tipo, amount in vars_resources.items()}
         self.values_mapper.update({k: [None]*amount for k, amount in temp_dict.items()})
         # temps
+        # print("vars_resources:", vars_resources)
+        # print("temps_resources:", temps_resources)
         temp_dict = {str("temps_"+DECODE[int(k)]): v for k, v in temps_resources.items()}
         self.values_mapper.update({k: [None]*amount for k, amount in temp_dict.items()})
 
@@ -69,6 +74,7 @@ class Memoria:
                     temps_bool=None,
                     temps_int=None,
                     temps_float=None,
+                    temps_ptr=None,
                 ) -> None:
         self.base_addresses_mapper['vars_bool']   = vars_bool   if vars_bool   is not None else self.base_addresses_mapper['vars_bool']
         self.base_addresses_mapper['vars_char']   = vars_char   if vars_char   is not None else self.base_addresses_mapper['vars_char']
@@ -79,6 +85,7 @@ class Memoria:
         self.base_addresses_mapper['temps_bool']  = temps_bool  if temps_bool  is not None else self.base_addresses_mapper['temps_bool']
         self.base_addresses_mapper['temps_int']   = temps_int   if temps_int   is not None else self.base_addresses_mapper['temps_int']
         self.base_addresses_mapper['temps_float'] = temps_float if temps_float is not None else self.base_addresses_mapper['temps_float']
+        self.base_addresses_mapper['temps_ptr']   = temps_ptr   if temps_ptr   is not None else self.base_addresses_mapper['temps_ptr']
     
         
     def find_type_from_address_base(self, address_base) -> str:
@@ -89,22 +96,49 @@ class Memoria:
         return list(mydict.keys())[list(mydict.values()).index(address_base)]
             
     
-    def get_registry(self, address):
+    def get_registry(self, address, operator=None):
+        # print("address:", address)
+        address = int(address)
         item_base = math.floor(address/1000)*1000
         type = self.find_type_from_address_base(address_base=item_base)
-        cast = getattr(self, type[type.find("_")+1:])
-        value = self.values_mapper[type][address-item_base]
-        # if value is None:
-        #     raise Exception("variable referenced before assignment")
-        return cast(value)
+        if "ptr" not in type:
+            cast = getattr(self, type[type.find("_")+1:])
+            # print("got here, type:", type)
+            value = self.values_mapper[type][address-item_base]
+            # print("got here, value:", value)
+            # if value is None:
+            #     raise Exception("variable referenced before assignment")
+            return cast(value)
+        else:
+            # print("ay ojo se viene un getget de pointer")
+            pointed_address = self.values_mapper[type][address-item_base]
+            # print("pointed_address:", pointed_address, "pointer_address:", address)
+            return self.get_registry(pointed_address)
         
     
-    def set_registry(self, value, address) -> None:
+    def set_registry(self, value, address, operator=None) -> None:
+        address = int(address)
         item_base = math.floor(address/1000)*1000
         type = self.find_type_from_address_base(address_base=item_base)
-        self.values_mapper[type].append(None)
-        self.values_mapper[type][address-item_base] = value
-    
+        if operator == 'assign' and "ptr" in type:
+            # print("ay ojo se viene un getset de pointer")
+            pointed_address = self.values_mapper[type][address-item_base]
+            # print("pointed_address:", pointed_address, "pointer_address:", address)
+            self.set_registry(value, pointed_address)
+        else:
+            self.values_mapper[type].append(None)
+            self.values_mapper[type][address-item_base] = value
+            
+            
+        # if "ptr" not in type:
+        #     self.values_mapper[type].append(None)
+        #     self.values_mapper[type][address-item_base] = value
+        # else:
+        #     print("ay ojo se viene un set de pointer")
+        #     pointed_address = self.values_mapper[type][address-item_base]
+        #     print("pointed_address:", pointed_address, "pointer_address:", address)
+        #     self.set_registry(value, pointed_address)
+            
     
     def fill_from_dict(self, mem_dict:dict) -> None:
         for value, address in mem_dict.items():
@@ -116,7 +150,7 @@ class Memoria:
         
         
     def int(self, val) -> int:
-        return int(val)
+        return int(float(val))
     
     def float(self, val) -> float:
         return float(val)

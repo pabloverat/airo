@@ -89,6 +89,7 @@ def t_CONST_INT(t):
 
 def t_CONST_STRING(t):
     r'"([^"\\]|\\.)*"'
+    t.value = t.value.strip("\"")
     return t
 
 def t_ID(t):

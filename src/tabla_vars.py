@@ -9,14 +9,14 @@ class Tabla_Vars:
     def __init__(self) -> None:
         self.vars = {}
         self.vars_range = {
-            ENCODE["bool"]:  (1_000, 1_999),
+            # ENCODE["bool"]:  (1_000, 1_999),
             ENCODE["char"]:  (2_000, 2_999),
             ENCODE["int"]:   (3_000, 3_999),
             ENCODE["float"]: (4_000, 4_999),
             ENCODE["frame"]: (5_000, 9_999),
         }
         self.vars_counts = {
-            ENCODE["bool"]:  0,
+            # ENCODE["bool"]:  0,
             ENCODE["char"]:  0,
             ENCODE["int"]:   0,
             ENCODE["float"]: 0,
@@ -25,11 +25,12 @@ class Tabla_Vars:
         
         self.temps = {}
         self.temps_range = {
-            ENCODE["bool"]:  (101_000, 101_999),
+            ENCODE["bool"]:    (101_000, 101_999),
             # ENCODE["char"]:  (102_000, 102_999),
-            ENCODE["int"]:   (103_000, 103_999),
-            ENCODE["float"]: (104_000, 104_999),
-            # ENCODE["frame"]: (105_000, 109_999),
+            ENCODE["int"]:     (103_000, 103_999),
+            ENCODE["float"]:   (104_000, 104_999),
+            # ENCODE["frame"]: (105_000, 108_999),
+            ENCODE["ptr"]: (109_000, 109_999),
         }
         self.temps_counts = {
             ENCODE["bool"]:  0,
@@ -37,6 +38,7 @@ class Tabla_Vars:
             ENCODE["int"]:   0,
             ENCODE["float"]: 0,
             # ENCODE["frame"]: 0,
+            ENCODE["ptr"]: 0,
         }
 
 
@@ -44,13 +46,16 @@ class Tabla_Vars:
         """
         temp types:
         1 - bool    2 - char    3 - int
-        4 - float   5 - frame
+        4 - float   5 - frame   6 - ptr
         """
-
+        # print(self.temps_range)
+        # print(temp_type)
+        # print(self.temps_range[temp_type])
+        # print("got here")
         # possible virtual address for temp
-        temp_address = self.temps_range[temp_type][0] + self.temps_counts[temp_type]
+        temp_address_temp = self.temps_range[temp_type][0]
+        temp_address = temp_address_temp + self.temps_counts[temp_type]
         temp_name = "t" + DECODE[temp_type] + str(self.temps_counts[temp_type])
-
         # is the address out of range?
         if temp_address > self.temps_range[temp_type][1]:
             raise Exception(f"out of slots for temps of type {DECODE[temp_type]}")
@@ -70,7 +75,7 @@ class Tabla_Vars:
         """
         var types:
         1 - bool    2 - char    3 - int
-        4 - float   5 - frame
+        4 - float   5 - frame   6 - ptr
         """
         
         # possible virtual address for variable
@@ -84,18 +89,18 @@ class Tabla_Vars:
         if var_name in self.vars.keys():
             raise Exception(f"variable {var_name} already exists")
         
-        # add variable to vars var_table
+        # for when var is array or matrix
         if dims:
-            # arrays
-            print("DIMS 1 size:", dims.r)
-            size = dims.r
-        elif dims.next:
-            # matrices
-            print("DIMS 2 size:", dims.next.r)
-            size = dims.next.r
+            if not dims.next:
+                # arrays
+                size = dims.r
+            else:
+                # matrices
+                size = dims.next.r
         else:
             size = 1
             
+        # add variable to vars var_table
         self.vars[var_name] = {'tipo': var_type, 'address':var_address, 'dims':dims}
         self.vars_counts[var_type] += size
 
@@ -109,12 +114,13 @@ class Tabla_Vars:
 
     # def calculate_resources(self) -> int:
     def calculate_resources(self):
-        vars = [var['tipo'] for var in self.vars.values()]
-        vars_count = Counter(vars)
-        temps = [temp['tipo'] for temp in self.temps.values()]
-        temps_count = Counter(temps)
-        # print((vars_count, temps_count))
-        return (vars_count, temps_count)
+        # vars = [var['tipo'] for var in self.vars.values()]
+        # vars_count = Counter(vars)
+        # temps = [temp['tipo'] for temp in self.temps.values()]
+        # temps_count = Counter(temps)
+        # # print((vars_count, temps_count))
+        # return (vars_count, temps_count)
+        return (self.vars_counts, self.temps_counts)
 
 
     def get_var_type(self, var_name: str) -> int:
@@ -122,7 +128,17 @@ class Tabla_Vars:
 
 
     def print_vars(self) -> None:
-        pretty_vars = json.dumps(self.vars, indent=4, sort_keys=False)
+        def dims_num(var_content):
+            if var_content['dims']:
+                dims = 1
+                if var_content['dims'].next:
+                    dims = 2
+                var_content['dims'] = dims
+            return var_content
+                
+        vars = self.vars.copy()
+        vars = {name: dims_num(v) for name,v in vars.items()}
+        pretty_vars = json.dumps(vars, indent=4, sort_keys=False)
         pretty_temps = json.dumps(self.temps, indent=4, sort_keys=False)
         print("vars: ", pretty_vars)
         print("temps: ", pretty_temps)
