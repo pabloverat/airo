@@ -576,17 +576,6 @@ def p_save_dims_var(p):
     else:
         raise Exception(f"Expression {current_var} unknown")
         
-    # try:
-    
-    #     current_func = p.parser.context
-    #     print(current_func)
-    #     p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[current_func]['varTable'].vars.items() if current_var == k}
-    # except:
-    #     try:
-    #         p.parser.dims_var = {k:v for k,v in p.parser.dir_funcs.funcs[p.parser.programName]['varTable'].vars.items() if current_var == k}
-    #     except:
-    #         raise Exception(f"Expression {current_var} unknown")
-        
 
 def p_param(p):
     '''param : ID COLON var_typ

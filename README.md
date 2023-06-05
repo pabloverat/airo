@@ -47,7 +47,7 @@ Lenguaje de programación  imperativo que se desarrolla como parte del curso Dis
     🟢 Máquina Virtual: ejecución de estatutos secuenciales y condicionales
 
 #### Avance 8
-    🔴 1era versión de Documentación
+    🟡 1era versión de Documentación
     🟡 Máquina virtual: ejecución de módulos y arreglos
     🔴 Generación de código y Máquina virtual para una parte de la aplicación
 
